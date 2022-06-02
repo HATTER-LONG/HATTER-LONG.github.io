@@ -4,12 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="第一篇博客, Layton&#39;s Blog">
-    <meta name="description" content="博客功能测试代码高亮测试
-C++ 代码：
-
-template &amp;lt;class TFactory&gt;
-auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
+    <meta name="keywords" content="（一）测试驱动开发技巧--环境设置, Layton&#39;s Blog">
+    <meta name="description" content="环境设置前言新开个坑，本系列主要是《C++程序设计实践与技巧：测试驱动开发》一书的学习记录，由于笔记是在 2020 年就完成了。本次将其进行了一些细节修订、图片优化后同步到 blog 上，因此有些时间会对不上，不要在意这些细节无伤大雅 😂">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -23,7 +19,7 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
 
     
 
-    <title>第一篇博客 | Layton&#39;s Blog</title>
+    <title>（一）测试驱动开发技巧--环境设置 | Layton&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -272,12 +268,12 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">第一篇博客</h1>
+                    <h1 class="description center-align post-title">（一）测试驱动开发技巧--环境设置</h1>
                 </div>
             </div>
         </div>
@@ -393,8 +389,8 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%8A%9F%E8%83%BD/">
-                                <span class="chip bg-color">博客功能</span>
+                            <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                                <span class="chip bg-color">测试驱动开发技巧</span>
                             </a>
                         
                     </div>
@@ -405,8 +401,8 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/" class="post-category">
-                                博客建设
+                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
+                                测试驱动开发技巧
                             </a>
                         
                     </div>
@@ -418,7 +414,7 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-05-28
+                    2022-06-02
                 </div>
                 
 
@@ -427,14 +423,14 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    143
+                    2.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    12 分
                 </div>
                 
 
@@ -454,61 +450,186 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="博客功能测试"><a href="#博客功能测试" class="headerlink" title="博客功能测试"></a>博客功能测试</h1><h2 id="代码高亮测试"><a href="#代码高亮测试" class="headerlink" title="代码高亮测试"></a>代码高亮测试</h2><ol>
-<li>C++ 代码：</li>
-</ol>
-<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">TFactory</span><span class="token operator">></span>
-<span class="token keyword">auto</span> <span class="token function">REQUIRES</span><span class="token punctuation">(</span>m_mutex<span class="token punctuation">)</span> <span class="token function">getFactory</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> id<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token operator">-</span><span class="token operator">></span>
-    <span class="token keyword">typename</span> FactoryDetails<span class="token operator">::</span>get_interface_const_ref<span class="token operator">&lt;</span>TFactory<span class="token operator">></span><span class="token operator">::</span>type
-<span class="token punctuation">{</span>
-    tComponentContItr componentPtr <span class="token operator">=</span> findComponentFactory<span class="token operator">&lt;</span>TFactory<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>componentPtr <span class="token operator">!=</span> m_componentCont<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token punctuation">{</span>
-        <span class="token keyword">auto</span> factory <span class="token operator">=</span> componentPtr<span class="token operator">-</span><span class="token operator">></span>second<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>factory <span class="token operator">!=</span> componentPtr<span class="token operator">-</span><span class="token operator">></span>second<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-        <span class="token punctuation">{</span>
-            <span class="token keyword">using</span> tInterface <span class="token operator">=</span>
-                <span class="token keyword">typename</span> FactoryDetails<span class="token operator">::</span>get_interface<span class="token operator">&lt;</span>TFactory<span class="token operator">></span><span class="token operator">::</span>type<span class="token punctuation">;</span>
-            <span class="token keyword">return</span> <span class="token operator">*</span><span class="token keyword">static_cast</span><span class="token operator">&lt;</span>tInterface<span class="token operator">*</span><span class="token operator">></span><span class="token punctuation">(</span>factory<span class="token operator">-</span><span class="token operator">></span>second<span class="token operator">-</span><span class="token operator">></span><span class="token function">getPtr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">throw</span> <span class="token function">FactoryNotRegisteredEx</span><span class="token punctuation">(</span><span class="token keyword">typeid</span><span class="token punctuation">(</span>TFactory<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
+                <h1 id="环境设置"><a href="#环境设置" class="headerlink" title="环境设置"></a>环境设置</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>新开个坑，本系列主要是<code>《C++程序设计实践与技巧：测试驱动开发》</code>一书的学习记录，由于笔记是在 2020 年就完成了。本次将其进行了一些细节修订、图片优化后同步到 blog 上，因此有些时间会对不上，不要在意这些细节无伤大雅 😂。</p>
+<blockquote>
+<p>图床我是自建在 <a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/Resource">github</a> 上用的 CDN 加速，如果有图片刷不出来的情况可以邮件我，看到了我会处理的。</p>
+</blockquote>
+<blockquote>
+<p>或者直接看<a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/NoteBook_ModernCppProgrammingWithTDD">我的笔记</a>也可以，觉得不错的来个 star 吧 😊。</p>
+</blockquote>
+<h2 id="实例程序"><a href="#实例程序" class="headerlink" title="实例程序"></a>实例程序</h2><p>书中主要使用了两种测试框架 GMock 与 CppUTest，但是学习过程中希望 Catch 替换掉 CppUTest 与 GMock 并存的方式。</p>
+<ul>
+<li>Wait，没想到上来就有个大差异，最近 Catch2 已经发布 v3 了。一次史无前例的破坏性更新，本文还是继续使用 v2 lastest 稳定版本，如果想要尝试切换参考官方给出的<a target="_blank" rel="noopener" href="https://github.com/catchorg/Catch2/blob/devel/docs/migrate-v2-to-v3.md#top">移植建议</a>。</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/HATTER-LONG/Resource@main/images/TDD/01_codeexample.png" alt="code_example"></p>
+<h2 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h2><p>主要在 Ubuntu20.04 system 下，使用 Clang-11 为编译器前端，Gun 的 ld 为连接器。</p>
+<ul>
+<li>两年过去了，我也抛弃了 Ubuntu 改用 Mac 了。你变成了你最讨厌的样子。</li>
+<li>话说 LLVM 都更新到 14 了（此文编写日），<code>不过不用担心编译器问题</code>，本系列的代码没有需要特殊语法的地方，即使切换了 Catch2 v3 也只需要 C++14 标准即可。不过我还是要说 LLVM 永远的神。</li>
+</ul>
+<pre class="line-numbers language-shell"><code class="language-shell">~/WorkSpace
+❯ ls /bin/ld -l
+lrwxrwxrwx 1 root root 19 Apr  7  2020 /bin/ld -> x86_64-linux-gnu-ld
+
+~/WorkSpace
+❯ clang -v
+clang version 11.0.0 (https://github.com/llvm/llvm-project.git 0160ad802e899c2922bc9b29564080c22eb0908c)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/8
+Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/9
+Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/8
+Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/9
+Selected GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/9
+Candidate multilib: .;@m64
+Selected multilib: .;@m64
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<ol start="2">
-<li>Rust 代码：</li>
-</ol>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">impl</span><span class="token operator">&lt;</span>T<span class="token operator">></span> Cacher<span class="token operator">&lt;</span>T<span class="token operator">></span>
-<span class="token keyword">where</span>
-    T<span class="token punctuation">:</span> <span class="token function">Fn</span><span class="token punctuation">(</span>u32<span class="token punctuation">)</span> <span class="token punctuation">-></span> u32<span class="token punctuation">,</span>
-<span class="token punctuation">{</span>
-    <span class="token keyword">fn</span> <span class="token function">new</span><span class="token punctuation">(</span>calculation<span class="token punctuation">:</span> T<span class="token punctuation">)</span> <span class="token punctuation">-></span> Cacher<span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token punctuation">{</span>
-        Cacher <span class="token punctuation">{</span>
-            calculation<span class="token punctuation">,</span>
-            value<span class="token punctuation">:</span> None<span class="token punctuation">,</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">fn</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token keyword">self</span><span class="token punctuation">,</span> arg<span class="token punctuation">:</span> u32<span class="token punctuation">)</span> <span class="token punctuation">-></span> u32 <span class="token punctuation">{</span>
-        <span class="token keyword">match</span> <span class="token keyword">self</span><span class="token punctuation">.</span>value <span class="token punctuation">{</span>
-            <span class="token function">Some</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> v<span class="token punctuation">,</span>
-            None <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
-                <span class="token keyword">let</span> v <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>calculation<span class="token punctuation">)</span><span class="token punctuation">(</span>arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">self</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token function">Some</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                v
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>使用 CMake 支持跨平台编译。</p>
+<pre class="line-numbers language-shell"><code class="language-shell">~/WorkSpace
+❯ cmake -version
+cmake version 3.16.3
 
-<span class="token keyword">fn</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> simulated_user_specified_value <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> simulated_random_number <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">;</span>
-    <span class="token function">generate_workout</span><span class="token punctuation">(</span>simulated_user_specified_value<span class="token punctuation">,</span> simulated_random_number<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="Google-Mock-amp-Catch2"><a href="#Google-Mock-amp-Catch2" class="headerlink" title="Google Mock &amp; Catch2"></a>Google Mock &amp; Catch2</h2><p>安装不在赘述，Google Mock 的版本信息如下：</p>
+<pre class="line-numbers language-shell"><code class="language-shell">/usr/local/lib/cmake/GTest
+❯ ls
+GTestConfig.cmake  GTestConfigVersion.cmake  GTestTargets-noconfig.cmake  GTestTargets.cmake
 
-<span class="token keyword">fn</span> <span class="token function">generate_workout</span><span class="token punctuation">(</span>intensity<span class="token punctuation">:</span> u32<span class="token punctuation">,</span> random_number<span class="token punctuation">:</span> u32<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-<span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+/usr/local/lib/cmake/GTest
+❯ dpkg -l | grep googletest
+ii  googletest                             1.10.0-2                            all          Google's C++ test framework sources
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Catch2 版本信息如下：</p>
+<pre class="line-numbers language-cxx"><code class="language-cxx">/usr/local/lib/cmake/Catch2
+❯ ls
+Catch.cmake         Catch2ConfigVersion.cmake     Catch2Targets.cmake  ParseAndAddCatchTests.cmake
+Catch2Config.cmake  Catch2Targets-noconfig.cmake  CatchAddTests.cmake
+
+/usr/local/lib/cmake/Catch2
+❯ vim Catch2ConfigVersion.cmake
+
+>>> set(PACKAGE_VERSION "2.13.3")
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="搭建运行-GMock-与-Catch2-的环境"><a href="#搭建运行-GMock-与-Catch2-的环境" class="headerlink" title="搭建运行 GMock 与 Catch2 的环境"></a>搭建运行 GMock 与 Catch2 的环境</h3><p>详见我的<a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/TDD_Learning">项目</a>。</p>
+<ul>
+<li>快瞧瞧这个青涩的项目，README 写的一塌糊涂，给个 star 吧，让我知道有人在看有动力翻新下。</li>
+</ul>
+<h2 id="Json"><a href="#Json" class="headerlink" title="Json"></a>Json</h2><p>不打算使用 JsonCPP 切换为开源的 <code>Json for modern c++</code>。</p>
+<ul>
+<li>爱用哪个都行，换成 MDJSON 纯粹是喜欢 Only Header。</li>
+</ul>
+<pre class="line-numbers language-shell"><code class="language-shell">Install the project...
+-- Install configuration: ""
+-- Up-to-date: /usr/local/include
+-- Installing: /usr/local/include/nlohmann
+-- Installing: /usr/local/include/nlohmann/json.hpp
+-- Installing: /usr/local/lib/cmake/nlohmann_json/nlohmann_jsonConfig.cmake
+-- Installing: /usr/local/lib/cmake/nlohmann_json/nlohmann_jsonConfigVersion.cmake
+-- Installing: /usr/local/lib/cmake/nlohmann_json/nlohmann_jsonTargets.cmake
+-- Installing: /usr/local/lib/pkgconfig/nlohmann_json.pc
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="libcurl"><a href="#libcurl" class="headerlink" title="libcurl"></a>libcurl</h2><p>开源代码安装</p>
+<pre class="line-numbers language-shell"><code class="language-shell">~/Tools/curl-7.74.0/build
+❯ sudo make install -j32
+[ 73%] Built target libcurl
+[100%] Built target curl
+Install the project...
+-- Install configuration: ""
+-- Installing: /usr/local/lib/libcurl.a
+-- Installing: /usr/local/bin/curl
+-- Installing: /usr/local/bin/curl-config
+-- Installing: /usr/local/lib/pkgconfig/libcurl.pc
+-- Up-to-date: /usr/local/include/curl
+-- Up-to-date: /usr/local/include/curl/curl.h
+-- Up-to-date: /usr/local/include/curl/curlver.h
+-- Up-to-date: /usr/local/include/curl/easy.h
+-- Up-to-date: /usr/local/include/curl/mprintf.h
+-- Up-to-date: /usr/local/include/curl/multi.h
+-- Up-to-date: /usr/local/include/curl/options.h
+-- Up-to-date: /usr/local/include/curl/stdcheaders.h
+-- Up-to-date: /usr/local/include/curl/system.h
+-- Up-to-date: /usr/local/include/curl/typecheck-gcc.h
+-- Up-to-date: /usr/local/include/curl/urlapi.h
+-- Old export file "/usr/local/lib/cmake/CURL/CURLTargets.cmake" will be replaced.  Removing files [/usr/local/lib/cmake/CURL/CURLTargets-noconfig.cmake].
+-- Installing: /usr/local/lib/cmake/CURL/CURLTargets.cmake
+-- Installing: /usr/local/lib/cmake/CURL/CURLTargets-noconfig.cmake
+-- Installing: /usr/local/lib/cmake/CURL/CURLConfigVersion.cmake
+-- Installing: /usr/local/lib/cmake/CURL/CURLConfig.cmake
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="Boost"><a href="#Boost" class="headerlink" title="Boost"></a>Boost</h2><p>Boost 直接通过 apt-get 安装管理：</p>
+<ul>
+<li>被 apt 版本管理折磨的退坑，是我不配 😭。</li>
+</ul>
+<pre class="line-numbers language-shell"><code class="language-shell">~/Tools
+❯ dpkg -l | grep boost
+ii  libboost-atomic1.71-dev:amd64          1.71.0-6ubuntu6                     amd64        atomic data types, operations, and memory ordering constraints
+ii  libboost-atomic1.71.0:amd64            1.71.0-6ubuntu6                     amd64        atomic data types, operations, and memory ordering constraints
+ii  libboost-chrono1.71-dev:amd64          1.71.0-6ubuntu6                     amd64        C++ representation of time duration, time point, and clocks
+ii  libboost-chrono1.71.0:amd64            1.71.0-6ubuntu6                     amd64        C++ representation of time duration, time point, and clocks
+ii  libboost-container1.71-dev:amd64       1.71.0-6ubuntu6                     amd64        C++ library that implements several well-known containers - dev files
+ii  libboost-container1.71.0:amd64         1.71.0-6ubuntu6                     amd64        C++ library that implements several well-known containers
+ii  libboost-context1.71-dev:amd64         1.71.0-6ubuntu6                     amd64        provides a sort of cooperative multitasking on a single thread
+ii  libboost-context1.71.0:amd64           1.71.0-6ubuntu6                     amd64        provides a sort of cooperative multitasking on a single thread
+ii  libboost-coroutine1.71-dev:amd64       1.71.0-6ubuntu6                     amd64        provides a sort of cooperative multitasking on a single thread
+ii  libboost-coroutine1.71.0:amd64         1.71.0-6ubuntu6                     amd64        provides a sort of cooperative multitasking on a single thread
+ii  libboost-date-time1.71-dev:amd64       1.71.0-6ubuntu6                     amd64        set of date-time libraries based on generic programming concepts
+ii  libboost-date-time1.71.0:amd64         1.71.0-6ubuntu6                     amd64        set of date-time libraries based on generic programming concepts
+ii  libboost-exception1.71-dev:amd64       1.71.0-6ubuntu6                     amd64        library to help write exceptions and handlers
+ii  libboost-fiber1.71-dev:amd64           1.71.0-6ubuntu6                     amd64        cooperatively-scheduled micro-/userland-threads
+ii  libboost-fiber1.71.0:amd64             1.71.0-6ubuntu6                     amd64        cooperatively-scheduled micro-/userland-threads
+ii  libboost-filesystem1.71-dev:amd64      1.71.0-6ubuntu6                     amd64        filesystem operations (portable paths, iteration over directories, etc) in C++
+ii  libboost-filesystem1.71.0:amd64        1.71.0-6ubuntu6                     amd64        filesystem operations (portable paths, iteration over directories, etc) in C++
+ii  libboost-graph-parallel1.71-dev        1.71.0-6ubuntu6                     amd64        generic graph components and algorithms in C++
+ii  libboost-graph-parallel1.71.0          1.71.0-6ubuntu6                     amd64        generic graph components and algorithms in C++
+ii  libboost-graph1.71-dev:amd64           1.71.0-6ubuntu6                     amd64        generic graph components and algorithms in C++
+ii  libboost-graph1.71.0:amd64             1.71.0-6ubuntu6                     amd64        generic graph components and algorithms in C++
+ii  libboost-iostreams1.71-dev:amd64       1.71.0-6ubuntu6                     amd64        Boost.Iostreams Library development files
+ii  libboost-iostreams1.71.0:amd64         1.71.0-6ubuntu6                     amd64        Boost.Iostreams Library
+ii  libboost-locale1.71-dev:amd64          1.71.0-6ubuntu6                     amd64        C++ facilities for localization
+ii  libboost-locale1.71.0:amd64            1.71.0-6ubuntu6                     amd64        C++ facilities for localization
+ii  libboost-log1.71-dev                   1.71.0-6ubuntu6                     amd64        C++ logging library
+ii  libboost-log1.71.0                     1.71.0-6ubuntu6                     amd64        C++ logging library
+ii  libboost-math1.71-dev:amd64            1.71.0-6ubuntu6                     amd64        Boost.Math Library development files
+ii  libboost-math1.71.0:amd64              1.71.0-6ubuntu6                     amd64        Boost.Math Library
+ii  libboost-mpi-python1.71-dev            1.71.0-6ubuntu6                     amd64        C++ interface to the Message Passing Interface (MPI), Python Bindings
+ii  libboost-mpi-python1.71.0              1.71.0-6ubuntu6                     amd64        C++ interface to the Message Passing Interface (MPI), Python Bindings
+ii  libboost-mpi1.71-dev                   1.71.0-6ubuntu6                     amd64        C++ interface to the Message Passing Interface (MPI)
+ii  libboost-mpi1.71.0                     1.71.0-6ubuntu6                     amd64        C++ interface to the Message Passing Interface (MPI)
+ii  libboost-numpy1.71-dev                 1.71.0-6ubuntu6                     amd64        Boost.Python NumPy extensions development files
+ii  libboost-numpy1.71.0                   1.71.0-6ubuntu6                     amd64        Boost.Python NumPy extensions
+ii  libboost-program-options1.71-dev:amd64 1.71.0-6ubuntu6                     amd64        program options library for C++
+ii  libboost-program-options1.71.0:amd64   1.71.0-6ubuntu6                     amd64        program options library for C++
+ii  libboost-python1.71-dev                1.71.0-6ubuntu6                     amd64        Boost.Python Library development files
+ii  libboost-python1.71.0                  1.71.0-6ubuntu6                     amd64        Boost.Python Library
+ii  libboost-random1.71-dev:amd64          1.71.0-6ubuntu6                     amd64        Boost Random Number Library
+ii  libboost-random1.71.0:amd64            1.71.0-6ubuntu6                     amd64        Boost Random Number Library
+ii  libboost-regex1.71-dev:amd64           1.71.0-6ubuntu6                     amd64        regular expression library for C++
+ii  libboost-regex1.71.0:amd64             1.71.0-6ubuntu6                     amd64        regular expression library for C++
+ii  libboost-serialization1.71-dev:amd64   1.71.0-6ubuntu6                     amd64        serialization library for C++
+ii  libboost-serialization1.71.0:amd64     1.71.0-6ubuntu6                     amd64        serialization library for C++
+ii  libboost-stacktrace1.71-dev:amd64      1.71.0-6ubuntu6                     amd64        library to capture and print stack traces - development files
+ii  libboost-stacktrace1.71.0:amd64        1.71.0-6ubuntu6                     amd64        library to capture and print stack traces
+ii  libboost-system1.71-dev:amd64          1.71.0-6ubuntu6                     amd64        Operating system (e.g. diagnostics support) library
+ii  libboost-system1.71.0:amd64            1.71.0-6ubuntu6                     amd64        Operating system (e.g. diagnostics support) library
+ii  libboost-test1.71-dev:amd64            1.71.0-6ubuntu6                     amd64        components for writing and executing test suites
+ii  libboost-test1.71.0:amd64              1.71.0-6ubuntu6                     amd64        components for writing and executing test suites
+ii  libboost-thread1.71-dev:amd64          1.71.0-6ubuntu6                     amd64        portable C++ multi-threadingii  libboost-thread1.71.0:amd64            1.71.0-6ubuntu6                     amd64        portable C++ multi-threadingii  libboost-timer1.71-dev:amd64           1.71.0-6ubuntu6                     amd64        C++ wall clock and CPU process timers
+ii  libboost-timer1.71.0:amd64             1.71.0-6ubuntu6                     amd64        C++ wall clock and CPU process timers
+ii  libboost-type-erasure1.71-dev:amd64    1.71.0-6ubuntu6                     amd64        C++ runtime polymorphism based on concepts
+ii  libboost-type-erasure1.71.0:amd64      1.71.0-6ubuntu6                     amd64        C++ runtime polymorphism based on concepts
+ii  libboost-wave1.71-dev:amd64            1.71.0-6ubuntu6                     amd64        C99/C++ preprocessor libraryii  libboost-wave1.71.0:amd64              1.71.0-6ubuntu6                     amd64        C99/C++ preprocessor libraryii  libboost1.71-all-dev                   1.71.0-6ubuntu6                     amd64        Boost C++ Libraries development files (ALL)
+ii  libboost1.71-dev:amd64                 1.71.0-6ubuntu6                     amd64        Boost C++ Libraries development files
+ii  libboost1.71-doc                       1.71.0-6ubuntu6                     all          Boost.org libraries documentation placeholder
+ii  libboost1.71-tools-dev                 1.71.0-6ubuntu6                     amd64        Boost C++ Libraries development tools
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文主要展示了后边文章中所需要的一些三方库、安装等示例，继续吐槽 C++ 没有统一的包管理器（对着 Cargo 流口水）。</p>
+<ul>
+<li>看到以前写的笔记还是感慨良多。有时看书实在太功利了，总想这去读对自己有用的，但是当能判断出这书有用了其实反而对于知识、眼界的扩展是有限的。</li>
+<li>在阅读本书时，无论工作内容还是什么其他方面完全没有测试代码的意识，在钢丝上行走小心翼翼的维护者脆弱的代码。随着经验的增加越来越能体会到测试代码的重要性，已经记不得当时学习这本书的动机了，但是以现在的眼光来看当时的决定对我的帮助无疑是巨大的。</li>
+<li>最后引用一句忘记了从那本书看到的话：你读过的每一本书，最后都会变成你的血与肉。</li>
+</ul>
 
                 
             </div>
@@ -535,7 +656,7 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://hatter-long-blog.vercel.app/2022/05/28/di-yi-pian-bo-ke/">https://hatter-long-blog.vercel.app/2022/05/28/di-yi-pian-bo-ke/</a>
+                    <a href="https://hatter-long-blog.vercel.app/2022/06/02/yi-ce-shi-qu-dong-kai-fa-ji-qiao-huan-jing-she-zhi/">https://hatter-long-blog.vercel.app/2022/06/02/yi-ce-shi-qu-dong-kai-fa-ji-qiao-huan-jing-she-zhi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -573,8 +694,8 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%8A%9F%E8%83%BD/">
-                                    <span class="chip bg-color">博客功能</span>
+                                <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                                    <span class="chip bg-color">测试驱动开发技巧</span>
                                 </a>
                             
                         </div>
@@ -626,13 +747,13 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/06/02/yi-ce-shi-qu-dong-kai-fa-ji-qiao-huan-jing-she-zhi/">
+                <a href="/2022/06/02/er-ce-shi-qu-dong-kai-fa-ji-qiao-di-yi-ge-shi-li/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="（一）测试驱动开发技巧--环境设置">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="（二）测试驱动开发技巧--第一个示例">
                         
-                        <span class="card-title">（一）测试驱动开发技巧--环境设置</span>
+                        <span class="card-title">（二）测试驱动开发技巧--第一个示例</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -672,7 +793,7 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
                 <a href="/2022/05/28/di-yi-pian-bo-ke/">
@@ -706,7 +827,6 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
