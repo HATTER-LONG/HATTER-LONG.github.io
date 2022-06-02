@@ -4,12 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="第一篇博客, null">
-    <meta name="description" content="博客功能测试代码高亮测试
-C++ 代码：
+    <meta name="keywords" content="（三）测试驱动开发技巧--基础概念, null">
+    <meta name="description" content="测试驱动开发基础前言
+经过前一章的介绍想必对于 TDD 的实践有了个了解，本章开始将会深入其中，对于其概念开始详细的分析。
 
-template &amp;lt;class TFactory&gt;
-auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
+单元测试和测试驱动开发基础TDD 会产出单元测试。单元测试验证了一个代码单元的行为，这里的代码单元是一个应用中最小">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -23,7 +22,7 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
 
     
 
-    <title>第一篇博客 | null</title>
+    <title>（三）测试驱动开发技巧--基础概念 | null</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -272,12 +271,12 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">第一篇博客</h1>
+                    <h1 class="description center-align post-title">（三）测试驱动开发技巧--基础概念</h1>
                 </div>
             </div>
         </div>
@@ -393,8 +392,8 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%8A%9F%E8%83%BD/">
-                                <span class="chip bg-color">博客功能</span>
+                            <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                                <span class="chip bg-color">测试驱动开发技巧</span>
                             </a>
                         
                     </div>
@@ -405,8 +404,8 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/" class="post-category">
-                                博客建设
+                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
+                                测试驱动开发技巧
                             </a>
                         
                     </div>
@@ -418,7 +417,7 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-05-28
+                    2022-06-02
                 </div>
                 
 
@@ -427,14 +426,14 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    143
+                    4.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    16 分
                 </div>
                 
 
@@ -454,61 +453,281 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="博客功能测试"><a href="#博客功能测试" class="headerlink" title="博客功能测试"></a>博客功能测试</h1><h2 id="代码高亮测试"><a href="#代码高亮测试" class="headerlink" title="代码高亮测试"></a>代码高亮测试</h2><ol>
-<li>C++ 代码：</li>
+                <h1 id="测试驱动开发基础"><a href="#测试驱动开发基础" class="headerlink" title="测试驱动开发基础"></a>测试驱动开发基础</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
+<li>经过前一章的介绍想必对于 TDD 的实践有了个了解，本章开始将会深入其中，对于其概念开始详细的分析。</li>
+</ul>
+<h2 id="单元测试和测试驱动开发基础"><a href="#单元测试和测试驱动开发基础" class="headerlink" title="单元测试和测试驱动开发基础"></a>单元测试和测试驱动开发基础</h2><p>TDD 会产出单元测试。单元测试验证了一个代码单元的行为，这里的代码单元是一个应用中最小的、可测的一段代码。通常而言，开发单元测试和代码单元要使用一致的编程语言。</p>
+<h3 id="单元测试的组织和执行"><a href="#单元测试的组织和执行" class="headerlink" title="单元测试的组织和执行"></a>单元测试的组织和执行</h3><ul>
+<li>单元测试包括一个描述性的名称和一系列代码声明，从概念上可以细分成四个（有序的）部分：<ol>
+<li>设置能够运行上下文的语句，这一部分是可选的；</li>
+<li>一条或多条能构成你想要验证的行为的语句；</li>
+<li>一条或多条验证期望输出的语句；</li>
+<li>清理工作的语句（例如，释放所分配的内存），这一部分是可选的。</li>
 </ol>
-<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">TFactory</span><span class="token operator">></span>
-<span class="token keyword">auto</span> <span class="token function">REQUIRES</span><span class="token punctuation">(</span>m_mutex<span class="token punctuation">)</span> <span class="token function">getFactory</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> id<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token operator">-</span><span class="token operator">></span>
-    <span class="token keyword">typename</span> FactoryDetails<span class="token operator">::</span>get_interface_const_ref<span class="token operator">&lt;</span>TFactory<span class="token operator">></span><span class="token operator">::</span>type
-<span class="token punctuation">{</span>
-    tComponentContItr componentPtr <span class="token operator">=</span> findComponentFactory<span class="token operator">&lt;</span>TFactory<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>componentPtr <span class="token operator">!=</span> m_componentCont<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token punctuation">{</span>
-        <span class="token keyword">auto</span> factory <span class="token operator">=</span> componentPtr<span class="token operator">-</span><span class="token operator">></span>second<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>factory <span class="token operator">!=</span> componentPtr<span class="token operator">-</span><span class="token operator">></span>second<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-        <span class="token punctuation">{</span>
-            <span class="token keyword">using</span> tInterface <span class="token operator">=</span>
-                <span class="token keyword">typename</span> FactoryDetails<span class="token operator">::</span>get_interface<span class="token operator">&lt;</span>TFactory<span class="token operator">></span><span class="token operator">::</span>type<span class="token punctuation">;</span>
-            <span class="token keyword">return</span> <span class="token operator">*</span><span class="token keyword">static_cast</span><span class="token operator">&lt;</span>tInterface<span class="token operator">*</span><span class="token operator">></span><span class="token punctuation">(</span>factory<span class="token operator">-</span><span class="token operator">></span>second<span class="token operator">-</span><span class="token operator">></span><span class="token function">getPtr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">throw</span> <span class="token function">FactoryNotRegisteredEx</span><span class="token punctuation">(</span><span class="token keyword">typeid</span><span class="token punctuation">(</span>TFactory<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</li>
+</ul>
+<p>执行一遍所有的测试称为运行测试（test run 或 suite run）。在运行测试的过程中，<strong>工具会枚举所有的测试，独立地执行每个测试</strong>。对于每个测试来说，测试工具都是从头到尾执行其中的语句的。当执行一条断言语句时，如果断言所期待的条件不满足，那么测试就会失败。反之，测试通过。</p>
+<h3 id="测试驱动单元"><a href="#测试驱动单元" class="headerlink" title="测试驱动单元"></a>测试驱动单元</h3><ul>
+<li><p><strong>TDD 的好处?</strong></p>
+<ul>
+<li>与 POUT 即开发完成后再编写测试不同，TDD 事一个更加简明的流程，并且也使用了单元测试。在 TDD 中先编写测试，并且保持测试的粒度尽量小且一致，这样会带来许多好处，最重要的是可以安全地修改现有代码。</li>
+</ul>
+</li>
+<li><p><strong>怎么进行 TDD?</strong></p>
+<ul>
+<li>在 TDD 中，是以非常小的步伐，增量地往系统中添加新行为。换句话说，为了往系统中加入新的行为，首先会去写一个测试来定义这个行为。这个起初运行失败的测试将驱使你去实现相应的行为。</li>
+</ul>
+</li>
+<li><p><strong>TDD 与功能测试的区别？</strong></p>
+<ul>
+<li>TDD 不应该和大量功能的测试混淆。主要区别在于，覆盖了大量功能的测试是与其他代码或者外部实体集成后的整体功能，一般被称为集成测试。此类测试应在验收或者系统测试时进行。</li>
+<li>TDD 主导的是产生单元测试，是去覆盖最小的逻辑代码单元的测试用例。虽说 TDD 在失败测试通过时才编写产品代码的规则，往往会指引者开发者与外部实体代码进行交互，进而变成集成测试，但是者没有关系。<strong>重要的是现指定行为，系统地测试驱动开发系统中的每一块代码</strong>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="测试驱动开发周期：红-绿-重构"><a href="#测试驱动开发周期：红-绿-重构" class="headerlink" title="测试驱动开发周期：红 - 绿 - 重构"></a>测试驱动开发周期：红 - 绿 - 重构</h2><p>就像第二章中描述的步骤一样：</p>
+<ol>
+<li>先写一个测试（“红”）；</li>
+<li>让测试通过（“绿”）；</li>
+<li>优化设计（“重构”）。</li>
+</ol>
+<p><img src="https://fastly.jsdelivr.net/gh/HATTER-LONG/Resource@main/images/TDD/1_TDD_Process.png" alt="TDDProcess"></p>
+<h3 id="思考测试驱动开发"><a href="#思考测试驱动开发" class="headerlink" title="思考测试驱动开发"></a>思考测试驱动开发</h3><ul>
+<li><p>总的来说 TDD 过程需要思考两件事情：</p>
+<ol>
+<li>需要编写一个测试说明行为；</li>
+<li>每个周期都要清理代码。</li>
+</ol>
+</li>
+<li><p>在 TDD 周期中的每一步，你必须能回答以下问题：</p>
+<ol>
+<li>写一个小测试：<ul>
+<li>怎样才算可以增量开发的最小行为？</li>
+<li>系统中已经存在这样的行为了么？</li>
+<li>怎样让测试名称准确表达行为？</li>
+<li>测试中使用的接口是客户端代码使用这一行为最好的方式吗？</li>
+</ul>
+</li>
+<li>确保新的测试是失败的：<ul>
+<li>如果没有失败，为什么？</li>
+<li>这个行为已经在系统中存在了么？</li>
+<li>是否是忘记了编译差异代码？</li>
+<li>是不是在上一个测试中步伐太大了，包含了多个行为？</li>
+<li>断言是否有效？</li>
+</ul>
+</li>
+<li>写出你认为可以让测试通过的代码：<ul>
+<li>代码是不是刚好满足测试说明的行为要求？</li>
+<li>你清楚刚才写的代码中哪些地方需要整理么？</li>
+<li>是否遵循了团队标准？</li>
+</ul>
+</li>
+<li>确保所有测试都能通过：<ul>
+<li>如果没有，你的编码是否正确？</li>
+<li>你的规范正确么？</li>
+</ul>
+</li>
+<li>整理刚才的代码改动：<ul>
+<li>怎么做才能使你的代码符合团队标准？</li>
+<li>新的代码和系统中其他要清除的代码有重复么？</li>
+<li>代码有没有坏味？</li>
+<li>遵循好的设计原则了吗？</li>
+<li>除了当下要做的设计和代码整理工作，你还知道其他什么？</li>
+<li>设计是朝好的方向发展吗？</li>
+<li>你的代码改动会导致需要修改其他地方的代码吗？</li>
+</ul>
+</li>
+<li>确保所有测试再次通过：<ul>
+<li>确信你的单元测试覆盖率够高吗？</li>
+<li>是不是应该运行一些速度较慢的测试集合，以便有信息继续前行？</li>
+<li>下一个测试是什么？</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="TDD-的三条准则"><a href="#TDD-的三条准则" class="headerlink" title="TDD 的三条准则"></a>TDD 的三条准则</h2><ul>
+<li>Robert C. Martin（Bob 大叔）提出了践行 TDD 的<a target="_blank" rel="noopener" href="http://butunclebob.com/ArticleS.UncleBob.TheThreeRulesOfTdd">简明规则</a>。<ol>
+<li>只在让失败测试通过时才编写产品代码。</li>
+<li>当测试刚好失败时，停止继续编写。编译失败也是失败。</li>
+<li>只编写能刚好让一个失败测试通过的产品代码。</li>
+</ol>
+</li>
+</ul>
+<h2 id="表里不一"><a href="#表里不一" class="headerlink" title="表里不一"></a>表里不一</h2><p>TDD 的第一条准则便是在编写代码前先写出一个运行失败的测试，但是经常在开发中碰到刚刚写完一个测试立刻就通过了，这种非期望实践产生的可能原因：</p>
+<ol>
+<li><p>运行了错误的测试；</p>
+<ul>
+<li>运行了错误的测试集。</li>
+<li>可能新增的测试没有被编译进入执行程序，测试框架的测试用例数量需要时刻关注。</li>
+<li>测试框架的种种过滤器用法，是否是新增的测试被过滤了。</li>
+<li>测试被关闭、禁止了。</li>
+</ul>
+</li>
+<li><p>测试了错误的代码；</p>
+<ul>
+<li>没有包含最新的测试代码。</li>
+<li>没有注意到构建失败了。</li>
+<li>构建脚本有缺陷，没有新增测试代码。</li>
+<li>你在测试错误的类。同名替身类这些。</li>
+</ul>
+</li>
+<li><p>不当的测试规范；</p>
+<ul>
+<li>类似下例这种，断言的目标与测试描述的行为不符。</li>
+</ul>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_F</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> IsEmptyWhenCreated<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>portfolio<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<ol start="2">
-<li>Rust 代码：</li>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>对系统的无效假设；</p>
+<ul>
+<li>写了一个测试，它一运行就通过了。之所以写测试用例是因为最开始假设这个行为并没有实现。这个通过的测试提醒了你之前的假设是错误的。这时需要停下来，就前面已添加的行为来分析系统这个行为的实现是否合理。</li>
+</ul>
+</li>
+<li><p>不佳的测试顺序；</p>
+<ul>
+<li>测试用例之间不要存在耦合关系，每个单元测试都应该是独立不受顺序影响的。</li>
+</ul>
+</li>
+<li><p>相关联的产品代码；</p>
+</li>
+<li><p>过度编码；</p>
+<ul>
+<li>在开发功能的过程中往往会有下意识更好的解决方法，例如引入新的数据结构等等，但是其可能导致后续许多的测试用例提前通过，如果你想成功运用 TDD，就必须确保增量地引入这些想法，并配以相应的测试。有时候你会觉得自己甚至不需要一个 map。与此同时，不做多余需求的实现可以保持代码简单。这样做也可以避免在存在更简单的解决方案时，引入长时间的过度复杂的代码。</li>
+</ul>
+</li>
+<li><p>确定性测试。</p>
+<ul>
+<li>有时候你并不知道代码在一些特定情形下是怎样工作的。你认为 TDD 的代码应该是一个完整的解决方案，但并不确定。“我们的算法处理这一情形了吗？”你可以有针对性地写一个测试来探测系统行为。</li>
+</ul>
+</li>
+<li><p>思考：</p>
+<ul>
+<li>测试提前通过的情况应该很少见。但是这种情形却很重要，可以问自己几个问题：我漏掉了什么？我的步伐是不是大了点儿？我有没有犯愚蠢的错误？如果不这样做会是什么结果呢？和编译警告一样，你始终要去揣摩测试提前通过背后的真相。</li>
+</ul>
+</li>
 </ol>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">impl</span><span class="token operator">&lt;</span>T<span class="token operator">></span> Cacher<span class="token operator">&lt;</span>T<span class="token operator">></span>
-<span class="token keyword">where</span>
-    T<span class="token punctuation">:</span> <span class="token function">Fn</span><span class="token punctuation">(</span>u32<span class="token punctuation">)</span> <span class="token punctuation">-></span> u32<span class="token punctuation">,</span>
-<span class="token punctuation">{</span>
-    <span class="token keyword">fn</span> <span class="token function">new</span><span class="token punctuation">(</span>calculation<span class="token punctuation">:</span> T<span class="token punctuation">)</span> <span class="token punctuation">-></span> Cacher<span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token punctuation">{</span>
-        Cacher <span class="token punctuation">{</span>
-            calculation<span class="token punctuation">,</span>
-            value<span class="token punctuation">:</span> None<span class="token punctuation">,</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">fn</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token keyword">self</span><span class="token punctuation">,</span> arg<span class="token punctuation">:</span> u32<span class="token punctuation">)</span> <span class="token punctuation">-></span> u32 <span class="token punctuation">{</span>
-        <span class="token keyword">match</span> <span class="token keyword">self</span><span class="token punctuation">.</span>value <span class="token punctuation">{</span>
-            <span class="token function">Some</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> v<span class="token punctuation">,</span>
-            None <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
-                <span class="token keyword">let</span> v <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>calculation<span class="token punctuation">)</span><span class="token punctuation">(</span>arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">self</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token function">Some</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                v
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
+<h2 id="成功运用测试驱动开发的思维"><a href="#成功运用测试驱动开发的思维" class="headerlink" title="成功运用测试驱动开发的思维"></a>成功运用测试驱动开发的思维</h2><h3 id="增量性"><a href="#增量性" class="headerlink" title="增量性"></a>增量性</h3><p>TDD 以渐进的方式从无到有地开发一个功能完善的系统，每当往系统中加入新行为单元前，都应该为其编写一个测试，并保证以往加入的行为也有对应的测试，你只有在新功能与其他所有功能协同工作时才能继续前进。</p>
+<p>TDD 与敏捷开发的流程也相互契合，在每个短的敏捷开发迭代周期，都可以定义、构建并发布少量的功能，而 TDD 则会保证你的修改是否影响其他功能以及新开发的功能指定行为是否正确。</p>
+<h3 id="测试行为而非方法"><a href="#测试行为而非方法" class="headerlink" title="测试行为而非方法"></a>测试行为而非方法</h3><p>TDD 不应该集中精力去测试成员函数。“我们实现了一个 add() 成员函数。再写一个 TEST(ARetweetCollection, Add) 的测试。”想要完全覆盖一个 add 行为的测试需要考虑多种不同情况，非常浪费精力。</p>
+<ul>
+<li>相反将注意力放在描述行为上：<ul>
+<li>如果加入一个已经加入的 add 参数？</li>
+<li>如果客户传入一个空的参数？</li>
+<li>如果加入的参数不在生效？</li>
+<li>……等等。</li>
+</ul>
+</li>
+</ul>
+<h3 id="使用测试来描述行为"><a href="#使用测试来描述行为" class="headerlink" title="使用测试来描述行为"></a>使用测试来描述行为</h3><p>测试可以被看作一个示例，用它描述或文档化系统中的行为。</p>
+<ul>
+<li>可以通过下列两个方面来编写一个良好的测试：<ol>
+<li>测试名称，它概括了在特定上下文中系统表现出的行为；</li>
+<li>测试语句本身，它精炼地展现了一个测试的行为。</li>
+</ol>
+</li>
+</ul>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_F</span><span class="token punctuation">(</span>ARetweetCollection<span class="token punctuation">,</span> IgnoresDuplicateTweetAdded<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Tweet <span class="token function">tweet</span><span class="token punctuation">(</span><span class="token string">"msg"</span><span class="token punctuation">,</span> <span class="token string">"@user"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    Tweet <span class="token function">duplicate</span><span class="token punctuation">(</span>tweet<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    collection<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>tweet<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    collection<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>duplicate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>collection<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token number">1u</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-<span class="token keyword">fn</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> simulated_user_specified_value <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> simulated_random_number <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">;</span>
-    <span class="token function">generate_workout</span><span class="token punctuation">(</span>simulated_user_specified_value<span class="token punctuation">,</span> simulated_random_number<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">fn</span> <span class="token function">generate_workout</span><span class="token punctuation">(</span>intensity<span class="token punctuation">:</span> u32<span class="token punctuation">,</span> random_number<span class="token punctuation">:</span> u32<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-<span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token comment" spellcheck="true">//> 测试名称提供了高层次的概括：应该忽略重复添加的 tweet。但什么才算重复的 tweet？忽略重复的 tweet 意味着什么？这个测试提示了一个简单的示例，清楚地回答了这两个问题。当一个 tweet 和另一个 tweet 完全相同时，算作重复；当加入一个重复的 tweet 后，tweet 集合的大小不变。</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>越是重视 TDD 的文档功能，越懂得高质量测试的重要性。测试的文档功能是 TDD 的附属产物。为了确保在单元测试中的投入得到良好的回报，必须保证其他人能够很容易地理解测试，否则你的测试就是在浪费他们的时间。良好的测试可以通过全面地记录系统行为来节省时间。只要所有的测试都通过，它们就准确地传达了系统的内部行为。文档也不会过时。</p>
+<h3 id="保持简单"><a href="#保持简单" class="headerlink" title="保持简单"></a>保持简单</h3><p>有很多愿意导致开发人员制造非必要的复杂性：</p>
+<ol>
+<li>时间压力；</li>
+<li>缺乏学习；</li>
+<li>已有的复杂；</li>
+<li>害怕改代码；</li>
+<li>臆测；</li>
+</ol>
+<p>但是保持简单才是在持续变化的环境中的生存之道。最好的防范办法就是保持简单的设计：代码易读、没有冗余、没有无谓的复杂性。具有这些特征的系统会最大程度地降低维护成本。</p>
+<h3 id="恪守测试驱动开发周期"><a href="#恪守测试驱动开发周期" class="headerlink" title="恪守测试驱动开发周期"></a>恪守测试驱动开发周期</h3><p>请遵循“红-绿-重构”周期，非常重要。</p>
+<h2 id="成功运用-TDD-的方法"><a href="#成功运用-TDD-的方法" class="headerlink" title="成功运用 TDD 的方法"></a>成功运用 TDD 的方法</h2><h3 id="下一个测试是什么"><a href="#下一个测试是什么" class="headerlink" title="下一个测试是什么"></a>下一个测试是什么</h3><p>一个答案便是：如果一个测试需要的产品代码最少，那么就写这个测试。</p>
+<p>还可以使用<code>变换优先级假设（Transformation Priority Premise，TPP）</code>模式，第十章有讲解。大致描述：将每步变换分类。所有的变换按从最简单（最高优先级）到最复杂（最低优先级）安排优先级顺序。你要做的就是选择一个最高优先级的变换，然后为此变换写一个测试。按照变换优先级增量地进行，就能得到一个理想的测试顺序。</p>
+<ul>
+<li>除此之外，可以回答下列问题做出决定：<ol>
+<li>从逻辑上来说，那个行为最具有意义？</li>
+<li>你可以验证这个有意义的行为中哪个最小集合？</li>
+<li>你能写一个测试来说明当前的行为不完备吗？</li>
+</ol>
+</li>
+</ul>
+<h3 id="十分钟限制"><a href="#十分钟限制" class="headerlink" title="十分钟限制"></a>十分钟限制</h3><p>TDD 依赖较短的反馈周期。但有时遇到困难，例如重构代码时破坏了一些测试，又或者需要 GDB 工具查找问题。</p>
+<p>当遇到这些痛苦时间后，从上一个测试通过算起，不要超过 10 分钟。如果限定时间到了，那么丢掉之前的修改重新来过。不要过分纠结代码，特别时和现在做的不相干的代码，大可忽略他们，不要写超过 10 分钟的代码，你的方案可能质量不高。重新整理思绪，用全新的视角与方法再进行尝试。</p>
+<h3 id="代码缺陷"><a href="#代码缺陷" class="headerlink" title="代码缺陷"></a>代码缺陷</h3><p>使用 TDD 几乎不会出现一些愚蠢的逻辑错误。那还会有哪些呢？其他的事情也会出现问题：没人预料到的条件、不同步的外部事情（例如，配置文件），以及多个方法或类合在一起时表现出的奇怪行为。如果规范有问题也会出错，包括因粗心而忽略掉一些东西，你和客户间的误解。TDD 不是银弹，却有助于消除一些人人都会犯的逻辑错误。（更重要的是，它是精细打磨系统设计的绝妙方法。）</p>
+<p>当 QA 或客户支持团队当面给你指出一个代码缺陷时，你该怎么做？嗯，测试驱动！你或许可以先写一些简单的测试来探测系统行为。专注于相关代码的测试能帮助你更好地理解代码是怎样工作的，也有助于解读代码缺陷。有些时候，你可以保留这些测试，并把它们用作特征测试。有时候则可以丢弃这些类似一次性工具的测试。一旦查明问题根源，也不要简单修复，继续做其他事情吧。我们是在测试驱动开发！相反，写一个你认为能模拟暴露缺陷的行为的测试。确保测试失败（红），修复它（绿），重构。</p>
+<h3 id="禁用测试"><a href="#禁用测试" class="headerlink" title="禁用测试"></a>禁用测试</h3><p>正常情况下，在测试驱动开发时一次只关注一件事情。个别情况下，当你忙于让第一个测试通过时，第二个测试失败了。如果另一个测试失败，这意味着你的第一个测试没能遵守“红-绿-重构”周期（除非这两个测试是因为同一个原因而失败）。</p>
+<p>为了不让第二个失败的测试分散你的注意力，可以让它暂时失效。</p>
+<p>不要提交被禁用（或注释掉）的测试的代码，除非你有充足的理由。集成后的代码应该反映系统的当前功能。注释掉的测试（或产品代码）会浪费其他开发者的时间。“测试被注释掉是因为没有这个行为了吗？这个测试有问题？处于变动中？这个测试运行太慢以至于需要的时候才启用它？我是不是应该找个人讨论一下这个测试？”</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本章讲解了一些测试驱动开发的基本概念：</p>
+<ul>
+<li><p>首先就是测试驱动开发周期：</p>
+<ol>
+<li>先写一个测试（“红”）；</li>
+<li>让测试通过（“绿”）；</li>
+<li>优化设计（“重构”）。<blockquote>
+<p>就像第二章中描述的步骤一样，这里将其精简。</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><p>TDD 的前进规则，在 TDD 周期中的每一步，你必须能回答以下几个方面的问题：</p>
+<ol>
+<li>确定测试目标。</li>
+<li>确保新的测试是失败的。</li>
+<li>写出你认为可以让测试通过的代码。</li>
+<li>确保所有测试都能通过。</li>
+<li>整理刚才的代码改动。</li>
+<li>确保所有测试再次通过。</li>
+</ol>
+</li>
+<li><p>TDD 三条准则</p>
+<ol>
+<li>只在让失败测试通过时才编写产品代码。</li>
+<li>当测试刚好失败时，停止继续编写。编译失败也是失败。</li>
+<li>只编写能刚好让一个失败测试通过的产品代码。</li>
+</ol>
+</li>
+</ul>
+<h3 id="成功运用-TDD-的方法-1"><a href="#成功运用-TDD-的方法-1" class="headerlink" title="成功运用 TDD 的方法"></a>成功运用 TDD 的方法</h3><ol>
+<li><strong>下一个测试是什么</strong>，这是 TDD 正确前进的重要问题，文中给出三种方案：<ol>
+<li>如果一个测试需要的产品代码最少，那么就写这个测试。</li>
+<li>使用<code>变换优先级假设（Transformation Priority Premise，TPP）</code>模式。</li>
+<li>可以回答下列问题做出决定：<ol>
+<li>从逻辑上来说，那个行为最具有意义？</li>
+<li>你可以验证这个有意义的行为中哪个最小集合？</li>
+<li>你能写一个测试来说明当前的行为不完备吗？</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><strong>十分钟限制</strong>：出现问题开始十分钟如果解决不了，应该回滚并换一种思路了。</li>
+<li><strong>代码缺陷</strong>：TDD 不是银弹无法完全消除错误，但是却有助于消除一些人人都会犯的逻辑错误（更重要的是，它是精细打磨系统设计的绝妙方法。）。当发现了一个新的问题最好的方式便是将错误通过测试代码进行描述，进入“红-绿-重构”周期。</li>
+<li><strong>禁用测试</strong>：正常情况下，在测试驱动开发时一次只关注一件事情。个别情况下，当你忙于让第一个测试通过时，第二个测试失败了。为了不让第二个失败的测试分散你的注意力，可以让它暂时失效。但是不要提交这种被禁用的测试用例，除非你有足够的理由，并且做好完善的备注，避免给别人误导。</li>
+</ol>
+<h3 id="TDD-QA"><a href="#TDD-QA" class="headerlink" title="TDD QA"></a>TDD QA</h3><ol>
+<li>TDD 的好处？<ul>
+<li>与 POUT 即开发完成后再编写测试不同，TDD 事一个更加简明的流程，并且也使用了单元测试。在 TDD 中先编写测试，并且保持测试的粒度尽量小且一致，这样会带来许多好处，最重要的是可以安全地修改现有代码。</li>
+</ul>
+</li>
+<li>如何进行 TDD？<ul>
+<li>在 TDD 中，是以非常小的步伐，增量地往系统中添加新行为。换句话说，为了往系统中加入新的行为，首先会去写一个测试来定义这个行为。这个起初运行失败的测试将驱使你去实现相应的行为。</li>
+</ul>
+</li>
+<li>TDD 与功能测试的区别？<ul>
+<li>TDD 不应该和大量功能的测试混淆。主要区别在于，覆盖了大量功能的测试是与其他代码或者外部实体集成后的整体功能，一般被称为集成测试。此类测试应在验收或者系统测试时进行。</li>
+<li>TDD 主导的是产生单元测试，是去覆盖最小的逻辑代码单元的测试用例。虽说 TDD 在失败测试通过时才编写产品代码的规则，往往会指引者开发者与外部实体代码进行交互，进而编程集成测试，但是者没有关系。<strong>重要的是现指定行为，系统地测试驱动开发系统中的每一块代码</strong>。</li>
+</ul>
+</li>
+</ol>
 
                 
             </div>
@@ -535,7 +754,7 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://hatter-long-blog.vercel.app/2022/05/28/di-yi-pian-bo-ke/">https://hatter-long-blog.vercel.app/2022/05/28/di-yi-pian-bo-ke/</a>
+                    <a href="https://hatter-long-blog.vercel.app/2022/06/02/san-ce-shi-qu-dong-kai-fa-ji-qiao-ji-chu-gai-nian/">https://hatter-long-blog.vercel.app/2022/06/02/san-ce-shi-qu-dong-kai-fa-ji-qiao-ji-chu-gai-nian/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -573,8 +792,8 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%8A%9F%E8%83%BD/">
-                                    <span class="chip bg-color">博客功能</span>
+                                <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                                    <span class="chip bg-color">测试驱动开发技巧</span>
                                 </a>
                             
                         </div>
@@ -626,13 +845,13 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/06/02/yi-ce-shi-qu-dong-kai-fa-ji-qiao-huan-jing-she-zhi/">
+                <a href="/2022/06/02/si-ce-shi-qu-dong-kai-fa-ji-qiao-ce-shi-jie-gou/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="（一）测试驱动开发技巧--环境设置">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="（四）测试驱动开发技巧--测试结构">
                         
-                        <span class="card-title">（一）测试驱动开发技巧--环境设置</span>
+                        <span class="card-title">（四）测试驱动开发技巧--测试结构</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -672,16 +891,16 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/05/28/di-yi-pian-bo-ke/">
+                <a href="/2022/06/02/er-ce-shi-qu-dong-kai-fa-ji-qiao-di-yi-ge-shi-li/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="第一篇博客">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="（二）测试驱动开发技巧--第一个示例">
                         
-                        <span class="card-title">第一篇博客</span>
+                        <span class="card-title">（二）测试驱动开发技巧--第一个示例</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -692,26 +911,25 @@ auto REQUIRES(m_mutex) getFactory(const std::string&amp;amp; id) const -&gt;">
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-02
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/" class="post-category">
-                                    博客建设
+                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
+                                    测试驱动开发技巧
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%8A%9F%E8%83%BD/">
-                        <span class="chip bg-color">博客功能</span>
+                    <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                        <span class="chip bg-color">测试驱动开发技巧</span>
                     </a>
                     
                 </div>

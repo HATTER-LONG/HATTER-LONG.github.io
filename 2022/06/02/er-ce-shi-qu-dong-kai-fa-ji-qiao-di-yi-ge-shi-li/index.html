@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="（二）测试驱动开发技巧--第一个示例, Layton&#39;s Blog">
+    <meta name="keywords" content="（二）测试驱动开发技巧--第一个示例, null">
     <meta name="description" content="测试驱动开发：第一个示例前言写个测试，保证它通过，接着重构设计，这就是 TDD 的全部内容了。
 
 啊哈，我太勤快了，这么快就更新第二篇文章了，吐槽下身份证过期了导致旅游计划被搁置 😓，疫情下太久没用过身份证了，没想到还过期了。
@@ -22,7 +22,7 @@
 
     
 
-    <title>（二）测试驱动开发技巧--第一个示例 | Layton&#39;s Blog</title>
+    <title>（二）测试驱动开发技巧--第一个示例 | null</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -50,7 +50,7 @@
                     
                     <img src="/medias/logo.png" class="logo-img" alt="LOGO">
                     
-                    <span class="logo-span">Layton&#39;s Blog</span>
+                    <span class="logo-span"></span>
                 </a>
             </div>
             
@@ -127,7 +127,7 @@
         
         <img src="/medias/logo.png" class="logo-img circle responsive-img">
         
-        <div class="logo-name">Layton&#39;s Blog</div>
+        <div class="logo-name"></div>
         <div class="logo-desc">
             
             随机更新
@@ -553,21 +553,21 @@
 <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>现在得到了与前边编译失败不同的结果，断言失败。当然这是必然的，因为 encode 方法并没有什么实现。</p>
-<pre class="line-numbers language-c++"><code class="language-c++">/**
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token comment" spellcheck="true">/**
  * @brief Soundex 算法类
  *
- */
-class Soundex
-{
-public:
-    /**
+ */</span>
+<span class="token keyword">class</span> <span class="token class-name">Soundex</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token comment" spellcheck="true">/**
      * @brief 按照 Soundex 算法转换输入的字符串内容
      *
      * @param word
      * @return std::string
-     */
-    std::string encode(const std::string& Word) const { return "A"; }
-};
+     */</span>
+    std<span class="token operator">::</span>string <span class="token function">encode</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Word<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token string">"A"</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>现在断言能通过了，不过功能并没有完善，不过这里展示了一个渐进式 TDD 开发的过程。</p>
 <h2 id="去掉不干净的代码"><a href="#去掉不干净的代码" class="headerlink" title="去掉不干净的代码"></a>去掉不干净的代码</h2><p>即使代码很短也可能存在问题，TDD 为开发提供了更好的时机去修复，即每次完成单元测试代码以及功能代码编写后都可以进行快速的增量审阅，避免小问题越积越多。</p>
@@ -1614,18 +1614,17 @@ std<span class="token operator">::</span>string <span class="token function">las
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/06/02/er-ce-shi-qu-dong-kai-fa-ji-qiao-di-yi-ge-shi-li/">
+                <a href="/2022/06/02/san-ce-shi-qu-dong-kai-fa-ji-qiao-ji-chu-gai-nian/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="（二）测试驱动开发技巧--第一个示例">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="（三）测试驱动开发技巧--基础概念">
                         
-                        <span class="card-title">（二）测试驱动开发技巧--第一个示例</span>
+                        <span class="card-title">（三）测试驱动开发技巧--基础概念</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1635,9 +1634,9 @@ std<span class="token operator">::</span>string <span class="token function">las
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-02
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-02
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1650,7 +1649,6 @@ std<span class="token operator">::</span>string <span class="token function">las
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1844,7 +1842,7 @@ std<span class="token operator">::</span>string <span class="token function">las
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">12.1k</span>
+                        class="white-color">39.5k</span>
             
             
             

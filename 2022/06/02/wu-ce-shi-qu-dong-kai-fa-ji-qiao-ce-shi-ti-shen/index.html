@@ -1,0 +1,1956 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="（五）测试驱动开发技巧--测试替身, null">
+    <meta name="description" content="测试替身在前面的章节中了解了 TDD 的基础内容，但是在真实的生产环境中对象必须协同工作，有时依赖合作对象使得 TDD 变得举步维艰，本章将会介绍如何使用测试替身来解决。
+
+测试替身解答了一个困惑我好久的问题，就是代码耦合的情况下我该如何测">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    
+
+    <title>（五）测试驱动开发技巧--测试替身 | null</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/aos/3.0.0-beta.6/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/lightgallery/1.6.12/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span"></span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name"></div>
+        <div class="logo-desc">
+            
+            随机更新
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/HATTER-LONG" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/HATTER-LONG" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">（五）测试驱动开发技巧--测试替身</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                                <span class="chip bg-color">测试驱动开发技巧</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
+                                测试驱动开发技巧
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-06-02
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    10k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    39 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="测试替身"><a href="#测试替身" class="headerlink" title="测试替身"></a>测试替身</h1><p>在前面的章节中了解了 TDD 的基础内容，但是在真实的生产环境中对象必须协同工作，有时依赖合作对象使得 TDD 变得举步维艰，本章将会介绍如何使用测试替身来解决。</p>
+<ul>
+<li>测试替身解答了一个困惑我好久的问题，就是代码耦合的情况下我该如何测试这个函数会按照要求调用其他关联组件。测试替身即可以让你编写代码来感知到调用以及调用次数，还会倒逼你去尝试注入依赖组件从而进行解藕，相信看完这一章会有所感受。</li>
+<li>本章会有一些代码标注了 git hash 值，标识我是那次修改对应的代码，方便对比。这不得夸下当时我可太有耐心了 😄。</li>
+</ul>
+<h2 id="依赖问题"><a href="#依赖问题" class="headerlink" title="依赖问题"></a>依赖问题</h2><ul>
+<li>Story：位置描述服务<ul>
+<li>作为一个地图应用开发人员，我需要这样的服务，即它能基于给定的位置（经纬度）返回一行信息来描述离它最近的地方。</li>
+</ul>
+</li>
+</ul>
+<p>构建位置描述服务中一个重要的工作就是去调用一个外部 API，这个 API 能接受一个位置信息，并返回位置数据。书中举例 REST 服务，给定一个 GET URL，它会以 JSON 格式返回位置数据。测试驱动开发位置描述服务会遇到一个难题。至少出于以下几点原因，对 REST 调用的依赖会成为一个问题。</p>
+<ol>
+<li>通过一个 HTTP 来调用 REST 服务非常缓慢，这也导致测试的运行速度变慢。</li>
+<li>REST 服务可能不是一直处于可用状态。</li>
+<li>REST 服务返回的结果得不到保证。</li>
+</ol>
+<p>为什么这些依赖会使得测试变得困难呢？</p>
+<ol>
+<li>依赖一个慢速的协作对象会让测试慢得难以忍受。</li>
+<li>依赖一个不稳定的服务（要么不可用，要么每次返回不同的结果）会导致测试间断性地失败。</li>
+</ol>
+<p>而且如果当前没有发起 HTTP 调用的代码，可能是被人还没有设计实现完成，同时你也没有时间自己去实现一个 HTTP 类怎么办？如果自己就是负责 HTTP 类实现的人怎么办？或许可以先了解下位置描述服务整体设计与使用方法后在考虑 HTTP 工具类的具体实现细节。</p>
+<h2 id="测试替身原理"><a href="#测试替身原理" class="headerlink" title="测试替身原理"></a>测试替身原理</h2><p>在上述提到的问题，可以利用<code>测试替身</code>来避免被这类问题阻塞。测试替身起到代替的作用：它代替了实际产品代码中的类。</p>
+<p>如上文 HTTP 类带来了困难，可以为其创建测试替身！当客户提交一个 GET 请求至 HTTP 对象时，测试替身能够返回预先准备的响应。测试替身应该返回什么是由测试自己决定的。</p>
+<ul>
+<li>假设需要构建一个服务，有以下几个功能类可以复用（当前还未实现）：<ul>
+<li>CurlHttp，它使用 cURL 发起 HTTP 请求。这个类派生自纯虚基类 Http，这个基类定义两个函数：get() 和 initialize()。客户端代码在调用 get() 前必须先调用 initialize()。</li>
+<li>Address，一个包含几个字段的结构。</li>
+<li>AddressExtractor，它借助 JsonCpp 库从一个 JSON 字符串中提取地址 (本文将 Catch2 实现版本从书中的 JsonCpp 切换成 nlohmann/json.hpp)，并填写 Address 结构。</li>
+</ul>
+</li>
+</ul>
+<p>可能的代码流程：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">CurlHttp http<span class="token punctuation">;</span>
+http<span class="token punctuation">.</span><span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">auto</span> jsonResponse <span class="token operator">=</span> http<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token function">createGetRequestUrl</span><span class="token punctuation">(</span>latitude<span class="token punctuation">,</span> longitude<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+AddressExtractor extractor<span class="token punctuation">;</span>
+<span class="token keyword">auto</span> address <span class="token operator">=</span> extractor<span class="token punctuation">.</span><span class="token function">addressFrom</span><span class="token punctuation">(</span>jsonResponse<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">return</span> <span class="token function">summaryDescription</span><span class="token punctuation">(</span>address<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="手动打造的测试替身"><a href="#手动打造的测试替身" class="headerlink" title="手动打造的测试替身"></a>手动打造的测试替身</h2><p><a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/TDD_Learning">配套工程</a>参考代码版本：Git SHA (92c0b746c3b862199597c6a9eb2da93abca8a5aa)；</p>
+<p>如果想要使用替身，首先必须使其取代 CurlHttp 类的行为。C++提供了许多不同的方法，其中多态的使用频率最高。我们先来看一下 CurlHttp 类所实现的基类 <a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/TDD_Learning/tree/master/Include/Http.h">Http 接口</a>。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">virtual</span> <span class="token operator">~</span><span class="token function">Http</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+<span class="token keyword">virtual</span> <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">virtual</span> std<span class="token operator">::</span>string <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>利用多态只需要在派生类中覆写虚函数，并在这个覆写中提供特别的行为来支持测试，然后将基类指针传递给地名描述服务。现在来进行一些<a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/TDD_Learning/tree/master/test/Gmock/PlaceDescriptionServiceTest/PlaceDescriptionServiceTest.cpp">测试</a>：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">APlaceDescriptionService</span> <span class="token operator">:</span> <span class="token keyword">public</span> Test
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string ValidLatitude<span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string ValidLongitude<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HttpStub httpStub<span class="token punctuation">;</span>
+    PlaceDescriptionService service <span class="token punctuation">{</span> <span class="token operator">&amp;</span>httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> description <span class="token operator">=</span> service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>description<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token string">"Drury Ln, Fountain, CO, US"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里我们所需的替身 HttpStub 还没有实现，在测试代码文件中先定义一个。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">HttpStub</span> <span class="token operator">:</span> <span class="token keyword">public</span> Http
+<span class="token punctuation">{</span>
+    <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> override <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+    std<span class="token operator">::</span>string <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span> override <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token string">"???"</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HttpStub httpStub<span class="token punctuation">;</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>返回问号字符串没有什么作用，可以尝试会返回一个搜索服务真实的 Json 响应，<a target="_blank" rel="noopener" href="https://nominatim.org/release-docs/develop/api/Search/#parameters">内容可以尝试向 Nominatim 提交 Get 请求获取</a>，这里保持书中的示例：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">HttpStub</span> <span class="token operator">:</span> <span class="token keyword">public</span> Http
+<span class="token punctuation">{</span>
+    <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> override <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+    std<span class="token operator">::</span>string <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span> override
+    <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> R<span class="token string">"({ "</span>address"<span class="token operator">:</span> <span class="token punctuation">{</span>
+         <span class="token string">"road"</span><span class="token operator">:</span><span class="token string">"Drury Ln"</span><span class="token punctuation">,</span>
+         <span class="token string">"city"</span><span class="token operator">:</span><span class="token string">"Fountain"</span><span class="token punctuation">,</span>
+         <span class="token string">"state"</span><span class="token operator">:</span><span class="token string">"CO"</span><span class="token punctuation">,</span>
+         <span class="token string">"country"</span><span class="token operator">:</span><span class="token string">"US"</span> <span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">)</span>"<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接下来将 HttpStub 实例传递给了 PlaceDescriptionService 的构造函数。和原先的预想相比，我们正在改变设计。<strong>服务对象本身不创建私有的 Http 实例，相反，使用该服务对象的客户端需要自己创建一个 Http 实例，并把它传给服务对象</strong>。<a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/TDD_Learning/tree/master/Src/PlaceDescriptionService/PlaceDescriptionService.cpp">服务对象</a>通过一个基类指针持有这个 Http 实例。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">PlaceDescriptionService<span class="token operator">::</span><span class="token function">PlaceDescriptionService</span><span class="token punctuation">(</span>Http<span class="token operator">*</span> IHttp<span class="token punctuation">)</span>
+        <span class="token operator">:</span> <span class="token function">MHttp</span><span class="token punctuation">(</span>IHttp<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>利用多态实现了灵活的测试替身，功能类 <code>PlaceDescriptionService</code> 不清楚它持有的 Http 实例时一个真实的还是一个测试用的实例。</p>
+<p><strong>参考代码版本：Git SHA (05f37b1b63764fdd54fe4d9555b3b9d276136d6d)；</strong></p>
+<p>继续向下 summaryDescription 接口调用的参数是需要传入两个坐标，这里为 ValidLatitude、ValidLongitude 进行初始化：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">APlaceDescriptionService</span> <span class="token operator">:</span> <span class="token keyword">public</span> Test
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string ValidLatitude<span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string ValidLongitude<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> string APlaceDescriptionService<span class="token operator">::</span><span class="token function">ValidLatitude</span><span class="token punctuation">(</span><span class="token string">"38.005"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> string APlaceDescriptionService<span class="token operator">::</span><span class="token function">ValidLongitude</span><span class="token punctuation">(</span><span class="token string">"-104.44"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这时编译成功可以运行一下哎，不出意外失败了这时由于还没有具体实现 summaryDescription 接口的功能。</p>
+<p>至此，可以编写 summaryDescription() 了。但是首先还需要一个 AddressExtractor。它能解析 JSON 响应，并填写 Address 结构体。详细的过程略过，可以查阅<a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/TDD_Learning/tree/master/Src/PlaceDescriptionService/AddressExtractor.cpp">源码</a>。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token function">TEST_F</span><span class="token punctuation">(</span>AnAddressExtractor<span class="token punctuation">,</span> ReturnsPopulatedAddressForValidJsonResult<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token keyword">auto</span><span class="token operator">*</span> json <span class="token operator">=</span> R"<span class="token punctuation">(</span><span class="token punctuation">{</span>
+         <span class="token string">"place_id"</span><span class="token operator">:</span><span class="token string">"15331615"</span><span class="token punctuation">,</span>
+         <span class="token string">"address"</span><span class="token operator">:</span><span class="token punctuation">{</span>
+            <span class="token string">"road"</span><span class="token operator">:</span><span class="token string">"War Eagle Court"</span><span class="token punctuation">,</span>
+            <span class="token string">"city"</span><span class="token operator">:</span><span class="token string">"Colorado Springs"</span><span class="token punctuation">,</span>
+            <span class="token string">"state"</span><span class="token operator">:</span><span class="token string">"Colorado"</span><span class="token punctuation">,</span>
+            <span class="token string">"country"</span><span class="token operator">:</span><span class="token string">"United States of America"</span><span class="token punctuation">,</span>
+         <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>"<span class="token punctuation">;</span>
+
+    <span class="token keyword">auto</span> address <span class="token operator">=</span> Extractor<span class="token punctuation">.</span><span class="token function">addressFrom</span><span class="token punctuation">(</span>json<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>address<span class="token punctuation">.</span>Road<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token string">"War Eagle Court"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>address<span class="token punctuation">.</span>City<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token string">"Colorado Springs"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>address<span class="token punctuation">.</span>State<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token string">"Colorado"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>address<span class="token punctuation">.</span>Country<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token string">"United States of America"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最后我们实现 summaryDescription()：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">string PlaceDescriptionService<span class="token operator">::</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> string<span class="token operator">&amp;</span> Longitude<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token keyword">auto</span><span class="token operator">*</span> getRequestUrl <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> jsonResponse <span class="token operator">=</span> MHttp<span class="token operator">-</span><span class="token operator">></span><span class="token function">get</span><span class="token punctuation">(</span>getRequestUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    AddressExtractor extractor<span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> address <span class="token operator">=</span> extractor<span class="token punctuation">.</span><span class="token function">addressFrom</span><span class="token punctuation">(</span>jsonResponse<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> address<span class="token punctuation">.</span>Road <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span> address<span class="token punctuation">.</span>City <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span> address<span class="token punctuation">.</span>State <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span> address<span class="token punctuation">.</span>Country<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>下边参考代码版本：Git SHA (432dedc2c1589fe7a8bfb3487879fec56997e6fa)；</strong></p>
+<p>当测试调用 summaryDescription() 时，对 get() 的调用作用到 HttpStub 实例上，返回我们预先硬编码的 Json 字符串。但是请求的 URL 应该是什么，当正在接受测试的代码和一个协同对象交互时，需要保证给它传递一个正确的值。返回硬编码值的测试替身叫作存根（stub）。类似地，我们也可以称 get() 为存根方法。</p>
+<p>实际上，当传给 get() 一个空的字符串时就可以进行增量的开发了，接下来编写能够正确给 getRequestUrl 赋值的代码。<strong>利用三角法，并为第二个位置添加一个断言</strong>。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">HttpStub</span> <span class="token operator">:</span> <span class="token keyword">public</span> Http
+<span class="token punctuation">{</span>
+    <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> override <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+    std<span class="token operator">::</span>string <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span> override
+    <span class="token punctuation">{</span>
+        <span class="token function">verify</span><span class="token punctuation">(</span>Url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> R<span class="token string">"({ "</span>address"<span class="token operator">:</span> <span class="token punctuation">{</span>
+         <span class="token string">"road"</span><span class="token operator">:</span><span class="token string">"Drury Ln"</span><span class="token punctuation">,</span>
+         <span class="token string">"city"</span><span class="token operator">:</span><span class="token string">"Fountain"</span><span class="token punctuation">,</span>
+         <span class="token string">"state"</span><span class="token operator">:</span><span class="token string">"CO"</span><span class="token punctuation">,</span>
+         <span class="token string">"country"</span><span class="token operator">:</span><span class="token string">"US"</span> <span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">)</span>"<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">void</span> <span class="token function">verify</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">auto</span> <span class="token function">expectedArgs</span><span class="token punctuation">(</span><span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                          <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>Url<span class="token punctuation">,</span> <span class="token function">EndsWith</span><span class="token punctuation">(</span>expectedArgs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在调用 get() 时，存根实现可以确保参数符合预期，接下来修改代码通过测试：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">string PlaceDescriptionService<span class="token operator">::</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> string<span class="token operator">&amp;</span> Longitude<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">const</span> string<span class="token operator">&amp;</span> getRequestUrl <span class="token operator">=</span> <span class="token string">"lat="</span> <span class="token operator">+</span> Latitude <span class="token operator">+</span> <span class="token string">"&amp;lon="</span> <span class="token operator">+</span> Longitude<span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> jsonResponse <span class="token operator">=</span> MHttp<span class="token operator">-</span><span class="token operator">></span><span class="token function">get</span><span class="token punctuation">(</span>getRequestUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    AddressExtractor extractor<span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> address <span class="token operator">=</span> extractor<span class="token punctuation">.</span><span class="token function">addressFrom</span><span class="token punctuation">(</span>jsonResponse<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> address<span class="token punctuation">.</span>Road <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span> address<span class="token punctuation">.</span>City <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span> address<span class="token punctuation">.</span>State <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span> address<span class="token punctuation">.</span>Country<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>由于当前 URL 没有指定服务器路径，修改 verify() 函数，让它传给 get() 一个完整的 URL:</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">verify</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    string <span class="token function">urlStart</span><span class="token punctuation">(</span><span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> <span class="token function">expectedArgs</span><span class="token punctuation">(</span>urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                        <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>Url<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span>expectedArgs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最终实现 summaryDescription() 方法后：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">string PlaceDescriptionService<span class="token operator">::</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> string<span class="token operator">&amp;</span> Longitude<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">auto</span> request <span class="token operator">=</span> <span class="token function">createGetRequestUrl</span><span class="token punctuation">(</span>Latitude<span class="token punctuation">,</span> Longitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> response <span class="token operator">=</span> <span class="token function">get</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token function">summaryDescription</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+string PlaceDescriptionService<span class="token operator">::</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Response<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    AddressExtractor extractor<span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> address <span class="token operator">=</span> extractor<span class="token punctuation">.</span><span class="token function">addressFrom</span><span class="token punctuation">(</span>Response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> address<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+string PlaceDescriptionService<span class="token operator">::</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> RequestUrl<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> MHttp<span class="token operator">-</span><span class="token operator">></span><span class="token function">get</span><span class="token punctuation">(</span>RequestUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+string PlaceDescriptionService<span class="token operator">::</span><span class="token function">createGetRequestUrl</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> string<span class="token operator">&amp;</span> Longitude<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    string server <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    string document <span class="token punctuation">{</span> <span class="token string">"nominatim/v1/reverse"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> server <span class="token operator">+</span> document <span class="token operator">+</span> <span class="token string">"?"</span> <span class="token operator">+</span> <span class="token function">keyValue</span><span class="token punctuation">(</span><span class="token string">"format"</span><span class="token punctuation">,</span> <span class="token string">"json"</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span> <span class="token function">keyValue</span><span class="token punctuation">(</span><span class="token string">"lat"</span><span class="token punctuation">,</span> Latitude<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+           <span class="token function">keyValue</span><span class="token punctuation">(</span><span class="token string">"lon"</span><span class="token punctuation">,</span> Longitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+string PlaceDescriptionService<span class="token operator">::</span><span class="token function">keyValue</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Key<span class="token punctuation">,</span> <span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Value<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Key <span class="token operator">+</span> <span class="token string">"="</span> <span class="token operator">+</span> Value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>现在代码中还欠缺的地方：<ol>
+<li>重复代码：测试中的文本和产品代码中的文本完全一样。第七章会讲解如何去除这种重复。</li>
+<li>PlaceDescriptionService 中的一些结构是可以复用的。可以考虑如何设计更加方便支持第二个服务。</li>
+</ol>
+</li>
+</ul>
+<h2 id="在使用测试替身时提升测试的抽象程度"><a href="#在使用测试替身时提升测试的抽象程度" class="headerlink" title="在使用测试替身时提升测试的抽象程度"></a>在使用测试替身时提升测试的抽象程度</h2><p><strong>参考代码版本：Git SHA (71f934b009b744e4fd3d66d1a8d21792ad88471a)；</strong></p>
+<p>在使用测试替身时，由于测试中模糊的信息增加了许多理解的难度，例如 ReturnsDescriptionForValidLocation 测试中隐藏了许多相关信息，为什么最终断言的比对目标是 Drury Ln, Fountain, CO, US 这些都会给阅读测试的人查看 HttpStub 中与之相关的实现细节才能理解。</p>
+<p>因此我们需要重构测试，使它可以自包含。可以修改 HttpStub 的实现，让测试负责设定 get() 方法的返回值。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">HttpStub</span> <span class="token operator">:</span> <span class="token keyword">public</span> Http
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    string ReturnResponse<span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> override <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+    std<span class="token operator">::</span>string <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span> override
+    <span class="token punctuation">{</span>
+        <span class="token function">verify</span><span class="token punctuation">(</span>Url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> ReturnResponse<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">void</span> <span class="token function">verify</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span>
+    <span class="token punctuation">{</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HttpStub httpStub<span class="token punctuation">;</span>
+    httpStub<span class="token punctuation">.</span>ReturnResponse <span class="token operator">=</span> R<span class="token string">"({"</span>address"<span class="token operator">:</span> <span class="token punctuation">{</span>
+                                    <span class="token string">"road"</span><span class="token operator">:</span><span class="token string">"Drury Ln"</span><span class="token punctuation">,</span>
+                                    <span class="token string">"city"</span><span class="token operator">:</span><span class="token string">"Fountain"</span><span class="token punctuation">,</span>
+                                    <span class="token string">"state"</span><span class="token operator">:</span><span class="token string">"CO"</span><span class="token punctuation">,</span>
+                                    <span class="token string">"country"</span><span class="token operator">:</span><span class="token string">"US"</span> <span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">)</span>"<span class="token punctuation">;</span>
+    PlaceDescriptionService service <span class="token punctuation">{</span> <span class="token operator">&amp;</span>httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> description <span class="token operator">=</span> service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>description<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token string">"Drury Ln, Fountain, CO, US"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样阅读的人可以将摘要描述和 HttpStub 返回的 JSON 对象对应起来，类似的，也可以将 URL 验证以到测试中。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">HttpStub</span> <span class="token operator">:</span> <span class="token keyword">public</span> Http
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    string ReturnResponse<span class="token punctuation">;</span>
+    string ExpectedURL<span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> override <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+    std<span class="token operator">::</span>string <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span> override
+    <span class="token punctuation">{</span>
+        <span class="token function">verify</span><span class="token punctuation">(</span>Url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> ReturnResponse<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">void</span> <span class="token function">verify</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span> <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>Url<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span>ExpectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HttpStub httpStub<span class="token punctuation">;</span>
+    httpStub<span class="token punctuation">.</span>ReturnResponse <span class="token operator">=</span> <span class="token comment" spellcheck="true">//....</span>
+
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    httpStub<span class="token punctuation">.</span>ExpectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                           <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+
+    PlaceDescriptionService service <span class="token punctuation">{</span> <span class="token operator">&amp;</span>httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//.....</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>现在，在测试代码中可以清晰的表达出意图，同时 HttpStub 消减至一个小类，返回需要的存根同时验证期望的信息。，一个 HttpStub 对象验证了这样的事实：会有一个期望的 URL 传给 HttpStub。</p>
+<h2 id="使用模拟对象工具"><a href="#使用模拟对象工具" class="headerlink" title="使用模拟对象工具"></a>使用模拟对象工具</h2><p>本结学习如何使用 Google Mock 来实现对多个相似的模拟对象辅助生成 Mock 对象的方法。</p>
+<h3 id="定义一个派生类"><a href="#定义一个派生类" class="headerlink" title="定义一个派生类"></a>定义一个派生类</h3><p><strong>参考代码版本：Git SHA (74290eccd1b383da76082716ac070f7b06609a28)；</strong></p>
+<p>现在已重新开发 summaryDescription() 举例，我们需要模拟 HTTP 的方法：get() 和 initialize()。</p>
+<p>为了使用 Google Mock 自身的模拟对象，我们首先需要创建一个派生类用来声明所模拟的方法。Google Mock 允许我们简洁地定义名为 HttpStub 的派生类。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">HttpStub</span> <span class="token operator">:</span> <span class="token keyword">public</span> Http
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">MOCK_METHOD0</span><span class="token punctuation">(</span>initialize<span class="token punctuation">,</span> <span class="token keyword">void</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 使用宏来声明模拟的方法</span>
+    <span class="token function">MOCK_CONST_METHOD1</span><span class="token punctuation">(</span>get<span class="token punctuation">,</span> <span class="token function">string</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 1 标识一个参数，第一个参数成员函数名称，第二个宏参数给出方法其他信息(返回值和参数声明)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>GoogleTest 1.10.x Release 版本支持了一个新宏定义，舍去了繁琐的方法，使用如下：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">HttpStub</span> <span class="token operator">:</span> <span class="token keyword">public</span> Http
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">MOCK_METHOD</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">,</span> initialize<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>override<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">MOCK_METHOD</span><span class="token punctuation">(</span>string<span class="token punctuation">,</span> get<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">const</span> override<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+CmakeLists<span class="token punctuation">.</span>txt
+<span class="token comment" spellcheck="true">//当前使用的 googletest 版本为 1.10.x MOCK_METHOD 宏在编译器下会有错误信息，依据 gmock issues 无用报错 关闭相关警告</span>
+<span class="token function">add_definitions</span><span class="token punctuation">(</span><span class="token operator">-</span>Wno<span class="token operator">-</span>gnu<span class="token operator">-</span>zero<span class="token operator">-</span>variadic<span class="token operator">-</span>macro<span class="token operator">-</span>arguments<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Google Mock 把一个 mock 声明转为派生类中的一个成员函数。Google Mock 还在幕后实现了这个函数。</p>
+<h3 id="设立期望"><a href="#设立期望" class="headerlink" title="设立期望"></a>设立期望</h3><p><strong>参考代码版本：Git SHA (8e49b0b7091856f6308584b40d1d8bdc2114c621)；</strong></p>
+<p>首先屏蔽掉 summaryDescription() 的具体实现重新开发一次。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HttpStub httpStub<span class="token punctuation">;</span>
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> expectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                       <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>expectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    PlaceDescriptionService service <span class="token punctuation">{</span> <span class="token operator">&amp;</span>httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过 EXPECT_CALL 宏设立期望，这个宏配置 Google Mock 去验证给定的 expectedURL 参数去调用 httpStub 对象的 get() 逻辑是否吻合。其断言生效在模拟对象跳出作用域后开始验证，断言步骤被隐式的执行了。</p>
+<p>如果需要，也可以强制 Google Mock 在模拟对象跳出作用域前做验证: <code>Mock::VerifyAndClearExpectations(&amp;httpStub);</code></p>
+<p>首先空实现 summaryDescription()，让测试可以编译运行：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">string PlaceDescriptionService<span class="token operator">::</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> string<span class="token operator">&amp;</span> Longitude<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>执行后，测试出现失败信息，直到测试结束为止，httpStub 对象的 get() 也没有被调用。：</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[----------] 1 test from APlaceDescriptionService
+[ RUN      ] APlaceDescriptionService.ReturnsDescriptionForValidLocation
+/home/caolei/WorkSpace/TDD_Learning/test/Gmock/PlaceDescriptionServiceTestByGMock/PlaceDescriptionServiceTest.cpp:36: Failure
+Actual function call count doesn't match EXPECT_CALL(httpStub, get(expectedURL))...
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] APlaceDescriptionService.ReturnsDescriptionForValidLocation (0 ms)
+[----------] 1 test from APlaceDescriptionService (0 ms total)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>修改代码使之通过测试：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">string PlaceDescriptionService<span class="token operator">::</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> string<span class="token operator">&amp;</span> Longitude<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    string server <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    string document <span class="token punctuation">{</span> <span class="token string">"nominatim/v1/reverse"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// clang-format off</span>
+    string url <span class="token operator">=</span> server <span class="token operator">+</span> document <span class="token operator">+</span> <span class="token string">"?"</span> <span class="token operator">+</span>
+                    <span class="token function">keyValue</span><span class="token punctuation">(</span><span class="token string">"format"</span><span class="token punctuation">,</span> <span class="token string">"json"</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                    <span class="token function">keyValue</span><span class="token punctuation">(</span><span class="token string">"lat"</span><span class="token punctuation">,</span> Latitude<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                    <span class="token function">keyValue</span><span class="token punctuation">(</span><span class="token string">"lon"</span><span class="token punctuation">,</span> Longitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// clang-format on</span>
+    <span class="token keyword">auto</span> response <span class="token operator">=</span> MHttp<span class="token operator">-</span><span class="token operator">></span><span class="token function">get</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    AddressExtractor extractor<span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> address <span class="token operator">=</span> extractor<span class="token punctuation">.</span><span class="token function">addressFrom</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> address<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="松模拟和严模拟"><a href="#松模拟和严模拟" class="headerlink" title="松模拟和严模拟"></a>松模拟和严模拟</h3><p><strong>参考代码版本：Git SHA (46639a97cb73d0cd34071e70e1cc0bd05560fc94)；</strong></p>
+<p>summaryDescription() 的视线中并没有遵顼 CurlHttp 接口规则，即在使用 get() 前没有进行 initialize 初始化。可以在测试中新增一个期望来确保初始化被调用：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HttpStub httpStub<span class="token punctuation">;</span>
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> expectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                       <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>expectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    PlaceDescriptionService service <span class="token punctuation">{</span> <span class="token operator">&amp;</span>httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接下来保持 summaryDescription() 中策略不变，单独抽离 get() 接口成为单独的方法：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">string PlaceDescriptionService<span class="token operator">::</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    MHttp<span class="token operator">-</span><span class="token operator">></span><span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> MHttp<span class="token operator">-</span><span class="token operator">></span><span class="token function">get</span><span class="token punctuation">(</span>Url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="模拟对象中的顺序"><a href="#模拟对象中的顺序" class="headerlink" title="模拟对象中的顺序"></a>模拟对象中的顺序</h3><p><strong>参考代码版本：Git SHA (e1a51df6b0e5af65d328017b1e9c9ebb1b46b0ea)；</strong></p>
+<p>initialize() 和 get() 的调用是有先后顺序的，默认情况下 GMOCK 不会验证满足调用期望的顺序，如果想要验证，可以定义 InSequence 实例：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    InSequence forceExpectationOrder<span class="token punctuation">;</span>
+
+    HttpStub httpStub<span class="token punctuation">;</span>
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> expectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                       <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>expectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    PlaceDescriptionService service <span class="token punctuation">{</span> <span class="token operator">&amp;</span>httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>还可以更加精细控制，具体使用可以参见 <a target="_blank" rel="noopener" href="https://github.com/google/googletest/blob/master/docs/gmock_cheat_sheet.md">GoogleMock DOC</a>：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HttpStub httpStub<span class="token punctuation">;</span>
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> expectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                       <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+
+    Expectation Expectations <span class="token operator">=</span> <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>expectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">After</span><span class="token punctuation">(</span>Expectations<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    PlaceDescriptionService service <span class="token punctuation">{</span> <span class="token operator">&amp;</span>httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="巧妙的模拟工具特性"><a href="#巧妙的模拟工具特性" class="headerlink" title="巧妙的模拟工具特性"></a>巧妙的模拟工具特性</h3><p><strong>参考代码版本：Git SHA (8478946c5e86720daeec8eba54ef1dd5438899a1)；</strong></p>
+<p>EXPECT_CALL 宏支持许多修饰符。它的语法如下（?和<em>代表每个修饰符的基数：?表示可以选用修饰符一次；</em>表示可以多次使用修饰符。）：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>mock<span class="token operator">-</span>object<span class="token punctuation">,</span> <span class="token function">method</span> <span class="token punctuation">(</span>matchers<span class="token punctuation">)</span><span class="token operator">?</span><span class="token punctuation">)</span>
+     <span class="token punctuation">.</span><span class="token function">With</span><span class="token punctuation">(</span>multi<span class="token operator">-</span>argument<span class="token operator">-</span>matcher<span class="token punctuation">)</span>  <span class="token operator">?</span>
+     <span class="token punctuation">.</span><span class="token function">Times</span><span class="token punctuation">(</span>cardinality<span class="token punctuation">)</span>            <span class="token operator">?</span>
+     <span class="token punctuation">.</span><span class="token function">InSequence</span><span class="token punctuation">(</span>sequences<span class="token punctuation">)</span>         <span class="token operator">*</span>
+     <span class="token punctuation">.</span><span class="token function">After</span><span class="token punctuation">(</span>expectations<span class="token punctuation">)</span>           <span class="token operator">*</span>
+     <span class="token punctuation">.</span><span class="token function">WillOnce</span><span class="token punctuation">(</span>action<span class="token punctuation">)</span>              <span class="token operator">*</span>
+     <span class="token punctuation">.</span><span class="token function">WillRepeatedly</span><span class="token punctuation">(</span>action<span class="token punctuation">)</span>        <span class="token operator">?</span>
+     <span class="token punctuation">.</span><span class="token function">RetiresOnSaturation</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token operator">?</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>GMOCK 工具可以支持几乎所有的模拟方式，如下例模拟输入参数的函数并指定一个返回值：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">DifficultCollaborator</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">virtual</span> <span class="token keyword">bool</span> <span class="token function">calculate</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span> Result<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">throw</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token function">TEST</span><span class="token punctuation">(</span>ATarget<span class="token punctuation">,</span> ReturnsAnAmountWhenCalculatePasses<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    DifficultCollaboratorMock difficult<span class="token punctuation">;</span>
+    Target calc<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//SetArgPointee&lt;0>(3) 表示 第 0 个参数值为 3。</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>difficult<span class="token punctuation">,</span> <span class="token function">calculate</span><span class="token punctuation">(</span>_<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">WillOnce</span><span class="token punctuation">(</span><span class="token function">DoAll</span><span class="token punctuation">(</span>SetArgPointee<span class="token operator">&lt;</span><span class="token number">0</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">Return</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> result <span class="token operator">=</span> calc<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>difficult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>GMOCK 还提供了许多功能支持，但是大部分情况只需要基本的机制就足够了，如果在 TDD 过程中经常遇到要用怪异的模拟工具特性，请检查下设计是否做了过多的事情。</p>
+<p>当你尝试着为非测试驱动的、结构不良的系统编写测试并遇到问题时，或许需要使用模拟工具提供的更加强大的特性。我们会在第 8 章中讨论这类问题。</p>
+<h3 id="排除模拟失败"><a href="#排除模拟失败" class="headerlink" title="排除模拟失败"></a>排除模拟失败</h3><ol>
+<li>产品代码中是否有合理调用？</li>
+<li>是否正确定义了模拟方法？</li>
+<li>有没有将要模拟的成员函数声明为虚函数？</li>
+<li>MOCK_METHOD() 声明正不正确？</li>
+<li>排除参数匹配的担忧，为所有参数和返回值使用通配符 testing::_ ，如果测试通过，那么可以确定有一个参数不能被正确匹配。</li>
+</ol>
+<h3 id="一个还是两个测试"><a href="#一个还是两个测试" class="headerlink" title="一个还是两个测试"></a>一个还是两个测试</h3><p>当使用手工创建的模拟对象时，我们最终只用了一个测试来验证最终的目标，即为一个位置生成概要信息描述。但是，在第二个示例中，我们却用了两个测试。</p>
+<p>拥有两个测试还会提供额外的好处。第一，一个模拟验证是一个断言。我们已经用一个断言来验证概要信息字符串了。将测试分为两个，与一个断言一个测试保持一致（参考 7.3 节）。第二，独立的测试更具可读性。由于在 Google Mock 中设立期望会导致很难界定设置断言的位置（这也和 4.2.4 节一致），因此我们为简化基于模拟的测试的努力是值得的。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HttpStub httpStub<span class="token punctuation">;</span>
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> expectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                       <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+
+    Expectation Expectations <span class="token operator">=</span> <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//  get(expectedURL) 这一步同时验证了应该传给 get 的参数与 expectedURL 一致</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>expectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">After</span><span class="token punctuation">(</span>Expectations<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    PlaceDescriptionService service <span class="token punctuation">{</span> <span class="token operator">&amp;</span>httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> FormatsRetrievedAddressIntoSummaryDescription<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    NiceMock<span class="token operator">&lt;</span>HttpStub<span class="token operator">></span> httpStub<span class="token punctuation">;</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>_<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">WillOnce</span><span class="token punctuation">(</span><span class="token function">Return</span><span class="token punctuation">(</span>
+            R<span class="token string">"({ "</span>address"<span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token string">"road"</span><span class="token operator">:</span><span class="token string">"Drury Ln"</span><span class="token punctuation">,</span>
+              <span class="token string">"city"</span><span class="token operator">:</span><span class="token string">"Fountain"</span><span class="token punctuation">,</span>
+              <span class="token string">"state"</span><span class="token operator">:</span><span class="token string">"CO"</span><span class="token punctuation">,</span>
+              <span class="token string">"country"</span><span class="token operator">:</span><span class="token string">"US"</span> <span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">)</span>"<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    PlaceDescriptionService <span class="token function">service</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>httpStub<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">auto</span> description <span class="token operator">=</span> service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">ASSERT_THAT</span><span class="token punctuation">(</span>description<span class="token punctuation">,</span> <span class="token function">Eq</span><span class="token punctuation">(</span><span class="token string">"Drury Ln, Fountain, CO, US"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="让测试替身各就各位"><a href="#让测试替身各就各位" class="headerlink" title="让测试替身各就各位"></a>让测试替身各就各位</h2><p>在引入一个测试替身时需要做两件事。第一，编写测试替身。第二，在目标测试中使用测试替身的一个实例。这样的做法又称作依赖注入（Dependency Injection，DI）。</p>
+<p>以前文的 PlaceDescriptionService 为例，它是通过构造函数将测试替身注入其中，有些情况可能使用 setter 成员函数来注入测试替身更合适，这种方法又称作构造注入或 setter 注入。</p>
+<h3 id="覆写工厂方法和覆写-Getter"><a href="#覆写工厂方法和覆写-Getter" class="headerlink" title="覆写工厂方法和覆写 Getter"></a>覆写工厂方法和覆写 Getter</h3><p><strong>参考代码版本：Git SHA (fe19774356b4cb14d14e4041029c535b3619ebf3)；</strong></p>
+<p>想要使用覆写工厂方法，首先要修改产品代码使用工厂模式获取写作类的实例：</p>
+<p>首先修改 PlaceDescriptionService 中的成员 Http* MHttp，不在以成员方式保存而是 httpService() 获取：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token comment" spellcheck="true">//PlaceDescriptionService.h</span>
+<span class="token keyword">class</span> <span class="token class-name">PlaceDescriptionService</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">virtual</span> <span class="token operator">~</span><span class="token function">PlaceDescriptionService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    std<span class="token operator">::</span>string <span class="token function">summaryDescription</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Longitude<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">protected</span><span class="token operator">:</span>
+    <span class="token keyword">virtual</span> std<span class="token operator">::</span>shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> <span class="token function">httpService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//PlaceDescriptionService.cpp</span>
+string PlaceDescriptionService<span class="token operator">::</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">auto</span> http <span class="token operator">=</span> <span class="token function">httpService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    http<span class="token operator">-</span><span class="token operator">></span><span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> http<span class="token operator">-</span><span class="token operator">></span><span class="token function">get</span><span class="token punctuation">(</span>Url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> PlaceDescriptionService<span class="token operator">::</span><span class="token function">httpService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> make_shared<span class="token operator">&lt;</span>CurlHttp<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过 httpService 获取可以看作使通过工厂模式获取到功能类，在测试中，我们就可以通过继承 PlaceDescriptionService 来覆写 httpService 传入我们自定义的 Http 功能类：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">PlaceDescriptionServiceStubHttpService</span> <span class="token operator">:</span> <span class="token keyword">public</span> PlaceDescriptionService
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token comment" spellcheck="true">// 这里创建了一个构造用于传入自定义的 Http 功能类</span>
+    <span class="token function">PlaceDescriptionServiceStubHttpService</span><span class="token punctuation">(</span>shared_ptr<span class="token operator">&lt;</span>HttpStub<span class="token operator">></span> ParmHttpStub<span class="token punctuation">)</span>
+            <span class="token operator">:</span> HttpStub <span class="token punctuation">{</span> ParmHttpStub <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+    shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> <span class="token function">httpService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> override <span class="token punctuation">{</span> <span class="token keyword">return</span> HttpStub<span class="token punctuation">;</span> <span class="token punctuation">}</span>
+    shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> HttpStub<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>具体测试代码于之间差不多，唯一的差异就是使用智能指针进行了封装：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionService<span class="token punctuation">,</span> ReturnsDescriptionForValidLocation<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    shared_ptr<span class="token operator">&lt;</span>HttpStub<span class="token operator">></span> httpStub <span class="token punctuation">{</span> <span class="token keyword">new</span> HttpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> expectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                       <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+
+    Expectation Expectations <span class="token operator">=</span> <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span><span class="token operator">*</span>httpStub<span class="token punctuation">,</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//  get(expectedURL) 这一步同时验证了应该传给 get 的参数与 expectedURL 一致</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span><span class="token operator">*</span>httpStub<span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>expectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">After</span><span class="token punctuation">(</span>Expectations<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    PlaceDescriptionServiceStubHttpService service <span class="token punctuation">{</span> httpStub <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>覆写工厂方法展示了使用测试替身所带来的测试覆盖率漏洞。由于我们的测试覆写了产品代码中 httpService() 的实现，因此测试并没有使用实际产品代码中的这个函数。正如前面所说，要确保在集成测试中使用实际的服务！同时，不要在工厂方法中加入实际逻辑的代码，否则，未经测试的代码就会越来越多。工厂方法应当只返回协作类型的一个实例。</p>
+<p>关于 Getter 其实与覆盖工厂差不多，区别如下:</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">PlaceDescriptionService</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">PlaceDescriptionService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">virtual</span> <span class="token operator">~</span><span class="token function">PlaceDescriptionService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    std<span class="token operator">::</span>string <span class="token function">summaryDescription</span><span class="token punctuation">(</span>
+    <span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> longitude<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token comment" spellcheck="true">// ...</span>
+    std<span class="token operator">::</span>shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> http_<span class="token punctuation">;</span>
+
+<span class="token keyword">protected</span><span class="token operator">:</span>
+    <span class="token keyword">virtual</span> std<span class="token operator">::</span>shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> <span class="token function">httpService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+PlaceDescriptionService<span class="token operator">::</span><span class="token function">PlaceDescriptionService</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token operator">:</span> http_<span class="token punctuation">{</span>make_shared<span class="token operator">&lt;</span>CurlHttp<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// ...</span>
+shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> PlaceDescriptionService<span class="token operator">::</span><span class="token function">httpService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> http_<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="使用工厂"><a href="#使用工厂" class="headerlink" title="使用工厂"></a>使用工厂</h3><p><strong>参考代码版本：Git SHA (398ef02bf56e9484335f5f1aed0f07caf01424b1)；</strong></p>
+<p>工厂类是用来负责创建和返回实例的。如果你有一个 HttpFactory，那么就可以在测试中告诉它返回一个 HttpStub 实例而非 Http 实例。注意不要仅仅为了支持测试而引入工厂模式。</p>
+<p>下例使工厂实现：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"CurlHttp.h"</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"HttpFactory.h"</span></span>
+
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;memory></span></span>
+
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+HttpFactory<span class="token operator">::</span><span class="token function">HttpFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> HttpFactory<span class="token operator">::</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Instance<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> HttpFactory<span class="token operator">::</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    Instance <span class="token operator">=</span> make_shared<span class="token operator">&lt;</span>CurlHttp<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> HttpFactory<span class="token operator">::</span><span class="token function">setInstance</span><span class="token punctuation">(</span>shared_ptr<span class="token operator">&lt;</span>Http<span class="token operator">></span> NewInstance<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    Instance <span class="token operator">=</span> NewInstance<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>修改测试代码，在测试执行前，调用 setInstance 将工厂中产品替换掉：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">APlaceDescriptionService</span> <span class="token operator">:</span> <span class="token keyword">public</span> Test
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string ValidLatitude<span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string ValidLongitude<span class="token punctuation">;</span>
+
+    shared_ptr<span class="token operator">&lt;</span>HttpStub<span class="token operator">></span> httpStub<span class="token punctuation">;</span>
+    shared_ptr<span class="token operator">&lt;</span>HttpFactory<span class="token operator">></span> factory<span class="token punctuation">;</span>
+    shared_ptr<span class="token operator">&lt;</span>PlaceDescriptionService<span class="token operator">></span> service<span class="token punctuation">;</span>
+
+    <span class="token keyword">virtual</span> <span class="token keyword">void</span> <span class="token function">SetUp</span><span class="token punctuation">(</span><span class="token punctuation">)</span> override
+    <span class="token punctuation">{</span>
+        factory <span class="token operator">=</span> make_shared<span class="token operator">&lt;</span>HttpFactory<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        service <span class="token operator">=</span> make_shared<span class="token operator">&lt;</span>PlaceDescriptionService<span class="token operator">></span><span class="token punctuation">(</span>factory<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">void</span> <span class="token function">TearDown</span><span class="token punctuation">(</span><span class="token punctuation">)</span> override
+    <span class="token punctuation">{</span>
+        factory<span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        httpStub<span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">APlaceDescriptionServiceWithHttpMock</span> <span class="token operator">:</span> <span class="token keyword">public</span> APlaceDescriptionService
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">void</span> <span class="token function">SetUp</span><span class="token punctuation">(</span><span class="token punctuation">)</span> override
+    <span class="token punctuation">{</span>
+        APlaceDescriptionService<span class="token operator">::</span><span class="token function">SetUp</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        httpStub <span class="token operator">=</span> make_shared<span class="token operator">&lt;</span>HttpStub<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        factory<span class="token operator">-</span><span class="token operator">></span><span class="token function">setInstance</span><span class="token punctuation">(</span>httpStub<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionServiceWithHttpMock<span class="token punctuation">,</span> MakesHttpRequestToObtainAddress<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> expectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                       <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span><span class="token operator">*</span>httpStub<span class="token punctuation">,</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span><span class="token operator">*</span>httpStub<span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>expectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    service<span class="token operator">-</span><span class="token operator">></span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>修改 summaryDescription() 代码，通过工厂获取 Http 实例：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token comment" spellcheck="true">//构造传入工厂实例</span>
+PlaceDescriptionService<span class="token operator">::</span><span class="token function">PlaceDescriptionService</span><span class="token punctuation">(</span>shared_ptr<span class="token operator">&lt;</span>HttpFactory<span class="token operator">></span> HttpFactory<span class="token punctuation">)</span>
+        <span class="token operator">:</span> httpFactory_ <span class="token punctuation">{</span> HttpFactory <span class="token punctuation">}</span>
+<span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">//冲获取接口改为从工厂获得实例</span>
+string PlaceDescriptionService<span class="token operator">::</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Url<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// auto http = httpService();</span>
+    <span class="token keyword">auto</span> http <span class="token operator">=</span> httpFactory_<span class="token operator">-</span><span class="token operator">></span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    http<span class="token operator">-</span><span class="token operator">></span><span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> http<span class="token operator">-</span><span class="token operator">></span><span class="token function">get</span><span class="token punctuation">(</span>Url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="通过模板参数"><a href="#通过模板参数" class="headerlink" title="通过模板参数"></a>通过模板参数</h3><p><strong>参考代码版本：Git SHA (35932b820ad5de4a9bb584f1eeed6d4f6bfa86f4)；</strong></p>
+<p>可以通过模板参数进行注入，它不需要客户程序传递一个协作类的实例。把 PlaceDescriptionService 声明为一个模板，它有一个类型名称，即 HTTP。在这个模板中加入一个成员变量，http_，其类型为 HTTP。因为我们想让客户使用类名 PlaceDescriptionService，所以我们将模板类改名为 PlaceDescriptionServiceTemplate。在定义模板之后，我们使用 typedef 来定义 PlaceDescriptionService，它将产品类 Http 作为 PlaceDescriptionServiceTemplate 的模板参数。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">template</span><span class="token operator">&lt;</span><span class="token keyword">typename</span> HTTP<span class="token operator">></span>
+<span class="token keyword">class</span> <span class="token class-name">PlaceDescriptionServiceTemplate</span> <span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token comment" spellcheck="true">// ...</span>
+    <span class="token comment" spellcheck="true">// 测试中的mock需要引用</span>
+    HTTP<span class="token operator">&amp;</span> <span class="token function">http</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> http_<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token comment" spellcheck="true">// ...</span>
+    std<span class="token operator">::</span>string <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> url<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        http_<span class="token punctuation">.</span><span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> http_<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// ...</span>
+    HTTP http_<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">class</span> <span class="token class-name">Http</span><span class="token punctuation">;</span>
+<span class="token keyword">typedef</span> PlaceDescriptionServiceTemplate<span class="token operator">&lt;</span>Http<span class="token operator">></span> PlaceDescriptionService<span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在测试时也是通过声明一个服务模拟类，即 HttpStub，为模板 PlaceDescriptionServiceTemplate 的参数。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">APlaceDescriptionService</span> <span class="token operator">:</span> <span class="token keyword">public</span> Test
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string ValidLatitude<span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string ValidLongitude<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">APlaceDescriptionServiceWithHttpMock</span> <span class="token operator">:</span> <span class="token keyword">public</span> APlaceDescriptionService
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    PlaceDescriptionServiceTemplate<span class="token operator">&lt;</span>HttpStub<span class="token operator">></span> service<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">TEST_F</span><span class="token punctuation">(</span>APlaceDescriptionServiceWithHttpMock<span class="token punctuation">,</span> MakesHttpRequestToObtainAddress<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+
+    string urlStart <span class="token punctuation">{</span> <span class="token string">"http://open.mapquestapi.com/nominatim/v1/reverse?format=json&amp;"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">auto</span> expectedURL <span class="token operator">=</span> urlStart <span class="token operator">+</span> <span class="token string">"lat="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLatitude <span class="token operator">+</span> <span class="token string">"&amp;"</span> <span class="token operator">+</span>
+                       <span class="token string">"lon="</span> <span class="token operator">+</span> APlaceDescriptionService<span class="token operator">::</span>ValidLongitude<span class="token punctuation">;</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">http</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">http</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">get</span><span class="token punctuation">(</span>expectedURL<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    service<span class="token punctuation">.</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>ValidLatitude<span class="token punctuation">,</span> ValidLongitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="注入工具"><a href="#注入工具" class="headerlink" title="注入工具"></a>注入工具</h3><p>用于注入协作对象作为依赖对象的工具又称为依赖注入工具。首先，你需要掌握这里描述的手工注入技巧。其次，再去调研一下注入工具，来检查它们能否带来一些改善。依赖注入工具通常在完全支持反射机制的语言中更加有效。</p>
+<h2 id="设计会变化"><a href="#设计会变化" class="headerlink" title="设计会变化"></a>设计会变化</h2><p>在使用测试替身时会发现，正在改变你的设计方法。这样可能会令你不安。但是不要担心，这是正常的反应。</p>
+<h3 id="内聚与耦合"><a href="#内聚与耦合" class="headerlink" title="内聚与耦合"></a>内聚与耦合</h3><p>在面对一些慢速或者不稳定的协同对象，最好的方法是将它们隔离成单独的类。例如发送 HTTP 的请求，虽然它并不是非常复杂，放到一个小而独立的类中有些不值得，但是选择这样的方式将带来宠用的机会和更灵活的设计弹性（可以利用多态的方式来替换）。</p>
+<p>另一种方法是创建更加过程化、弱内聚的代码，在测试后行的时候，一个 PlaceDescriptionService 的典型解决方案：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">string PlaceDescriptionService<span class="token operator">::</span><span class="token function">summaryDescription</span><span class="token punctuation">(</span>
+      <span class="token keyword">const</span> string<span class="token operator">&amp;</span> latitude<span class="token punctuation">,</span> <span class="token keyword">const</span> string<span class="token operator">&amp;</span> longitude<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+   <span class="token comment" spellcheck="true">// retrieve JSON response via API</span>
+   response_ <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+   <span class="token keyword">auto</span> url <span class="token operator">=</span> <span class="token function">createGetRequestUrl</span><span class="token punctuation">(</span>latitude<span class="token punctuation">,</span> longitude<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token function">curl_easy_setopt</span><span class="token punctuation">(</span>curl<span class="token punctuation">,</span> CURLOPT_URL<span class="token punctuation">,</span> url<span class="token punctuation">.</span><span class="token function">c_str</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token function">curl_easy_perform</span><span class="token punctuation">(</span>curl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token function">curl_easy_cleanup</span><span class="token punctuation">(</span>curl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   <span class="token comment" spellcheck="true">// parse json response</span>
+   Value location<span class="token punctuation">;</span>
+   Reader reader<span class="token punctuation">;</span>
+   reader<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>response_<span class="token punctuation">,</span> location<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">auto</span> jsonAddress <span class="token operator">=</span> location<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"address"</span><span class="token punctuation">,</span> Value<span class="token operator">::</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   <span class="token comment" spellcheck="true">// populate address from json</span>
+   Address address<span class="token punctuation">;</span>
+   address<span class="token punctuation">.</span>road <span class="token operator">=</span> jsonAddress<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"road"</span><span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">asString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   address<span class="token punctuation">.</span>city <span class="token operator">=</span> jsonAddress<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"hamlet"</span><span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">asString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   address<span class="token punctuation">.</span>state <span class="token operator">=</span> jsonAddress<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"state"</span><span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">asString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   address<span class="token punctuation">.</span>country <span class="token operator">=</span> jsonAddress<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"country"</span><span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">asString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   <span class="token keyword">return</span> address<span class="token punctuation">.</span>road <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span> address<span class="token punctuation">.</span>city <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span>
+          address<span class="token punctuation">.</span>state <span class="token operator">+</span> <span class="token string">", "</span> <span class="token operator">+</span> address<span class="token punctuation">.</span>country<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这是典型的后测试代码。虽然我们可以将其拆成多个更小的函数，就像稍早前的做法一样，但是开发人员不会这么做。测试后行的开发者不习惯定期做重构，通常，他们不需要使用快速的测试来让重构变得更快、更安全。</p>
+<ul>
+<li>从设计的角度，这二十多行代码违背了单一责任原则——需要修改 summaryDescription() 的原因有多个：<ol>
+<li>首先，这个函数与 cURL 紧密耦合；</li>
+<li>其次，这二十多行代码的函数算作冗长函数，想要完全理解它会花费很多时间。</li>
+<li>再者，这种冗长的函数会导致不必要的代码重复。许多可重用的代码深埋于冗长的函数中，那么重用将不会发生。</li>
+</ol>
+</li>
+</ul>
+<p>即使这样也可以对其进行测试，例如使用 link substitution 写一个快速的单元测试（参见 8.9 节），或者写一个能发起一个即时的 REST 服务调用的集成测试。</p>
+<p>而当践行 TDD 时，自然而然的会寻求高内聚、低耦合的设计。你会开始意识到灵活设计的好处，也会很快发现好的设计是怎样与测试和谐共存的，而且这些测试具有体量小，易于编写、阅读和维护的特点。</p>
+<h3 id="转嫁私有依赖"><a href="#转嫁私有依赖" class="headerlink" title="转嫁私有依赖"></a>转嫁私有依赖</h3><p>如果不需要方便于测试，PlaceDescriptionService 中的 HTTP 调用可以通过成员保存一个私有的实例，使得客户端调用不需要再 setter 或者构造注入。反之，需要客户端创建 HTTP 对象，并将其传给 PlaceDescriptionService 实例，就将其对 HTTP 的依赖转嫁给了客户端。</p>
+<p>Q: setter 或构造函数注入是不是违反了信息隐藏？<br>A: 从客户端程序的角度来说，确实是违反了。但是有几种方法有效避免：</p>
+<ol>
+<li>使用其他依赖注入方法，使得某人即使利用了这些暴露出的信息，也无法造成不好的影响。</li>
+<li>提供某人的实例，先配置一个默认的实例，如果测试提供了 HttpStub 实例，那么它将被替换。而真正的客户端时不需要做什么改动的。</li>
+</ol>
+<p>Q: 如果心怀恶意的开发者提供一个具有破坏性的 Http 实例呢？<br>A: 如果产品的客户是团队之外的人，那么可以选择其他注入形式。如果担心团队内部的开发者有意利用注入点做些不好的事，那你将面临更大的问题。</p>
+<p>Q: 我逐渐能够测试驱动开发了，但我担心仅仅为了测试的目的而改变我的设计方法。我的团队中的其他人可能也会这么觉得。<br>A: 确切地了解软件能如期工作是改变设计方式的重要原因。你可以这样和同事讲：“我更关心代码是否如期工作。做出这么一个小的让步意味着我们能够更容易地测试代码，也会有更多的测试能够帮助我们更容易地打磨设计，我们也会对代码更有信心。所以你们能重新思考下我们的标准吗？”</p>
+<h2 id="使用测试替身的策略"><a href="#使用测试替身的策略" class="headerlink" title="使用测试替身的策略"></a>使用测试替身的策略</h2><p>使用测试替身和其他工具一样，最大的挑战不是学会怎么用它们，而是知道什么时候使用。</p>
+<h3 id="探索设计"><a href="#探索设计" class="headerlink" title="探索设计"></a>探索设计</h3><p>现在假设 AddressExtractor 不存在，在测试驱动开发 summaryDescription() 时，肯定会意识到需要一些逻辑去处理 JSON 格式的响应，并返回一个格式化的字符串，通常开发者可以在 PlaceDescriptionService 中全部自己实现。</p>
+<p>但是还可以寻求潜在的重用性、更大的灵活性和易于理解的代码设计，为了遵守单一原则，或许可以将需要的逻辑拆分成两块：解析 JSON 格式的响应和格式化输出。</p>
+<p>TDD 会促使你在任何时候都要做出清醒的设计选择。例如你可以先写一个描述 summaryDescription() 怎样于外部协作者交互的测试。这个协作者的工作是得到一个 JSON 格式的响应，并返回相应的地址数据结构。目前而言，我们可以忽略实现这个协作者的细节，先集中使用 mock 来测试驱动开发 summaryDescription() ，就像前文中 HTTP 对象交互一样。</p>
+<p>当以这种方式开发完成时，可以通过引入 mock 来替代缺失的协作者功能。<strong>在某一时刻，你或其他人将会实现这个协作者。这时你可以作出以下选择：移除 mock，以便待测试的代码使用产品级的协作者；保留 mock。</strong></p>
+<p>也许你已经作好了选择。<strong>如果协作者引入麻烦的依赖，那么就需要保留 mock。否则，移除 mock 会降低测试的复杂度。但是，你也许选择保留它，特别是需要用它来描述与协作者的交互式设计中的重要方面。</strong><br>或许最好的指导方针需要考虑维护和理解测试所需的精力。如果没有 mock，事情可能会简单些，但不总是这样的。mock 可能需要大量的代码来初始化一些协作者，这也会增加维护测试的成本。</p>
+<h3 id="明智地使用测试替身"><a href="#明智地使用测试替身" class="headerlink" title="明智地使用测试替身"></a>明智地使用测试替身</h3><p>如果你要彻头彻尾地测试驱动开发一个带有快速测试的系统，这其中的大部分系统都需要使用测试替身。在使用测试替身时，可以参考下面的建议：</p>
+<ul>
+<li>重新思考设计：你是为了简化依赖对象的创建而使用 mock 的吗？如果是的话，那么重新修改依赖结构。你是不是在多个地方为同一个东西使用了 mock？如果是的话，那么重新设计来消除这样的重复。</li>
+<li>意识到单元测试覆盖率上的让步。一个测试替身代表了系统测试覆盖率的漏洞。因为测试替身提供的逻辑正是单元测试所不能覆盖的，所以一定要确保其他测试覆盖到这部分逻辑。</li>
+<li>重构测试。不能让对第三方工具的依赖成为问题。使用随意的方法会导致 mock 的大量增加，也会导致大量的重复和复杂难懂的测试。要像重构产品代码那样去重构测试！把期望声明封装进一个公共的辅助函数能够提高抽象、降低依赖度、减少重复代码。</li>
+<li>质疑以过度复杂的方式使用测试替身。如果你身陷 mock，那可能是因为你尝试了过度测试或你的设计有缺陷。这时使用多级的 mock 通常能解决问题。如果遇到了问题，那么就要将测试分解为多个小的测试来简化问题。同样也要检测一下所测代码是否可以拆解。</li>
+<li>表达力胜于功能。选择 mock 工具是因为它能帮助你创建高度抽象的测试，这些测试可以文档化系统行为和设计，而不仅仅是因为它有很酷的功能，可以做精巧和深奥的事情。除非必要，否则不要使用这些精巧深奥的功能。</li>
+</ul>
+<h2 id="其他关于测试替身的主题"><a href="#其他关于测试替身的主题" class="headerlink" title="其他关于测试替身的主题"></a>其他关于测试替身的主题</h2><h3 id="称呼"><a href="#称呼" class="headerlink" title="称呼"></a>称呼</h3><p>本章中使用的术语有测试替身、mock 和 Stub。还有以下的定义称呼：</p>
+<ul>
+<li>测试替身：为测试而模拟产品代码的代码。</li>
+<li>Stub：一个返回硬编码值的测试替身。</li>
+<li>Spy：一个保存接受信息以便日后验证的测试替身。</li>
+<li>mock：一个基于期望自我验证的测试替身。</li>
+<li>Fake：提供产品类轻量级实现的测试替身。</li>
+</ul>
+<h3 id="测试替身该放在哪"><a href="#测试替身该放在哪" class="headerlink" title="测试替身该放在哪"></a>测试替身该放在哪</h3><p>一开始在相同的测试文件中定义测试替身，以便开发者看到。当多个 fixture 使用同一个测试替身时，再将声明移植到单独的头文件中。当不再需要查看测试替身时，应该把它们从视野中移除。</p>
+<h3 id="虚函数表和性能"><a href="#虚函数表和性能" class="headerlink" title="虚函数表和性能"></a>虚函数表和性能</h3><p>引入测试替身是为了测试驱动开发一个有复杂依赖关系的类。许多创建测试替身的技术都需要创建派生类来覆写虚成员函数。如果之前的产品类没有虚函数，那么现在会有，并且会有一个虚函数表。虚函数表带来额外的间接性是有开销的。</p>
+<p>然而，如果你必须大规模地调用模拟的产品函数，那么就需要先得到一些性能数据。如果性能降到不可接受的程度，就要考虑不同的模拟方式（或许基于模板的方案），重新设计（可能的话，通过优化其他地方来补偿性能损失），或者引入集成测试来弥补单元测试的不足（参见 10.2 节）。</p>
+<h3 id="模拟具体的类"><a href="#模拟具体的类" class="headerlink" title="模拟具体的类"></a>模拟具体的类</h3><p>在前面的示例中，我们通过实现一个纯虚的 Http 接口来创建一个 mock。很多系统主要由具体的类构成，因此没有多少此类接口。从设计的角度讲，使用接口是将系统中的一部分和另一部分隔离的方式。</p>
+<p>依赖倒置原则（Dependency Inversion Principle，DIP）提倡让客户端依赖抽象的接口而非具体的实现，从而达到消除依赖的目的。以纯虚类的方式引入这种抽象，能够加快编译并隔离复杂性。更重要的是，它们能让测试变得简单。</p>
+<p>在某些情况下也可以创建一个派生自一个具体类的 mock。问题是产生的类混合了产品代码和模拟的行为，这又被称为部分模拟。它可以体现出两方面问题：</p>
+<ol>
+<li>首先，部分模拟通常能告诉你所模拟的类过大，如果你只需要其中的一部分而不是全部，那么就可以按照这些边界将类拆分成两个。</li>
+<li>其次，使用部分模拟很可能使你陷入麻烦，以至于很快陷入模拟地狱。在一些情况下，你也可能遇到诡秘的问题：“啊！我原以为代码此时会与模拟的方法交互，但是看起来它与真正的方法交互了。”</li>
+</ol>
+<p>结论便是：如果你使用诸如部分模拟此类难以驾驭的工具，那么你的设计正散发着坏味。举例来说，一个干净的设计会采用具体类继承一个接口的方式。这样，测试也不再需要部分模拟了，为这个接口创建一个测试替身即可。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>真实的生产环境中对象必须协同工作，有时依赖合作对象使得 TDD 变得举步维艰，可以使用 MOCK 技术来解决这些问题。由于 Catch2 没有提供 MOCK 功能支持，本章节主要的代码演示均使用 GMOCK。但是 Catch2 也是可以利用 GMOCK 相关宏来完善测试需要，<a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/TDD_Learning/tree/master/test/Catch2/PlaceDescriptionServiceTestByGMock">具体使用</a>。</p>
+</li>
+<li><p>依赖问题：当构建产品代码是无法避免与第三方进行交互，这时就会有许多不确定性（接口不稳定、速度慢、甚至没有开发完成等等），这时就可以利用 MOCK 替身技术来避免阻塞。</p>
+</li>
+<li><p>使用模拟对象工具：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">HttpStub</span> <span class="token operator">:</span> <span class="token keyword">public</span> Http
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">MOCK_METHOD</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">,</span> initialize<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>override<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">MOCK_METHOD</span><span class="token punctuation">(</span>string<span class="token punctuation">,</span> get<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">const</span> override<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//CmakeLists.txt</span>
+<span class="token comment" spellcheck="true">//当前使用的 googletest 版本为 1.10.x MOCK_METHOD 宏在编译器下会有错误信息，依据 gmock issues 无用报错 关闭相关警告</span>
+<span class="token function">add_definitions</span><span class="token punctuation">(</span><span class="token operator">-</span>Wno<span class="token operator">-</span>gnu<span class="token operator">-</span>zero<span class="token operator">-</span>variadic<span class="token operator">-</span>macro<span class="token operator">-</span>arguments<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>设立期望：</p>
+<ul>
+<li><p>通过 EXPECT_CALL 宏设立期望，这个宏配置 Google Mock 去验证以给定的参数去调用目标对象逻辑是否吻合。</p>
+</li>
+<li><p>EXPECT_CALL 宏支持许多修饰符。它的语法如下（?和<em>代表每个修饰符的基数：?表示可以选用修饰符一次；</em>表示可以多次使用修饰符。）：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">EXPECT_CALL</span><span class="token punctuation">(</span>mock<span class="token operator">-</span>object<span class="token punctuation">,</span> <span class="token function">method</span> <span class="token punctuation">(</span>matchers<span class="token punctuation">)</span><span class="token operator">?</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">With</span><span class="token punctuation">(</span>multi<span class="token operator">-</span>argument<span class="token operator">-</span>matcher<span class="token punctuation">)</span>  <span class="token operator">?</span>
+    <span class="token punctuation">.</span><span class="token function">Times</span><span class="token punctuation">(</span>cardinality<span class="token punctuation">)</span>            <span class="token operator">?</span>
+    <span class="token punctuation">.</span><span class="token function">InSequence</span><span class="token punctuation">(</span>sequences<span class="token punctuation">)</span>         <span class="token operator">*</span>
+    <span class="token punctuation">.</span><span class="token function">After</span><span class="token punctuation">(</span>expectations<span class="token punctuation">)</span>           <span class="token operator">*</span>
+    <span class="token punctuation">.</span><span class="token function">WillOnce</span><span class="token punctuation">(</span>action<span class="token punctuation">)</span>              <span class="token operator">*</span>
+    <span class="token punctuation">.</span><span class="token function">WillRepeatedly</span><span class="token punctuation">(</span>action<span class="token punctuation">)</span>        <span class="token operator">?</span>
+    <span class="token punctuation">.</span><span class="token function">RetiresOnSaturation</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token operator">?</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+</li>
+<li><p>排除模拟失败的方法：</p>
+<ol>
+<li>产品代码中是否有合理调用？</li>
+<li>是否正确定义了模拟方法？</li>
+<li>有没有将要模拟的成员函数声明为虚函数？</li>
+<li><code>MOCK_METHOD()</code> 声明正不正确？</li>
+<li>排除参数匹配的担忧，为所有参数和返回值使用通配符 testing::_ ，如果测试通过，那么可以确定有一个参数不能被正确匹配。</li>
+</ol>
+</li>
+<li><p>使用测试替身：在引入一个测试替身时需要做两件事。第一，编写测试替身。第二，在目标测试中使用测试替身的一个实例。这样的做法又称作依赖注入（Dependency Injection，DI）。</p>
+</li>
+<li><p>内聚与耦合：在典型的后测试代码情况，开发者可能不会经常进行重构，通常他们也无法使用快速的测试让重构变得更快更安全。这样往往产生一些冗余且耦合的代码。即使这样也可以对其进行测试，能够利用到的技术：</p>
+</li>
+<li><p>转嫁私有依赖：注入模式往往需要对客户端调用产生依赖关系，即 setter 或者构造注入。</p>
+</li>
+<li><p>使用 mock 的策略：在开发前期，可以通过引入 mock 来替代缺失的协作者功能。<strong>在某一时刻，你或其他人将会实现这个协作者。这时你可以作出以下选择：移除 mock，以便待测试的代码使用产品级的协作者；保留 mock。</strong></p>
+<ul>
+<li><strong>如果协作者引入麻烦的依赖，那么就需要保留 mock。否则，移除 mock 会降低测试的复杂度。但是，你也许选择保留它，特别是需要用它来描述与协作者的交互式设计中的重要方面。</strong></li>
+</ul>
+</li>
+<li><p>明智地使用测试替身：当需要从头 TDD 开发一个带有快速测试的系统，大部分系统功能都需要使用测试替身，在使用时可以参考明章节#智地使用测试替身。</p>
+</li>
+</ul>
+<h3 id="Q-x2F-A"><a href="#Q-x2F-A" class="headerlink" title="Q/A"></a>Q/A</h3><p>Q: setter 或构造函数注入是不是违反了信息隐藏？<br>A: 从客户端程序的角度来说，确实是违反了。但是有几种方法有效避免：</p>
+<ol>
+<li>使用其他依赖注入方法，使得某人即使利用了这些暴露出的信息，也无法造成不好的影响。</li>
+<li>提供某人的实例，先配置一个默认的实例，如果测试提供了 HttpStub 实例，那么它将被替换。而真正的客户端时不需要做什么改动的。</li>
+</ol>
+<p>Q: 如果心怀恶意的开发者提供一个具有破坏性的 Http 实例呢？<br>A: 如果产品的客户是团队之外的人，那么可以选择其他注入形式。如果担心团队内部的开发者有意利用注入点做些不好的事，那你将面临更大的问题。</p>
+<p>Q: 我逐渐能够测试驱动开发了，但我担心仅仅为了测试的目的而改变我的设计方法。我的团队中的其他人可能也会这么觉得。<br>A: 确切地了解软件能如期工作是改变设计方式的重要原因。你可以这样和同事讲：“我更关心代码是否如期工作。做出这么一个小的让步意味着我们能够更容易地测试代码，也会有更多的测试能够帮助我们更容易地打磨设计，我们也会对代码更有信心。所以你们能重新思考下我们的标准吗？”</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Layton</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://hatter-long-blog.vercel.app/2022/06/02/wu-ce-shi-qu-dong-kai-fa-ji-qiao-ce-shi-ti-shen/">https://hatter-long-blog.vercel.app/2022/06/02/wu-ce-shi-qu-dong-kai-fa-ji-qiao-ce-shi-ti-shen/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">Layton</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                                    <span class="chip bg-color">测试驱动开发技巧</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2022/06/02/liu-ce-shi-qu-dong-kai-fa-ji-qiao-zeng-liang-she-ji/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="（六）测试驱动开发技巧--增量设计">
+                        
+                        <span class="card-title">（六）测试驱动开发技巧--增量设计</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-02
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
+                                    测试驱动开发技巧
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                        <span class="chip bg-color">测试驱动开发技巧</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/06/02/si-ce-shi-qu-dong-kai-fa-ji-qiao-ce-shi-jie-gou/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="（四）测试驱动开发技巧--测试结构">
+                        
+                        <span class="card-title">（四）测试驱动开发技巧--测试结构</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
+                                    测试驱动开发技巧
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                        <span class="chip bg-color">测试驱动开发技巧</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2022</span>
+            
+            <a href="/about" target="_blank">Layton</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">39.5k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2022";
+                        var startMonth = "5";
+                        var startDate = "31";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已勉强运行 ' + diffDays + ' 天 ღゝ◡╹)ノ♡';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/HATTER-LONG" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:caolei6767@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=985001640" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 985001640" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.bootcss.com/aos/3.0.0-beta.6/aos.js"></script>
+    <script src="https://cdn.bootcss.com/scrollprogress/3.0.2/scrollProgress.min.js"></script>
+    <script src="https://cdn.bootcss.com/lightgallery/1.10.0/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

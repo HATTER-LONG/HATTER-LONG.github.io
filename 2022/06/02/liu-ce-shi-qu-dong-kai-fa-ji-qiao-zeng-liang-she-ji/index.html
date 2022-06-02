@@ -1,0 +1,1745 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="（六）测试驱动开发技巧--增量设计, null">
+    <meta name="description" content="增量设计前言使用 TDD 的主要原因是，能够以可承受的、稳定的维护成本来添加或修改功能特性。在本章中，你将学到重构过程中需要做的事情。我们将主要讨论 Kent Beck 提出的简单设计理念（参见《解析极限编程：拥抱变化》），以及可以保持代码">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    
+
+    <title>（六）测试驱动开发技巧--增量设计 | null</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/aos/3.0.0-beta.6/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/lightgallery/1.6.12/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span"></span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name"></div>
+        <div class="logo-desc">
+            
+            随机更新
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/HATTER-LONG" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/HATTER-LONG" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">（六）测试驱动开发技巧--增量设计</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                                <span class="chip bg-color">测试驱动开发技巧</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
+                                测试驱动开发技巧
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-06-02
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    6.6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    26 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="增量设计"><a href="#增量设计" class="headerlink" title="增量设计"></a>增量设计</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>使用 TDD 的主要原因是，能够以可承受的、稳定的维护成本来添加或修改功能特性。在本章中，你将学到重构过程中需要做的事情。我们将主要讨论 Kent Beck 提出的简单设计理念（参见《解析极限编程：拥抱变化》），以及可以保持代码整洁的一系列重要规则。</p>
+<h2 id="简单设计"><a href="#简单设计" class="headerlink" title="简单设计"></a>简单设计</h2><ul>
+<li>在使用 TDD 时需要考虑三条规则：<ol>
+<li>确保代码具备很强的可读性和表达力。</li>
+<li>在和第一条规则不冲突的情况下，消除所有的重复。</li>
+<li>不要向系统引入不必要的复杂性。避免猜测行的结构关系和不能增加系统表达力的抽象。</li>
+</ol>
+</li>
+</ul>
+<h3 id="重复代码的代价"><a href="#重复代码的代价" class="headerlink" title="重复代码的代价"></a>重复代码的代价</h3><p>随着时间的推移，重复代码或许是维护代码库的最大开销。大多数开发者懒于创建新的成员函数，因为怀疑这会降低性能，所以他们有时甚至会拒绝这样做。最终，他们只是为自己创造了更多的未来工作量。</p>
+<p>由于对重复的自然倾向，大部分大型系统的代码远远多于实际需要的代码。这些额外的代码大大地增加了维护成本和风险。</p>
+<p><strong>将增量重构作为 TDD 环节的一部分可以避免系统级的退化。</strong></p>
+<h3 id="投资管理器"><a href="#投资管理器" class="headerlink" title="投资管理器"></a>投资管理器</h3><p>以开发一个小型子系统举例:</p>
+<ul>
+<li>场景：投资管理器<ul>
+<li>投资人想要跟踪股票买卖记录，并将此作为金融分析的基础。</li>
+</ul>
+</li>
+</ul>
+<p>本篇示例代码大部分编写过程不在详细赘述，如果需要可以在<a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/TDD_Learning">源码工程</a>中查找到。</p>
+<p>经过初步编写，获得了如下的测试代码：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token comment" spellcheck="true">// test/Catch2/PortfolioTest/PortfolioTest.cpp</span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"Portfolio/Portfolio.h"</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"catch2/catch.hpp"</span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> Catch<span class="token punctuation">;</span>
+
+<span class="token function">TEST_CASE</span><span class="token punctuation">(</span><span class="token string">"Create portfolio example"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    Portfolio portfolio<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">APortfolio</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    Portfolio m_portfolio<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Is empty whe created"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>m_portfolio<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Is not empty after purchase"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_portfolio<span class="token punctuation">.</span><span class="token function">purchase</span><span class="token punctuation">(</span><span class="token string">"IBM"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE_FALSE</span><span class="token punctuation">(</span>m_portfolio<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers zero for share count of no purchased symbol"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>m_portfolio<span class="token punctuation">.</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token string">"AAPL"</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers share count for purchased symbol"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_portfolio<span class="token punctuation">.</span><span class="token function">purchase</span><span class="token punctuation">(</span><span class="token string">"IBM"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>m_portfolio<span class="token punctuation">.</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token string">"IBM"</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">2u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token comment" spellcheck="true">//Src/Portfolio/Portfolio.h</span>
+<span class="token macro property">#<span class="token directive keyword">pragma</span> once</span>
+
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;string></span></span>
+
+<span class="token keyword">class</span> <span class="token class-name">Portfolio</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">Portfolio</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">bool</span> <span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span> <span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token keyword">bool</span> m_isEmpty<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span> m_shareCount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//Src/Portfolio/Portfolio.cpp</span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"Portfolio.h"</span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+Portfolio<span class="token operator">::</span><span class="token function">Portfolio</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token operator">:</span> m_isEmpty <span class="token punctuation">{</span> <span class="token boolean">true</span> <span class="token punctuation">}</span>
+        <span class="token punctuation">,</span> m_shareCount <span class="token punctuation">{</span> <span class="token number">0u</span> <span class="token punctuation">}</span>
+<span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">bool</span> Portfolio<span class="token operator">::</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> m_isEmpty<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_isEmpty <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    m_shareCount <span class="token operator">=</span> ShareCount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">unsigned</span> <span class="token keyword">int</span> Portfolio<span class="token operator">::</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> m_shareCount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>测试代码就是阅读代码首要的理解途径。</p>
+<h3 id="投资管理器中的简单重复"><a href="#投资管理器中的简单重复" class="headerlink" title="投资管理器中的简单重复"></a>投资管理器中的简单重复</h3><p><strong>参考代码版本：Git SHA (18fdb0404fcec58c117f776cadb40d4909c50243)；</strong></p>
+<p>首先要知道一点，<strong>不仅仅是生产代码，测试代码中避免重复也是很重要的</strong>。例如字符串 “IBM” 在两个测试中就重复了 3 次。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">APortfolio</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string IBM<span class="token punctuation">;</span>
+    Portfolio m_portfolio<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> string APortfolio<span class="token operator">::</span><span class="token function">IBM</span><span class="token punctuation">(</span><span class="token string">"IBM"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>使用 IBM 成员替换掉 “IBM” 字符串。</p>
+<p>如下代码中也存在重复：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"Portfolio.h"</span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+Portfolio<span class="token operator">::</span><span class="token function">Portfolio</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token operator">:</span> m_isEmpty <span class="token punctuation">{</span> <span class="token boolean">true</span> <span class="token punctuation">}</span>
+        <span class="token punctuation">,</span> m_shareCount <span class="token punctuation">{</span> <span class="token number">0u</span> <span class="token punctuation">}</span>
+<span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">bool</span> Portfolio<span class="token operator">::</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> m_isEmpty<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_isEmpty <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    m_shareCount <span class="token operator">=</span> ShareCount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">unsigned</span> <span class="token keyword">int</span> Portfolio<span class="token operator">::</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> m_shareCount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>从视觉角度来看，代码并没有明显的行与行（或表达式与表达式）的重复。但其中存在算法级的重复。成员函数 IsEmpty() 返回一个布尔量，这个布尔量会在 Purchase() 被调用时更改。但是，空的概念却直接绑定了股票数目，股票数目会在调用 Purchase() 时被赋值。通过去除 m_isEmpty 变量，让 IsEmpty() 查询股票的数量，我们可以消除这一概念重复。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"Portfolio.h"</span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+Portfolio<span class="token operator">::</span><span class="token function">Portfolio</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token operator">:</span> m_shareCount <span class="token punctuation">{</span> <span class="token number">0u</span> <span class="token punctuation">}</span>
+<span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">bool</span> Portfolio<span class="token operator">::</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token number">0</span> <span class="token operator">==</span> m_shareCount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_shareCount <span class="token operator">=</span> ShareCount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">unsigned</span> <span class="token keyword">int</span> Portfolio<span class="token operator">::</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> m_shareCount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过查询股票数量来决定是不是空有些啰嗦，但是目前是正确的。而且随证增量编写代码，往往会有一些更有趣的想发进而促进新测试的产生。例如，有人购买了 0 股某股票，Portfolio::isEmpty() 会返回空。但是我们对于空的定义是是否包含任何股票，所以这是否为空？或者不应该允许这笔买入？确定好前进的方向，并增加一个测试吧。</p>
+<p><strong>算法的重复（解决同一问题的不同方法或问题的不同部分）会随系统增长演变为重大问题。通常来说，随着对一个实现的改动未能编写进其他实现，重复代码会演化为不经意的变体。</strong></p>
+<h3 id="如何坚持增量的方法"><a href="#如何坚持增量的方法" class="headerlink" title="如何坚持增量的方法"></a>如何坚持增量的方法</h3><p><strong>参考代码版本：Git SHA (76f547915f27e85a2078d92c70eac8144da2e336)；</strong></p>
+<p>经过一段时间的编码后，我们得到了如下的一些测试：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Is empty whe created"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Is not empty after purchase"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers zero for share count of no purchased symbol"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers share count for purchased symbol"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Throw on purchase of zero shares"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers share count for appropriate symbol"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"share count reflects accumulated for purchases same symbol"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Reduces share count of symbol on sell"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Throw when selling more shares than purchased"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>新增的需求来了：</p>
+<ul>
+<li><strong>场景：显示买入历史记录</strong><ul>
+<li>投资者想看一下特定股票的购买记录，每个记录要显示购买的日期及数量。</li>
+</ul>
+</li>
+</ul>
+<p>就当前实现来说，这个场景开发很困难，因为我们没有跟踪每一笔的交易，更没有记录购买日期。这也是许多开发者对 TDD 质疑的地方。但是如果多花一些时间进行前期的需求分析，那么我们就会知道需要跟踪买日日期，这样在最初的设计就可能纳入这个需求。</p>
+<p>但现在已经开发一般，马后炮是没有用的。这个需求场景需要重构，设定好 10 分钟的闹钟，开始。</p>
+<blockquote>
+<p>参考代码版本：Git SHA (d4516419538f4adfd5d8f252c10a9e8f37b528ec)</p>
+</blockquote>
+<ul>
+<li>先理顺以下需要做的工作：<ul>
+<li>首先必须定义好表示买入的数据结构、改变方法的参数列表、从客户端代码提供日期、正确地填写数据结构并储存数据。</li>
+<li>不过先不要开始，至少不要一口气做完。时刻谨记是否可以增量的进行，每几分钟就寻求一下正面的反馈。例如，让我们先创建一个做出一笔买入的测试，然后验证相应的买入是否在购买记录中。假设买入总是在一个指定的日期做出，因为可以不给 Purchase() 传递日期，这使得目前的任务更简单。</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers the purchase record for a single purchase"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">using</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token punctuation">;</span>
+    m_portfolio<span class="token punctuation">.</span><span class="token function">purchase</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> purchases <span class="token operator">=</span> m_portfolio<span class="token punctuation">.</span><span class="token function">purchases</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">auto</span> purchase <span class="token operator">=</span> purchases<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>purchase<span class="token punctuation">.</span>m_shareCount <span class="token operator">==</span> <span class="token number">5u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>purchase<span class="token punctuation">.</span>m_date <span class="token operator">==</span> Portfolio<span class="token operator">::</span>FIXED_PURCHASE_DATE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>为了使测试通过，可以先不需要将买入记录于 holding 数据结构关联。因为目前的假设只考虑单次买入，所以可以定义一个“全局的”买入记录集合：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">struct</span> PurchaseRecord
+<span class="token punctuation">{</span>
+    <span class="token function">PurchaseRecord</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token operator">&amp;</span> Date<span class="token punctuation">)</span>
+            <span class="token operator">:</span> <span class="token function">m_shareCount</span><span class="token punctuation">(</span>ShareCount<span class="token punctuation">)</span>
+            <span class="token punctuation">,</span> <span class="token function">m_date</span><span class="token punctuation">(</span>Date<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span> m_shareCount<span class="token punctuation">;</span>
+    boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date m_date<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">class</span> <span class="token class-name">Portfolio</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date FIXED_PURCHASE_DATE<span class="token punctuation">;</span>
+
+    <span class="token keyword">bool</span> <span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">void</span> <span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">sell</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span> <span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+    std<span class="token operator">::</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> <span class="token function">purchases</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+<span class="token keyword">private</span><span class="token operator">:</span>
+    std<span class="token operator">::</span>unordered_map<span class="token operator">&lt;</span>std<span class="token operator">::</span>string<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token operator">></span> m_holdings<span class="token punctuation">;</span>
+    std<span class="token operator">::</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> m_purchases<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>参考代码版本：Git SHA (34253c6cd9326d82aa508e8e82bd52061b26508f)</p>
+</blockquote>
+<p>在继续之前，获得对敲入代码的正面反馈是一件很好的事情。我们定义了一个常量 FIXED_PURCHASE_DATE，以便取得快速的、可以展示的进步。我们知道这是假设的，现在去掉这个假设，然后增加一个新的测试。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers the purchase record for a single purchase"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">using</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token punctuation">;</span>
+    date <span class="token function">dateOfPurchase</span><span class="token punctuation">(</span><span class="token number">2021</span><span class="token punctuation">,</span> boost<span class="token operator">::</span>date_time<span class="token operator">::</span>Mar<span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    m_portfolio<span class="token punctuation">.</span><span class="token function">purchase</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> dateOfPurchase<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> purchases <span class="token operator">=</span> m_portfolio<span class="token punctuation">.</span><span class="token function">purchases</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">auto</span> purchase <span class="token operator">=</span> purchases<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>purchase<span class="token punctuation">.</span>m_shareCount <span class="token operator">==</span> <span class="token number">5u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>purchase<span class="token punctuation">.</span>m_date <span class="token operator">==</span> dateOfPurchase<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>修改 purchase 接口支持传入日期参数：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token comment" spellcheck="true">//Src/Portfolio/Portfolio.h</span>
+    <span class="token keyword">void</span> <span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span>
+        <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token operator">&amp;</span> TransactionDate <span class="token operator">=</span> Portfolio<span class="token operator">::</span>FIXED_PURCHASE_DATE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//Src/Portfolio/Portfolio.cpp</span>
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token operator">==</span> ShareCount<span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token function">InvalidPurchaseException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_holdings<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> ShareCount <span class="token operator">+</span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_purchases<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">PurchaseRecord</span><span class="token punctuation">(</span>ShareCount<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到接口使用了默认参数，但是这个参数并没有什么作用，还容易引起错误，现在想要去除 purchase 的默认时间但是还有许多测试没有传入日期，可以提供一个 fixture 辅助方法，由它来处理对 Purchase() 的调用并提供一个默认日期。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">APortfolio</span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date ARBITRARY_DATE<span class="token punctuation">;</span>
+
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string IBM<span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> string SAMSUNG<span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span>
+        <span class="token keyword">const</span> date<span class="token operator">&amp;</span> TransactionDate <span class="token operator">=</span> APortfolio<span class="token operator">::</span>ARBITRARY_DATE<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        m_portfolio<span class="token punctuation">.</span><span class="token function">purchase</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">,</span> ShareCount<span class="token punctuation">,</span> ARBITRARY_DATE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    Portfolio m_portfolio<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Reduces share count of symbol on sell"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">purchase</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_portfolio<span class="token punctuation">.</span><span class="token function">sell</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>m_portfolio<span class="token punctuation">.</span><span class="token function">shareCount</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token punctuation">(</span><span class="token number">30u</span> <span class="token operator">-</span> <span class="token number">13</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>一个可能引起争议的点是，辅助函数 Purchase() 从测试中移除了一些信息，第一次阅读测试的人必须查看辅助函数以便了解其作用。但这是一个简单函数，没有隐藏对阅读者来说难以记忆的关键信息。<strong>因此在专门测试 Purchase() 行为时，我们应该直接调用它。</strong></p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers share count for purchased symbol"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_portfolio<span class="token punctuation">.</span><span class="token function">purchase</span><span class="token punctuation">(</span>IBM<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> ARBITRARY_DATE<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//可以接受一个默认的测试时间传入</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span>m_portfolio<span class="token punctuation">.</span><span class="token function">shareCount</span><span class="token punctuation">(</span>IBM<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">2u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="更多的重复"><a href="#更多的重复" class="headerlink" title="更多的重复"></a>更多的重复</h3><p><strong>参考代码版本：Git SHA (336879ab8d12cd3aeed071004ff61aa642c3d953)；</strong></p>
+<p>为了支持负数的买入记录，将 ShareCount 改为有符号整数。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">struct</span> PurchaseRecord
+<span class="token punctuation">{</span>
+    <span class="token function">PurchaseRecord</span><span class="token punctuation">(</span><span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token operator">&amp;</span> Date<span class="token punctuation">)</span>
+            <span class="token operator">:</span> <span class="token function">m_shareCount</span><span class="token punctuation">(</span>ShareCount<span class="token punctuation">)</span>
+            <span class="token punctuation">,</span> <span class="token function">m_date</span><span class="token punctuation">(</span>Date<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">int</span> m_shareCount<span class="token punctuation">;</span>
+    boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date m_date<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>实际的交易代码，其中三行看起来有些重复：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token operator">==</span> ShareCount<span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token function">InvalidPurchaseException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_holdings<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> ShareCount <span class="token operator">+</span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_purchases<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">PurchaseRecord</span><span class="token punctuation">(</span>ShareCount<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">sell</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>ShareCount <span class="token operator">></span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token function">InvalidSellException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_holdings<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span> <span class="token operator">-</span> ShareCount<span class="token punctuation">;</span>
+    m_purchases<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">PurchaseRecord</span><span class="token punctuation">(</span><span class="token operator">-</span>ShareCount<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>他们本质上很相似：</p>
+<ol>
+<li><p>第一行的保护语句都是用来约束操作，即不能买入 0，和不能卖出的大于持有的数量，但是卖出统一也不应卖出 0，同时 sell() 接口中的 InvalidSellException 异常类型的名称可以具体化公用。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Throws on sell of zero shares"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">REQUIRE_THROWS_AS</span><span class="token punctuation">(</span><span class="token function">sell</span><span class="token punctuation">(</span>IBM<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ShareCountCannotBeZeroException<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//Src/Portfolio/Portfolio.cpp</span>
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">sell</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>ShareCount <span class="token operator">></span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token function">InvalidSellException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//这样 sell 与 purchase 就有相同的判断条件了</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token operator">==</span> ShareCount<span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token function">ShareCountCannotBeZeroException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_holdings<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span> <span class="token operator">-</span> ShareCount<span class="token punctuation">;</span>
+    m_purchases<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">PurchaseRecord</span><span class="token punctuation">(</span><span class="token operator">-</span>ShareCount<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>通过加或减已持有的股票数，可以更新相应股票名称的持有量。这样 sell 与 purchase 公用的语句可以抽出：</p>
+</li>
+</ol>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">purchase</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">transact</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">,</span> ShareCount<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">sell</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>ShareCount <span class="token operator">></span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token function">InvalidSellException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">transact</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">,</span> <span class="token operator">-</span>ShareCount<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">transact</span><span class="token punctuation">(</span>
+    <span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">int</span> ShareChange<span class="token punctuation">,</span> <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token operator">==</span> ShareChange<span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token function">ShareCountCannotBeZeroException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_holdings<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span> <span class="token operator">+</span> ShareChange<span class="token punctuation">;</span>
+    m_purchases<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">PurchaseRecord</span><span class="token punctuation">(</span>ShareChange<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>另一个和表达力相关的事情，异常类型 InvalidSellException 的名称不是很好。我们将其改成 InsufficientSharesException。</p>
+<h3 id="小方法的好处"><a href="#小方法的好处" class="headerlink" title="小方法的好处"></a>小方法的好处</h3><p>Transact() 函数只包含三行简单的代码，但是想要了解整个系统确有些困难，不具备表达力对此进行修改。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">transact</span><span class="token punctuation">(</span>
+    <span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">int</span> ShareChange<span class="token punctuation">,</span> <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">throwIfShareCountIsZero</span><span class="token punctuation">(</span>ShareChange<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">updateShareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">,</span> ShareChange<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">addPurchaseRecord</span><span class="token punctuation">(</span>ShareChange<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">throwIfShareCountIsZero</span><span class="token punctuation">(</span><span class="token keyword">int</span> ShareChange<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token operator">==</span> ShareChange<span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token function">ShareCountCannotBeZeroException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">updateShareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">int</span> ShareChange<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_holdings<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">shareCount</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span> <span class="token operator">+</span> ShareChange<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">addPurchaseRecord</span><span class="token punctuation">(</span><span class="token keyword">int</span> ShareChange<span class="token punctuation">,</span> <span class="token keyword">const</span> date<span class="token operator">&amp;</span> Date<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_purchases<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">PurchaseRecord</span><span class="token punctuation">(</span>ShareChange<span class="token punctuation">,</span> Date<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>下面可能是你会提出不这么做的一些理由：</p>
+<ul>
+<li>这是额外功。创建新函数很费力。</li>
+<li>为只在一个地方用到的单行代码创建一个函数似乎很荒唐。</li>
+<li>额外的函数调用会加重性能开销。</li>
+<li>很难在所有代码中遵循完整的控制流。</li>
+<li>你会得到成千上万个小方法，且每个方法都有着巨长的名称。</li>
+</ul>
+</li>
+<li><p>期望这么做的原因：</p>
+<ul>
+<li>这遵守了内聚和单一责任的设计原则。同一函数中的所有代码处于同一层次的抽象。修改每个函数的原因只有一个。</li>
+<li>这为以后的设计改动铺平了道路。我们仍然需要将买入记录和对应的股票名称联系起来，但现在可以在一处完成改动，而非两处。</li>
+<li>忽略具体的实现细节会更容易理解代码控制流。回忆一下接口和实现或抽象和具体的分离理念。</li>
+<li>小方法是真正重用的开始。随着越来越多的相似函数被提取出来，识别出重复的概念和结构会变得更加容易。</li>
+</ul>
+</li>
+</ul>
+<h3 id="完成功能"><a href="#完成功能" class="headerlink" title="完成功能"></a>完成功能</h3><p><strong>参考代码版本：Git SHA (8e75460501b0ef4c3dd3689f549eff60f1e575e4)；</strong></p>
+<p>目前的投资管理器能够返回一个买入列表，但只能返回一支股票的列表。下一个测试要求投资管理器能返回多支已购股票的买入记录。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">==</span><span class="token punctuation">(</span><span class="token keyword">const</span> PurchaseRecord<span class="token operator">&amp;</span> Lhs<span class="token punctuation">,</span> <span class="token keyword">const</span> PurchaseRecord<span class="token operator">&amp;</span> Rhs<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Lhs<span class="token punctuation">.</span>m_shareCount <span class="token operator">==</span> Rhs<span class="token punctuation">.</span>m_shareCount <span class="token operator">&amp;&amp;</span> Lhs<span class="token punctuation">.</span>m_date <span class="token operator">==</span> Rhs<span class="token punctuation">.</span>m_date<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// TODO: 使用新式方法实现一个 Matcher 匹配器</span>
+<span class="token comment" spellcheck="true">// https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md</span>
+<span class="token keyword">class</span> <span class="token class-name">ElementsAre</span> <span class="token operator">:</span> <span class="token keyword">public</span> Catch<span class="token operator">::</span>MatcherBase<span class="token operator">&lt;</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">>></span>
+<span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">ElementsAre</span><span class="token punctuation">(</span><span class="token keyword">const</span> vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span><span class="token operator">&amp;</span> Param<span class="token punctuation">)</span>
+            <span class="token operator">:</span> <span class="token function">m_purchaseRecord</span><span class="token punctuation">(</span>Param<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">bool</span> <span class="token function">match</span><span class="token punctuation">(</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> <span class="token keyword">const</span><span class="token operator">&amp;</span> Arg<span class="token punctuation">)</span> <span class="token keyword">const</span> override
+    <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">auto</span> varL <span class="token operator">:</span> Arg<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token keyword">bool</span> retFlag <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">auto</span> varR <span class="token operator">:</span> m_purchaseRecord<span class="token punctuation">)</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>varL <span class="token operator">==</span> varR<span class="token punctuation">)</span> <span class="token punctuation">{</span> retFlag <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>retFlag<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">virtual</span> std<span class="token operator">::</span>string <span class="token function">describe</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> override <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token string">"None Match"</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+
+
+<span class="token keyword">private</span><span class="token operator">:</span>
+    vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> m_purchaseRecord<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Separates purchase records by symbol"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">purchase</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> ARBITRARY_DATE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">purchase</span><span class="token punctuation">(</span>IBM<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> ARBITRARY_DATE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">auto</span> sales <span class="token operator">=</span> m_portfolio<span class="token punctuation">.</span><span class="token function">purchases</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> checkArray <span class="token punctuation">{</span> <span class="token function">PurchaseRecord</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> ARBITRARY_DATE<span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE_THAT</span><span class="token punctuation">(</span>sales<span class="token punctuation">,</span> <span class="token function">ElementsAre</span><span class="token punctuation">(</span>checkArray<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Catch2 没有提供类似 gmock 的 ElementAre 匹配器，这里先自己实现一个，用来验证指定的元素是否在集合中。测试一开始失败了，因为名为 m_portfolio 的向量容器只包含两个买入记录——一个是 Samsung，另一个是 IBM。<br>现在修改代码，为每只股票保存包含了此股票买卖的记录。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Portfolio</span>
+<span class="token punctuation">{</span>
+<span class="token comment" spellcheck="true">//......</span>
+    <span class="token keyword">void</span> <span class="token function">addPurchaseRecord</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">int</span> ShareCount<span class="token punctuation">,</span> <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token operator">&amp;</span> Date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">throwIfShareCountIsZero</span><span class="token punctuation">(</span><span class="token keyword">int</span> ShareChange<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+    std<span class="token operator">::</span>unordered_map<span class="token operator">&lt;</span>std<span class="token operator">::</span>string<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token operator">></span> m_holdings<span class="token punctuation">;</span>
+    std<span class="token operator">::</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> m_purchases<span class="token punctuation">;</span>
+    std<span class="token operator">::</span>unordered_map<span class="token operator">&lt;</span>std<span class="token operator">::</span>string<span class="token punctuation">,</span> std<span class="token operator">::</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">>></span> m_purchaseRecords<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>增加一个 map 用于存储交易信息，同时 addPurchaseRecord 接口增加 Symbol 参数。修改具体实现：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">addPurchaseRecord</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">int</span> ShareChange<span class="token punctuation">,</span> <span class="token keyword">const</span> date<span class="token operator">&amp;</span> Date<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_purchases<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">PurchaseRecord</span><span class="token punctuation">(</span>ShareChange<span class="token punctuation">,</span> Date<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">auto</span> it <span class="token operator">=</span> m_purchaseRecords<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>it <span class="token operator">==</span> m_purchaseRecords<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> m_purchaseRecords<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+
+    m_purchaseRecords<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">PurchaseRecord</span><span class="token punctuation">(</span>ShareChange<span class="token punctuation">,</span> Date<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">//......</span>
+
+vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> Portfolio<span class="token operator">::</span><span class="token function">purchases</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> m_purchaseRecords<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span>second<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接下来在测试列表中加入一个条目（“处理在买入记录中找不到特定股票的情况”）。同时在测试通过后可以移除掉 m_purchases 相关的代码。从重复代码角度来看，ShareCount() 和 Purchases() 中都包含了在映射容器中查找元素的代码。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token comment" spellcheck="true">//test.cpp</span>
+<span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">!=</span><span class="token punctuation">(</span><span class="token keyword">const</span> PurchaseRecord<span class="token operator">&amp;</span> Lhs<span class="token punctuation">,</span> <span class="token keyword">const</span> PurchaseRecord<span class="token operator">&amp;</span> Rhs<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token operator">!</span><span class="token punctuation">(</span>Lhs <span class="token operator">==</span> Rhs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">TEST_CASE_METHOD</span><span class="token punctuation">(</span>APortfolio<span class="token punctuation">,</span> <span class="token string">"Answers empty purchase record vector when symbol not found"</span><span class="token punctuation">,</span> <span class="token string">"[Portfolio]"</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">REQUIRE_THAT</span><span class="token punctuation">(</span>m_portfolio<span class="token punctuation">.</span><span class="token function">purchases</span><span class="token punctuation">(</span>SAMSUNG<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">Equals</span><span class="token punctuation">(</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//.h</span>
+<span class="token keyword">class</span> <span class="token class-name">Portfolio</span>
+<span class="token punctuation">{</span>
+<span class="token comment" spellcheck="true">//.....</span>
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">typename</span> T<span class="token operator">></span>
+    T <span class="token function">mapFind</span><span class="token punctuation">(</span>std<span class="token operator">::</span>unordered_map<span class="token operator">&lt;</span>std<span class="token operator">::</span>string<span class="token punctuation">,</span> T<span class="token operator">></span> Map<span class="token punctuation">,</span> <span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Key<span class="token punctuation">)</span> <span class="token keyword">const</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">auto</span> it <span class="token operator">=</span> Map<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> it <span class="token operator">==</span> Map<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">?</span> T <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token operator">:</span> it<span class="token operator">-</span><span class="token operator">></span>second<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    std<span class="token operator">::</span>unordered_map<span class="token operator">&lt;</span>std<span class="token operator">::</span>string<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token operator">></span> m_holdings<span class="token punctuation">;</span>
+    std<span class="token operator">::</span>unordered_map<span class="token operator">&lt;</span>std<span class="token operator">::</span>string<span class="token punctuation">,</span> std<span class="token operator">::</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">>></span> m_purchaseRecords<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//cpp</span>
+<span class="token keyword">unsigned</span> <span class="token keyword">int</span> Portfolio<span class="token operator">::</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> mapFind<span class="token operator">&lt;</span><span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token operator">></span><span class="token punctuation">(</span>m_holdings<span class="token punctuation">,</span> Symbol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> Portfolio<span class="token operator">::</span><span class="token function">purchases</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> mapFind<span class="token operator">&lt;</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">>></span><span class="token punctuation">(</span>m_purchaseRecords<span class="token punctuation">,</span> Symbol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>同时进行一点点小小优化，主要针对 addPurchaseRecord ：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp">    <span class="token keyword">bool</span> <span class="token function">containsSymbol</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">initializePurchaseRecords</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> PurchaseRecord<span class="token operator">&amp;&amp;</span> Record<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>我们再一次做了大量的小函数重构。现在 AddPurchaseRecord() 声明了高层次的策略，其中的三个函数代表了策略中封装了实现细节的每个步骤。</p>
+<p>要说明的是，我们并没有提前思考设计。相反，我们先得到了一个可以运行的代码，然后再优化现有方案的设计。这样做的副作用是，以后的改动会更加容易。</p>
+<h3 id="增量设计让事情变得更简单"><a href="#增量设计让事情变得更简单" class="headerlink" title="增量设计让事情变得更简单"></a>增量设计让事情变得更简单</h3><p><strong>参考代码版本：Git SHA (687b674d83cd1eb25182666c53e130e12a15881e)；</strong></p>
+<p>在 Portfolio 中两个相似的集合：m_holdings 和 m_purchaseRecords，前者将股票和总股数相<br>联系，后者将股票和购买记录相联系。可以去除 m_holdings，转而按照需要来计算一个特定股票<br>的股数。</p>
+<p>其实如果不去除 m_holdings 其实对性能是有益处的，但是这也会导致代码稍显复杂，这一切取决于开发人员的取舍。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">bool</span> Portfolio<span class="token operator">::</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token number">0</span> <span class="token operator">==</span> m_purchaseRecords<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">transact</span><span class="token punctuation">(</span>
+    <span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> <span class="token keyword">int</span> ShareChange<span class="token punctuation">,</span> <span class="token keyword">const</span> boost<span class="token operator">::</span>gregorian<span class="token operator">::</span>date<span class="token operator">&amp;</span> TransactionDate<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">throwIfShareCountIsZero</span><span class="token punctuation">(</span>ShareChange<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">addPurchaseRecord</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">,</span> ShareChange<span class="token punctuation">,</span> TransactionDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">unsigned</span> <span class="token keyword">int</span> Portfolio<span class="token operator">::</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">auto</span> records <span class="token operator">=</span> mapFind<span class="token operator">&lt;</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">>></span><span class="token punctuation">(</span>m_purchaseRecords<span class="token punctuation">,</span> Symbol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token function">accumulate</span><span class="token punctuation">(</span>records<span class="token punctuation">.</span><span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> records<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token keyword">int</span> Total<span class="token punctuation">,</span> PurchaseRecord Record<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> Total <span class="token operator">+</span> Record<span class="token punctuation">.</span>m_shareCount<span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接下来需要将所有和买入记录相关的代码抽到单独的类中，因为 Portfolio 违反了单一责任原则，修改 Portfolio 类的主要原因应该和操作股票的方式有关。但还有一个需要修改的原因——针对买入记录的特定实现细节。</p>
+<p>通过增量的方式进行修改，首先引入一个新的成员变量，将股票和持有量联系起来：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Portfolio</span>
+<span class="token punctuation">{</span>
+<span class="token comment" spellcheck="true">//.....</span>
+    std<span class="token operator">::</span>unordered_map<span class="token operator">&lt;</span>std<span class="token operator">::</span>string<span class="token punctuation">,</span> std<span class="token operator">::</span>vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">>></span> m_purchaseRecords<span class="token punctuation">;</span>
+    std<span class="token operator">::</span>unordered_map<span class="token operator">&lt;</span>std<span class="token operator">::</span>string<span class="token punctuation">,</span> Holding<span class="token operator">></span> m_holdings<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Holding 就是后续需要将买入实现细节迁出的地方，接下来逐步将 m_holdings 替换掉 m_purchaseRecords。</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">initializePurchaseRecords</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_purchaseRecords<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_holdings<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">Holding</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">void</span> Portfolio<span class="token operator">::</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">,</span> PurchaseRecord<span class="token operator">&amp;&amp;</span> Record<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    m_purchaseRecords<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>Record<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    m_holdings<span class="token punctuation">[</span>Symbol<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>Record<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接下来将 Portfolio 中买入记录细节的代码迁出到 Holding.h 中，并将使用的 m_purchaseRecords 实现的功能替换成 Holding ：</p>
+<pre class="line-numbers language-cpp"><code class="language-cpp"><span class="token keyword">bool</span> Portfolio<span class="token operator">::</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// return 0 == m_purchaseRecords.size();</span>
+    <span class="token keyword">return</span> <span class="token number">0</span> <span class="token operator">==</span> m_holdings<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// .....</span>
+
+<span class="token keyword">bool</span> Portfolio<span class="token operator">::</span><span class="token function">containsSymbol</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// return m_purchaseRecords.find(Symbol) != m_purchaseRecords.end();</span>
+    <span class="token keyword">return</span> m_holdings<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Symbol<span class="token punctuation">)</span> <span class="token operator">!=</span> m_holdings<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">unsigned</span> <span class="token keyword">int</span> Portfolio<span class="token operator">::</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token keyword">const</span> string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// auto records = mapFind&lt;vector&lt;PurchaseRecord>>(m_purchaseRecords, Symbol);</span>
+    <span class="token comment" spellcheck="true">// return accumulate(records.begin(), records.end(), 0,</span>
+    <span class="token comment" spellcheck="true">// [](int Total, PurchaseRecord Record) { return Total + Record.m_shareCount; });</span>
+    <span class="token keyword">return</span> mapFind<span class="token operator">&lt;</span>Holding<span class="token operator">></span><span class="token punctuation">(</span>m_holdings<span class="token punctuation">,</span> Symbol<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">shareCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+vector<span class="token operator">&lt;</span>PurchaseRecord<span class="token operator">></span> Portfolio<span class="token operator">::</span><span class="token function">purchases</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> Symbol<span class="token punctuation">)</span> <span class="token keyword">const</span>
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// return mapFind&lt;vector&lt;PurchaseRecord>>(m_purchaseRecords, Symbol);</span>
+    <span class="token keyword">return</span> mapFind<span class="token operator">&lt;</span>Holding<span class="token operator">></span><span class="token punctuation">(</span>m_holdings<span class="token punctuation">,</span> Symbol<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">purchases</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最终删除 m_purchaseRecords 相关实例即可。</p>
+<h2 id="预先设计在哪"><a href="#预先设计在哪" class="headerlink" title="预先设计在哪"></a>预先设计在哪</h2><p>预先设计是一个很好的起始路线图。围绕此设计的讨论有助于发现软件中必须要做的东西，以及最初该怎样设计软件。但是，打造系统所需要的大量细节会发生变化。例如，类图是一个需要创建的好东西，但不要过度执着于底层细节：私有还是公开，属性细节，聚合还是组合，等等。这些东西来源于测试驱动的过程。相反，应致力于类名、依赖关系，或一些关键的公共行为。<br>TDD 允许你基于当前的业务需求，保持一个可能的最简设计。如果一直保持设计尽量简洁，那么就可以最大可能地引入新的、从未被考虑过的功能。相反，如果任由系统退化（并有大量的重复代码和晦涩难懂的代码），未来有任何新的需求时，你将痛苦万分。</p>
+<h3 id="哪里才会讨论真正的设计呢"><a href="#哪里才会讨论真正的设计呢" class="headerlink" title="哪里才会讨论真正的设计呢"></a>哪里才会讨论真正的设计呢</h3><p>当处于 TDD 的重构阶段，你要尽可能地了解与优秀设计构成相关的所有知识。同时，也要尽可能地了解团队的想法。你是在一个共享的代码库中工作，需要与团队就哪些可接受、哪些与设计无关等方面达成共识。<br>大多数时候，经典设计理念和简单设计原则相一致。举个例子，设计模式主要与解决方案的表达力相关。像模板方法这样的模式主要用于消除重复。</p>
+<h3 id="简单设计原则和经典设计理念冲突"><a href="#简单设计原则和经典设计理念冲突" class="headerlink" title="简单设计原则和经典设计理念冲突"></a>简单设计原则和经典设计理念冲突</h3><ol>
+<li><p>访问性：仍然应当尽量保持成员私有化。这会使得有些改动变得更容易些。虽然不太可能，但暴露不必要的成员会使得系统受到恶意或糊涂客户的破坏。</p>
+<ul>
+<li>但是，如果你需要放松访问控制来让测试验证一些功能是否可以如期工作，那大多数时间就不要为此担心了。如果每样东西都被测试，那么测试就会保护系统免受糊涂客户的破坏。<strong>知道系统可以如期工作远比对未来滥用的杞人忧天更让人向往。</strong></li>
+<li>在测试中，绝对要避免不必要的设计，例如，用私有还是公有控制。没有人会调用你的测试，测试中的访问指示符只会影响可读性。</li>
+</ul>
+</li>
+<li><p>及时性：老派的设计希望你能尝试获得尽可能完美的设计。在简单设计中，这是不正确的。实际上，越是绞尽脑汁想出应对未来每种可能功能的设计，就越会付出更多时间，同时，当功能需求真的出现时，你依然需要做大量的修改。最好的方式是，学习怎样通过简单、增量的设计来持续地应对变化。</p>
+</li>
+</ol>
+<h2 id="阻碍重构的因素"><a href="#阻碍重构的因素" class="headerlink" title="阻碍重构的因素"></a>阻碍重构的因素</h2><ol>
+<li>测试不足：使用 TDD 的话，构建进系统的每一小块逻辑都有对应的快速测试。这些测试可以给予你充足的信心来构建更好的代码。相反，如果你只有少量的快速单元测试，随之而来的是更低的测试覆盖率，重构的热情和重构的能力会大大缩减。</li>
+<li>生存周期长的分支：：如果曾经合并过包含大量改动的其他分支中的代码，那么你应该知道大量的重构会使合并代码异常困难。在一个分支上工作的开发者或许会被要求最小化改动范围。这样做可能会使代码合并更简单些，但也会使代码库从此深受煎熬。</li>
+<li>与实现相关的测试：在测试驱动开发中，类的行为是通过其公有接口来展现的。按定义来说，重构是在不改变其外在公有行为的前提下改变设计的。如果测试知道内部私有实现细节的话，那么在这些私有细节改变时，测试就有失败的可能。大量的模拟或协作者存根会向测试暴露一些本该私有的细节。使用得当的话，使用测试替身不会导致问题。但如果随意使用，你可能会在重构时发现许多测试失败。这也是很多开发者不愿意重构的好借口。</li>
+<li>大量的技术债务：大量晦涩难懂的代码足以让许多开发者放弃重构。“我该从哪下手呢？”越是任由代码退化，越是难以对它做出改变。</li>
+<li>缺乏知识：任何你不知道的事情都能够且终将绊倒你。</li>
+<li>着迷于提前的性能优化：本书中所提倡的许多观点都是基于小的类和函数，它们会带来创建额外对象、调用额外函数的开销。确保先创建一个整洁、可维护的设计。得到一个适合设计的性能数据来判断它是否有性能缺陷。仅对必须优化的代码进行优化。大多数优化会增加理解和维护代码的难度。</li>
+<li>绩效考核：HAHAHA。</li>
+<li>一味的追求速度：：“发布吧！不要花时间重构了！”你可以责怪工程经理不理解保持系统设计整洁的重要性吗？当然，可能看上去你的进度在一段时间内是快了些，但任由系统质量变差终会将你推入深渊。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>在使用 TDD 时需要考虑三条规则：</p>
+<ol>
+<li>确保代码具备很强的可读性和表达力。</li>
+<li>在和第一条规则不冲突的情况下，消除所有的重复。</li>
+<li>不要向系统引入不必要的复杂性。避免猜测行的结构关系和不能增加系统表达力的抽象。</li>
+</ol>
+</li>
+<li><p>重复代码或许使维护代码库最大的开销，因此时刻谨记将增量重构作为 TDD 环节的一部分，可以避免系统级的退化，文中以设计一个股票交易系统为例。</p>
+<ol>
+<li>不仅仅是生产代码，测试代码中避免重复同样重要。</li>
+<li>获取在代码层面没有明显重复，但是在逻辑上是有多余的点，例如例子中判断是否持仓为空与查询股票数量的关系，通过去除 m_isEmpty 变量，让 IsEmpty() 查询股票的数量，我们可以消除这一概念重复。<ul>
+<li>算法的重复（解决同一问题的不同方法或问题的不同部分）会随系统增长演变为重大问题。通常来说，随着对一个实现的改动未能编写进其他实现，重复代码会演化为不经意的变体。</li>
+</ul>
+</li>
+<li>抽离出公用的代码，避免重复。</li>
+<li>提取短小的方法有许多好处，职责单一，功能逻辑清晰，表达力强，同时也是避免重复的强力工具，只有将这些子功能提取出才有复用的可能。</li>
+</ol>
+</li>
+<li><p>何时探讨设计：</p>
+<ul>
+<li>预先设计是一个很好的起始路线图。围绕此设计的讨论有助于发现软件中必须要做的东西，以及最初该怎样设计软件。但是，打造系统所需要的大量细节会发生变化。</li>
+<li>TDD 允许你基于当前的业务需求，保持一个可能的最简设计。如果一直保持设计尽量简洁，那么就可以最大可能地引入新的、从未被考虑过的功能。相反，如果任由系统退化（并有大量的重复代码和晦涩难懂的代码），未来有任何新的需求时，你将痛苦万分。</li>
+</ul>
+</li>
+<li><p>简单设计原则与经典设计原则的冲突：</p>
+<ol>
+<li>访问性：如何抉择应不应该为测试方便，放松对于成员私有化的标准。</li>
+<li>及时性：老派的设计希望你能尝试获得尽可能完美的设计。在简单设计中，更应该考虑如何通过简单、增量的设计应对持续的变化。</li>
+</ol>
+</li>
+</ul>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Layton</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://hatter-long-blog.vercel.app/2022/06/02/liu-ce-shi-qu-dong-kai-fa-ji-qiao-zeng-liang-she-ji/">https://hatter-long-blog.vercel.app/2022/06/02/liu-ce-shi-qu-dong-kai-fa-ji-qiao-zeng-liang-she-ji/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">Layton</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                                    <span class="chip bg-color">测试驱动开发技巧</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2022/06/02/yi-llvm-bian-yi-qi-huan-jing-pei-zhi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="（一）LLVM编译器--环境配置">
+                        
+                        <span class="card-title">（一）LLVM编译器--环境配置</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-02
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-category">
+                                    LLVM 编译器
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/">
+                        <span class="chip bg-color">LLVM 编译器</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/06/02/wu-ce-shi-qu-dong-kai-fa-ji-qiao-ce-shi-ti-shen/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="（五）测试驱动开发技巧--测试替身">
+                        
+                        <span class="card-title">（五）测试驱动开发技巧--测试替身</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
+                                    测试驱动开发技巧
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
+                        <span class="chip bg-color">测试驱动开发技巧</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2022</span>
+            
+            <a href="/about" target="_blank">Layton</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">39.5k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2022";
+                        var startMonth = "5";
+                        var startDate = "31";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已勉强运行 ' + diffDays + ' 天 ღゝ◡╹)ノ♡';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/HATTER-LONG" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:caolei6767@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=985001640" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 985001640" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.bootcss.com/aos/3.0.0-beta.6/aos.js"></script>
+    <script src="https://cdn.bootcss.com/scrollprogress/3.0.2/scrollProgress.min.js"></script>
+    <script src="https://cdn.bootcss.com/lightgallery/1.10.0/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
