@@ -305,9 +305,7 @@
 
 
 <script>
-    // 每天切换 banner 图.  Switch banner image every day.
-    var bannerUrl = "/medias/banner/" + new Date().getDay() + '.jpg';
-    $('.bg-cover').css('background-image', 'url(' + bannerUrl + ')');
+    $('.bg-cover').css('background-image', 'url(/medias/banner/0.jpg)');
 </script>
 
 
@@ -328,19 +326,19 @@
                 
                 
                 
-                <a href="/categories/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/" title="博客建设: 1">
+                <a href="/categories/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/" title="LLVM 编译器: 3">
                     <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #F9EBEA;">博客建设
-                        <span class="tag-length">1</span>
+                             chip-active "
+                            style="background-color: #F9EBEA;">LLVM 编译器
+                        <span class="tag-length">3</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/" title="LLVM 编译器: 1">
+                <a href="/categories/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/" title="博客建设: 1">
                     <span class="chip center-align waves-effect waves-light
-                             chip-active "
-                            style="background-color: #F5EEF8;">LLVM 编译器
+                             chip-default "
+                            style="background-color: #F5EEF8;">博客建设
                         <span class="tag-length">1</span>
                     </span>
                 </a>
@@ -365,6 +363,99 @@
 
     <article id="articles" class="container articles">
         <div class="row tags-posts">
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/06/03/san-llvm-bian-yi-qi-clang-ast-xue-xi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="（三）LLVM编译器--Clang_AST_学习">
+                            
+                            <span class="card-title">（三）LLVM编译器--Clang_AST_学习</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                Clang AST 学习前言在之前搭建环境是就已经提到过，Clang 不仅仅可以作为一个编译器前端，同时还可以通过库的形式提供代码解析功能，将 C/C++ 程序源码转换为 abstract syntax tree （AST）语法树以及提供相
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-03
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-category">
+                                    LLVM 编译器
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/">
+                            <span class="chip bg-color">LLVM 编译器</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/06/03/er-llvm-bian-yi-qi-gou-jian-clang-libtooling-gong-ju/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="（二）LLVM编译器--构建_Clang_libTooling_工具">
+                            
+                            <span class="card-title">（二）LLVM编译器--构建_Clang_libTooling_工具</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                构建自己的 Clang libTooling 工具前言
+本篇文章主要介绍就是如何通过 llvm 源码去构建属于自己的 Clang Tooling 工具，由于之前环境是搭建在 Windows 下，所以本篇主要也是在 Windows 下进行，如
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-03
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-category">
+                                    LLVM 编译器
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/">
+                            <span class="chip bg-color">LLVM 编译器</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
@@ -436,7 +527,7 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">39.5k</span>
+                        class="white-color">46.6k</span>
             
             
             
