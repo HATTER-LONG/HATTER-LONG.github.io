@@ -1,0 +1,1528 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="（一）Rust_通用编程概念.md, null">
+    <meta name="description" content="通用编程概念前言又开新坑了，笔记系列主要学习了 Rust 官方的文档，配合 B 站的视频效果更佳。
+本章节主要介绍了一些 Rust 通用的基础概念，其实这部分对于已经有编程经验的人来说都很了解，可以快速浏览下了解 Rust 与其他语言的一些">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    
+
+    <title>（一）Rust_通用编程概念.md | null</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/aos/3.0.0-beta.6/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/lightgallery/1.6.12/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span"></span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name"></div>
+        <div class="logo-desc">
+            
+            随机更新
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/HATTER-LONG" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/HATTER-LONG" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">（一）Rust_通用编程概念.md</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+                                <span class="chip bg-color">Rust 编程基础</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="post-category">
+                                Rust 编程基础
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-07-02
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    10 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="通用编程概念"><a href="#通用编程概念" class="headerlink" title="通用编程概念"></a>通用编程概念</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>又开新坑了，笔记系列主要学习了 Rust 官方的<a target="_blank" rel="noopener" href="https://doc.rust-lang.org/book/title-page.html">文档</a>，配合 B 站的<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1hp4y1k7SV?spm_id_from=333.999.0.0">视频</a>效果更佳。</p>
+<p>本章节主要介绍了一些 Rust 通用的基础概念，其实这部分对于已经有编程经验的人来说都很了解，可以快速浏览下了解 Rust 与其他语言的一些细节不同之处。</p>
+<p>话不多说，Let’s Go.</p>
+<h2 id="变量与可变性"><a href="#变量与可变性" class="headerlink" title="变量与可变性"></a>变量与可变性</h2><ol>
+<li>声明变量使用 let 关键字。</li>
+<li>默认情况下，变量是不可变的。</li>
+<li>使用 mut 标记可变变量。</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+<span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"The value of x is {}"</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+x <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span>
+
+error<span class="token punctuation">[</span>E0384<span class="token punctuation">]</span><span class="token punctuation">:</span> cannot assign twice to immutable varia
+ble `x`
+ <span class="token operator">-</span><span class="token punctuation">-></span> src<span class="token operator">/</span>main<span class="token punctuation">.</span>rs<span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">:</span><span class="token number">1</span>
+  <span class="token operator">|</span>
+<span class="token number">4</span> <span class="token operator">|</span>     <span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+  <span class="token operator">|</span>         <span class="token operator">-</span>
+  <span class="token operator">|</span>         <span class="token operator">|</span>
+  <span class="token operator">|</span>         first assignment to `x`
+  <span class="token operator">|</span>         help<span class="token punctuation">:</span> consider making this binding mutab
+le<span class="token punctuation">:</span> `<span class="token keyword">mut</span> x`
+<span class="token number">5</span> <span class="token operator">|</span>     <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"The value of x is {}"</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token number">6</span> <span class="token operator">|</span> x <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span>
+  <span class="token operator">|</span> <span class="token operator">^</span><span class="token operator">^</span><span class="token operator">^</span><span class="token operator">^</span><span class="token operator">^</span> cannot assign twice to immutable variable
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="变量与常量"><a href="#变量与常量" class="headerlink" title="变量与常量"></a>变量与常量</h3><ol>
+<li>常量（constant)，常量在绑定值以后也是不可变的，但是它与不可变的变量有些区别：<ul>
+<li>不可以使用 mut， 常量永远都是不可变的。</li>
+<li>声明常量使用 const 关键字，它的类型必须显式的标注。</li>
+<li>常量可以在任何作用域内声明，包括全局作用域。</li>
+<li>常量只可以绑定到常量表达式，无法绑定到函数的调用结果或只能在运行时才能计算出的值。</li>
+</ul>
+</li>
+<li>在程序运行期间，常量在其声明的作用域内一直有效。</li>
+<li>命名规范：Rust 里常量使用全大写字母，每个单词之间用下划线分隔开，例如：<code>const MAX_POINTS: u32 = 100_000;</code>。</li>
+</ol>
+<h3 id="Shadowing-隐藏"><a href="#Shadowing-隐藏" class="headerlink" title="Shadowing 隐藏"></a>Shadowing 隐藏</h3><ol>
+<li><p>可以使用相同的名字声明新的变量，新的变量就会 shadow 之前声明的同名变量。</p>
+<ul>
+<li>在后续的代码中这个变量名代码的就是新的变量。</li>
+</ul>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+<span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"The value of x is {}"</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 5</span>
+<span class="token comment" spellcheck="true">//x = 6; error</span>
+<span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//shadowing</span>
+<span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"The value of x is {}"</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 6</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>shadow 和把变量标记为 mut 是不一样的：</p>
+<ul>
+<li>如果不使用 let 关键字，那么重新给非 mut 变量进行赋值时会导致编译错误。</li>
+<li>而使用 let 声明的同名新变量，也是不可变的。</li>
+<li>使用 let 声明的同名新变量，它的类型可以与之前不同。</li>
+</ul>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> space <span class="token operator">=</span> <span class="token string">"    "</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// str</span>
+<span class="token keyword">let</span> space <span class="token operator">=</span> space<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// usize</span>
+<span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"now space value is {}"</span><span class="token punctuation">,</span> space<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><ol>
+<li><p>标量和复合类型。</p>
+</li>
+<li><p>Rust 是静态编译语言，在编译时必须知道所有变量的类型：</p>
+<ul>
+<li>基于使用的值，编译器通常能够推断出它的具体类型。</li>
+<li>但如果可能的类型比较多（例如把 String 转为整数 parse<br>方法），就必须添加类型的显式标注，否则编译会报错。</li>
+</ul>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> guess <span class="token operator">=</span> <span class="token string">"42"</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">expect</span><span class="token punctuation">(</span><span class="token string">"Not a number"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+error<span class="token punctuation">[</span>E0282<span class="token punctuation">]</span><span class="token punctuation">:</span> <span class="token keyword">type</span> annotations needed
+<span class="token operator">-</span><span class="token punctuation">-></span> src<span class="token operator">/</span>main<span class="token punctuation">.</span>rs<span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">:</span><span class="token number">9</span>
+<span class="token operator">|</span>
+<span class="token number">16</span> <span class="token operator">|</span> <span class="token keyword">let</span> guess <span class="token operator">=</span> <span class="token string">"42"</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">expect</span><span class="token punctuation">(</span>"Not a numb
+er"<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">|</span> <span class="token operator">^</span><span class="token operator">^</span><span class="token operator">^</span><span class="token operator">^</span><span class="token operator">^</span> consider giving `guess` a <span class="token keyword">type</span>
+
+<span class="token comment" spellcheck="true">// 需要指定类型</span>
+<span class="token keyword">let</span> guess<span class="token punctuation">:</span> u32 <span class="token operator">=</span> <span class="token string">"42"</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">expect</span><span class="token punctuation">(</span><span class="token string">"Not a number"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<h3 id="标量类型"><a href="#标量类型" class="headerlink" title="标量类型"></a>标量类型</h3><h4 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h4><ol>
+<li><p>整数类型没有小数部分。</p>
+</li>
+<li><p>无符号整数类型以 u 开头。例如 u32 就是一个无符号的整数类型，占据 32 位的空间。</p>
+</li>
+<li><p>有符号整数类型以 i 开头。</p>
+</li>
+<li><p>Rust 整数类型关系：</p>
+<table>
+<thead>
+<tr>
+<th>length</th>
+<th>Signed</th>
+<th>unsigned</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8-bit</td>
+<td>i8</td>
+<td>u8</td>
+</tr>
+<tr>
+<td>16-bit</td>
+<td>i16</td>
+<td>u16</td>
+</tr>
+<tr>
+<td>32-bit</td>
+<td>i32</td>
+<td>u32</td>
+</tr>
+<tr>
+<td>64-bit</td>
+<td>i64</td>
+<td>u64</td>
+</tr>
+<tr>
+<td>128-bit</td>
+<td>i128</td>
+<td>u128</td>
+</tr>
+<tr>
+<td>arch</td>
+<td>isize</td>
+<td>usize</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>isize 与 usize 类型的位数由程序运行的计算机架构所决定：</p>
+<ul>
+<li>如果是 64 位计算机，那就是 64 位。</li>
+<li>32 位同理。</li>
+</ul>
+</li>
+<li><p>整数的字面值，除了 byte 类型外，所有的数值字面类型都允许使用类型后缀：</p>
+<ul>
+<li>不清楚应该使用那种类型，可以使用 Rust 默认类型：</li>
+<li>整数默认 i32 ：速度很快针对性优化。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Number literals</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Decimal</td>
+<td>98_222</td>
+</tr>
+<tr>
+<td>Hex</td>
+<td>0xff</td>
+</tr>
+<tr>
+<td>Octal</td>
+<td>0077</td>
+</tr>
+<tr>
+<td>Binary</td>
+<td>0b1111_0000</td>
+</tr>
+<tr>
+<td>Byte(u8 only)</td>
+<td>b’A’</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>整数溢出，在不同的编译模式下有不同效果：</p>
+<ul>
+<li>例如在 u8 的范围是 0-255，如果设置为 256：<ul>
+<li>在 debug 模式下，Rust 会检测整数溢出，发生溢出后程序在运行时就会 panic。</li>
+</ul>
+</li>
+<li>在 release 模式下，Rust 不会检测整数溢出，如果溢出则会进行<code>环绕</code>操作，即 256 变为 0。</li>
+</ul>
+</li>
+</ol>
+<h4 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h4><ol>
+<li><p>Rust 有两种基础的浮点类型，也就是含有小数部分的类型：</p>
+<ul>
+<li>f32，32 位，单精度。</li>
+<li>f64，64 位，双精度。</li>
+</ul>
+</li>
+<li><p>Rust 的浮点类型使用 IEEE-754 标准来进行描述。</p>
+</li>
+<li><p>f64 是默认类型，因为在现代 CPU 上 f64 和 f32 的速度出啊不多，而且精度更高。</p>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">2.0</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// f64</span>
+<span class="token keyword">let</span> y<span class="token punctuation">:</span> f32 <span class="token operator">=</span> <span class="token number">3.0</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// f32</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>数值操作：<code>+ - * / %</code>。</p>
+</li>
+</ol>
+<h4 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h4><ol>
+<li>Rust 的布尔类型也只有两个值：true 和 false。</li>
+<li>占用一个字节大小，符号是 bool。</li>
+</ol>
+<h4 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h4><ol>
+<li>Rust 语言中 char 类型被用来描述语言中最基础的单个字符。</li>
+<li>字符类型的字面值使用单引号，占用 4 字节大小。</li>
+<li>是 Unicode 标量值，可以表示比 ASCII 多得多的字符内容：拼音、中日韩文、零长度空白字符、emoji<br>表情等。</li>
+</ol>
+<h3 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h3><ol>
+<li>复合类型可以将多个值放在一个类型里。</li>
+<li>Rust 提供里两种基础的复合类型：元组（Tuple)、数组。</li>
+</ol>
+<h4 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h4><ol>
+<li><p>Tuple 可以将多个类型的多个值放在一个类型里。</p>
+</li>
+<li><p>Tuple 的长度是固定的：一旦声明就无法改变。</p>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> tup<span class="token punctuation">:</span> <span class="token punctuation">(</span>i32<span class="token punctuation">,</span> f64<span class="token punctuation">,</span> u8<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">6.4</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"{},{},{}"</span><span class="token punctuation">,</span> tup<span class="token number">.0</span><span class="token punctuation">,</span> tup<span class="token number">.1</span><span class="token punctuation">,</span> tup<span class="token number">.2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>获取 tuple 的元素值：</p>
+<ul>
+<li>可以使用模式匹配来解构（destructure）一个 tuple 进而获取元素的值。</li>
+<li>也可以像上边例子中使用元素索引号进行获取。</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> <span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> z<span class="token punctuation">)</span> <span class="token operator">=</span> tup<span class="token punctuation">;</span>
+<span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"x={},y={},z={}"</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> z<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 500 6.4 1</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><ol>
+<li><p>数组也可以将多个值放在一个类型里。</p>
+</li>
+<li><p>数组中每个元素的类型必须相同。</p>
+</li>
+<li><p>数组的长度也是固定的。</p>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>数组的用处。</p>
+<ul>
+<li>如果想要让数据存储在 stack 上而不是 heap，或者想保证固定的元素，这时使用数组更有好处。</li>
+<li>数组没有 Vector 灵活：Vector 与数组类似，由标准库提供而数组由预导入模块提供。</li>
+<li>Vector 长度可变，当不确定使用哪种时，优先使用 Vector。</li>
+</ul>
+</li>
+<li><p>数组的类型：</p>
+<ul>
+<li>数组的类型表示格式：<code>[类型；长度]</code> ==&gt; <code>let a: [i32; 5] = [1,2,3,4,5];</code></li>
+<li>如果数组中每个元素值都相同的，那么可以使用如下初始化方法：<code>let a = [3; 5];</code> 等同 <code>let a = [3,3,3,3,3];</code>。</li>
+</ul>
+</li>
+<li><p>访问数组的元素：</p>
+<ul>
+<li>数组是 stack 上分配的单个块的内存。</li>
+<li>可以使用索引来访问数组的元素。</li>
+</ul>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+ <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"a[0] = {}, a[2] = {}"</span><span class="token punctuation">,</span> a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> a<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 1、3</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li>如果访问的索引超出来数组的范围，那么：<ul>
+<li>编译会通过。</li>
+<li>运行时会报错（runtime 时会 panic），Rust 不允许其继续访问相应地址的内存。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><ol>
+<li>声明函数使用 <code>fn</code> 关键字。</li>
+<li>依照惯例，针对函数和变量名，Rust 使用 snake case 命名规范：<ul>
+<li>所有的字母都是小写的，单词之间使用下划线分隔开。</li>
+</ul>
+</li>
+</ol>
+<h3 id="函数的参数"><a href="#函数的参数" class="headerlink" title="函数的参数"></a>函数的参数</h3><ol>
+<li><p>parameters、arguments，即形参与实参。</p>
+</li>
+<li><p>在函数签名里，必须声明每个参数的类型。</p>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token function">another_function</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// argument</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 参数需要指明类型</span>
+<span class="token comment" spellcheck="true">// parameter</span>
+<span class="token keyword">fn</span> <span class="token function">another_function</span><span class="token punctuation">(</span>x<span class="token punctuation">:</span> i32<span class="token punctuation">,</span> y<span class="token punctuation">:</span> i32<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"the value of x is: {}"</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"the value of y is: {}"</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<h3 id="函数体中的语句与表达式"><a href="#函数体中的语句与表达式" class="headerlink" title="函数体中的语句与表达式"></a>函数体中的语句与表达式</h3><ol>
+<li>函数体由一系列语句组成，可选的由一个表达式结束。</li>
+<li>Rust 是一个基于表达式的语言。</li>
+<li>语句是执行一些动作的命令。</li>
+<li>表达式会计算产生一个值。</li>
+<li>函数定义也是语句。</li>
+<li>语句不返回值，所以不可以使用 let 将一个语句赋给一个变量。</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token comment" spellcheck="true">//函数声明语句</span>
+<span class="token keyword">fn</span> <span class="token function">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> y <span class="token operator">=</span> <span class="token number">5</span> <span class="token operator">+</span> <span class="token number">6</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//y = 绑定语句 , 5 + 6 不包括分号是表达式</span>
+
+    <span class="token comment" spellcheck="true">//let x = (let z = 7); err: 语句不能被赋值</span>
+
+    <span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> y <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// {} 其中包含 x + 3 是块中的最后一个表达式，相当于返回值</span>
+        <span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        x <span class="token operator">+</span> <span class="token number">3</span> <span class="token comment" spellcheck="true">// 如果加上分号使其变为语句 x+3; 则返回的知识一个空的 tuple ()</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"The value of y is : {}"</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="函数的返回值"><a href="#函数的返回值" class="headerlink" title="函数的返回值"></a>函数的返回值</h3><ol>
+<li>在符号 -&gt; 后边声明函数返回值的类型，但是不可以为返回值命名。</li>
+<li>在 Rust 里面，返回值就是函数体里面最后一个表达式的值。</li>
+<li>若想提前返回，需要使用 return 关键字，并指定一个值。<ul>
+<li>大多数函数都是默认使用最后一个表达式为返回值。</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function">five</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> i32 <span class="token punctuation">{</span>
+    <span class="token number">5</span> <span class="token comment" spellcheck="true">// 返回最后一个表达式 5</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">fn</span> <span class="token function">plus_five</span><span class="token punctuation">(</span>x<span class="token punctuation">:</span> i32<span class="token punctuation">)</span> <span class="token punctuation">-></span> i32 <span class="token punctuation">{</span>
+    x <span class="token operator">+</span> <span class="token number">5</span> <span class="token comment" spellcheck="true">// 返回表达式 x+5 的值，加上分号就变成语句了</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h2><h3 id="if-表达式"><a href="#if-表达式" class="headerlink" title="if 表达式"></a>if 表达式</h3><ol>
+<li><p>if 表达式允许根据条件来执行不同的代码分支。</p>
+<ul>
+<li>条件必须是 bool 类型。</li>
+</ul>
+</li>
+<li><p>if 表达式中，与条件相关联的代码块叫做分支。</p>
+</li>
+<li><p>可选的，在后边可以加上一个 else 表达式。</p>
+</li>
+<li><p>使用 else if 处理多重条件。</p>
+<ul>
+<li>如果使用了多余一个 else if，那么最好使用 match 来重构代码。</li>
+</ul>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token keyword">let</span> number <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+
+   <span class="token keyword">if</span> number <span class="token operator">&lt;</span> <span class="token number">5</span> <span class="token punctuation">{</span>
+      <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"condition was true"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"condition was false"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+
+   <span class="token keyword">let</span> number <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span> number <span class="token operator">%</span> <span class="token number">4</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+      <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"number is divisible by 4"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> number <span class="token operator">%</span> <span class="token number">3</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+      <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"number is divisible by 3"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> number <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+      <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"number is divisible by 2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"number is not divisible by 4, 3 or 2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>在 let 语句中使用 if：因为 if 是一个表达式，所以可以将它放在 let<br>语句中等号右边。</p>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function">ifvar</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token keyword">let</span> condition <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">;</span>
+   <span class="token keyword">let</span> number <span class="token operator">=</span> <span class="token keyword">if</span> condition <span class="token punctuation">{</span> <span class="token number">5</span> <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span> <span class="token number">6</span> <span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 两侧的类型需要一致</span>
+
+   <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"The value of number is : {}"</span><span class="token punctuation">,</span> number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><ol>
+<li>Rust 提供了三种循环：loop、while 和 for。</li>
+</ol>
+<h4 id="loop"><a href="#loop" class="headerlink" title="loop"></a>loop</h4><ol>
+<li><p>loop 关键字告诉 Rust 反复执行一块代码，直到喊停为止。或者使用 break<br>来进行中止。</p>
+<pre class="line-numbers language-rust"><code class="language-rust"> <span class="token keyword">let</span> <span class="token keyword">mut</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+ <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">loop</span> <span class="token punctuation">{</span>
+     count <span class="token operator">=</span> count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+     <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"loop count : {}"</span><span class="token punctuation">,</span> count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+     <span class="token keyword">if</span> count <span class="token operator">==</span> <span class="token number">10</span> <span class="token punctuation">{</span>
+         <span class="token keyword">break</span> count <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">;</span>
+     <span class="token punctuation">}</span>
+ <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<h4 id="while-条件循环"><a href="#while-条件循环" class="headerlink" title="while 条件循环"></a>while 条件循环</h4><ol>
+<li><p>每次执行循环体前都要判断一次条件。</p>
+<pre class="line-numbers language-rust"><code class="language-rust">
+<span class="token keyword">let</span> <span class="token keyword">mut</span> number <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+
+<span class="token keyword">while</span> number <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+    <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"{}!"</span><span class="token punctuation">,</span> number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    number <span class="token operator">=</span> number <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"LIFTOFF!!!!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<h4 id="for-循环遍历集合"><a href="#for-循环遍历集合" class="headerlink" title="for 循环遍历集合"></a>for 循环遍历集合</h4><ol>
+<li>可以使用 while 或 loop 遍历集合，但是易错且低效。</li>
+<li>使用 for 循环更加简洁紧凑，它可以针对集合中的每个元素来执行一些代码。</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">let</span> a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// iter 迭代器</span>
+<span class="token keyword">for</span> element <span class="token keyword">in</span> a<span class="token punctuation">.</span><span class="token function">iter</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"the value is : {}"</span><span class="token punctuation">,</span> element<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="Range"><a href="#Range" class="headerlink" title="Range"></a>Range</h4><ol>
+<li>标准库提供。</li>
+<li>指定一个开始数字和一个结束数字，Range 可以生成它们之间的数字（不包含结束）。</li>
+<li>rev 方法可以反转 Range。</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function">for_range</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">for</span> number <span class="token keyword">in</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">..</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">rev</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"{}!"</span><span class="token punctuation">,</span> number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"LIFTOFF!!!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Layton</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://hatter-long-blog.vercel.app/2022/07/02/yi-rust-tong-yong-bian-cheng-gai-nian-md/">https://hatter-long-blog.vercel.app/2022/07/02/yi-rust-tong-yong-bian-cheng-gai-nian-md/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">Layton</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+                                    <span class="chip bg-color">Rust 编程基础</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2022/07/02/yi-rust-tong-yong-bian-cheng-gai-nian-md/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="（一）Rust_通用编程概念.md">
+                        
+                        <span class="card-title">（一）Rust_通用编程概念.md</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="post-category">
+                                    Rust 编程基础
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+                        <span class="chip bg-color">Rust 编程基础</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/06/04/si-llvm-bian-yi-qi-clang-astmatcher/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="（四）LLVM编译器--Clang_ASTMatcher">
+                        
+                        <span class="card-title">（四）LLVM编译器--Clang_ASTMatcher</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-category">
+                                    LLVM 编译器
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/">
+                        <span class="chip bg-color">LLVM 编译器</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2022</span>
+            
+            <a href="/about" target="_blank">Layton</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">52.3k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2022";
+                        var startMonth = "5";
+                        var startDate = "31";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已勉强运行 ' + diffDays + ' 天 ღゝ◡╹)ノ♡';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/HATTER-LONG" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:caolei6767@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=985001640" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 985001640" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.bootcss.com/aos/3.0.0-beta.6/aos.js"></script>
+    <script src="https://cdn.bootcss.com/scrollprogress/3.0.2/scrollProgress.min.js"></script>
+    <script src="https://cdn.bootcss.com/lightgallery/1.10.0/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
