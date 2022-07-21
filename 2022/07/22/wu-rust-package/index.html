@@ -4,9 +4,17 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="（一）LLVM编译器--环境配置, null">
-    <meta name="description" content="Windows 下通过 CMAKE 搭建 LLVM 环境前言
-hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我记了这么多乱七八糟奇怪的笔记 😅。就像本文标题主要写着 Windows 下搭建环境一样诡异，不过反过来想想 ">
+    <meta name="keywords" content="（五）Rust_Package, null">
+    <meta name="description" content="Package、Crate and Module
+Package、Crate and Module
+Rust 的代码组织
+Package 和 Crate
+Cargo 的惯例
+
+
+定义 module 来控制作用域与私有性
+路径
+私有边界 pr">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +28,7 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
 
     
 
-    <title>（一）LLVM编译器--环境配置 | null</title>
+    <title>（五）Rust_Package | null</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -269,12 +277,12 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">（一）LLVM编译器--环境配置</h1>
+                    <h1 class="description center-align post-title">（五）Rust_Package</h1>
                 </div>
             </div>
         </div>
@@ -390,8 +398,8 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/">
-                                <span class="chip bg-color">LLVM 编译器</span>
+                            <a href="/tags/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+                                <span class="chip bg-color">Rust 编程基础</span>
                             </a>
                         
                     </div>
@@ -402,8 +410,8 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-category">
-                                LLVM 编译器
+                            <a href="/categories/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="post-category">
+                                Rust 编程基础
                             </a>
                         
                     </div>
@@ -415,7 +423,7 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-06-02
+                    2022-07-22
                 </div>
                 
 
@@ -424,14 +432,14 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.3k
+                    1.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    6 分
                 </div>
                 
 
@@ -451,163 +459,306 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Windows-下通过-CMAKE-搭建-LLVM-环境"><a href="#Windows-下通过-CMAKE-搭建-LLVM-环境" class="headerlink" title="Windows 下通过 CMAKE 搭建 LLVM 环境"></a>Windows 下通过 CMAKE 搭建 LLVM 环境</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
-<li>hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我记了这么多乱七八糟奇怪的笔记 😅。就像本文标题主要写着 Windows 下搭建环境一样诡异，不过反过来想想 Macos、Linux 下安装 LLVM 确实太简单了，包管理很好的完成了工作，Windows 更能体现技术不是。So 本文不会再我使用的 Macos 上重新修订啦！！希望能对有和我相同奇怪需求的你有所帮助。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/HATTER-LONG/AUTestTools">源笔记项目</a>，觉得不错来个 star 吧。</li>
+                <h1 id="Package、Crate-and-Module"><a href="#Package、Crate-and-Module" class="headerlink" title="Package、Crate and Module"></a>Package、Crate and Module</h1><ul>
+<li><a href="#packagecrate-and-module">Package、Crate and Module</a><ul>
+<li><a href="#rust-%E7%9A%84%E4%BB%A3%E7%A0%81%E7%BB%84%E7%BB%87">Rust 的代码组织</a></li>
+<li><a href="#package-%E5%92%8C-crate">Package 和 Crate</a><ul>
+<li><a href="#cargo-%E7%9A%84%E6%83%AF%E4%BE%8B">Cargo 的惯例</a></li>
 </ul>
-<blockquote>
-<p>本文记录于 2020 年，因此版本有些老了，不过编译方式与使用接口并没有太大变化，亲测在本文发出时 LLVM 14 上是可以正常编译的使用的。</p>
-</blockquote>
-<blockquote>
-<p>本系列文章我在 CSDN 上也传过，不过 CSDN 吃香太难看了，后续也不会在上边更新维护了，就这样。</p>
-</blockquote>
-<blockquote>
-<p>以下正文。</p>
-</blockquote>
-<p>本文主要介绍如何在 Windows 下通过 vscode 使用 Cmake+Ninja 来编译 LLVM 源码，从而搭建 LLVM 环境以及生成 clang 的 Tools 相关库。</p>
-<h2 id="前因"><a href="#前因" class="headerlink" title="前因"></a>前因</h2><ol>
-<li><p>为啥要编译源码，预编译包它不香么？</p>
+</li>
+<li><a href="#%E5%AE%9A%E4%B9%89-module-%E6%9D%A5%E6%8E%A7%E5%88%B6%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E7%A7%81%E6%9C%89%E6%80%A7">定义 module 来控制作用域与私有性</a></li>
+<li><a href="#%E8%B7%AF%E5%BE%84">路径</a></li>
+<li><a href="#%E7%A7%81%E6%9C%89%E8%BE%B9%E7%95%8C-privacy-boundary">私有边界 privacy boundary</a><ul>
+<li><a href="#pub-%E5%85%B3%E9%94%AE%E5%AD%97">pub 关键字</a></li>
+<li><a href="#super-%E5%85%B3%E9%94%AE%E5%AD%97">super 关键字</a></li>
+<li><a href="#pub-struct">pub struct</a></li>
+<li><a href="#pub-enum">pub enum</a></li>
+</ul>
+</li>
+<li><a href="#use-%E5%85%B3%E9%94%AE%E5%AD%97">use 关键字</a><ul>
+<li><a href="#use-%E7%9A%84%E4%B9%A0%E6%83%AF%E7%94%A8%E6%B3%95">use 的习惯用法</a></li>
+<li><a href="#as-%E5%85%B3%E9%94%AE%E5%AD%97">as 关键字</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8-pub-use-%E9%87%8D%E6%96%B0%E5%AF%BC%E5%87%BA%E5%90%8D%E7%A7%B0">使用 pub use 重新导出名称</a></li>
+</ul>
+</li>
+<li><a href="#package">package</a><ul>
+<li><a href="#%E4%BD%BF%E7%94%A8%E5%B5%8C%E5%A5%97%E8%B7%AF%E5%BE%84%E6%B8%85%E7%90%86%E5%A4%A7%E9%87%8F%E7%9A%84-use-%E8%AF%AD%E5%8F%A5">使用嵌套路径清理大量的 use 语句</a></li>
+<li><a href="#%E9%80%9A%E9%85%8D%E7%AC%A6-">通配符 *</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%B0%86%E6%A8%A1%E5%9D%97%E6%8B%86%E5%88%86%E4%B8%BA%E4%B8%8D%E5%90%8C%E7%9A%84%E6%96%87%E4%BB%B6">如何将模块拆分为不同的文件</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="Rust-的代码组织"><a href="#Rust-的代码组织" class="headerlink" title="Rust 的代码组织"></a>Rust 的代码组织</h2><ol>
+<li><p>代码组织主要包括：</p>
 <ul>
-<li>确实 LLVM 官方已经提供了 Win32 版本的预编译包，但是我尝试安装了 9.0.1 版本与 10.0.0 版本，它居然都没有 clang 的 libTooling 相关的库，这就很难受了所以为了能使用 clang Tools 只好从头做起，如果哪位同学知道为啥不提供 libtooling 这些库的原因请告诉下，谢谢~😂。<blockquote>
-<p>就是因为 Windows 上使用 LLVM 就是鸡肋，没人用呗 😓。</p>
-</blockquote>
-</li>
+<li>哪些细节可以暴露，哪些细节是私有的。</li>
+<li>作用域内哪些名称有效。</li>
 </ul>
 </li>
-<li><p>为啥非得在 Windows 下，Linux 不是更方便？</p>
+<li><p>这些组织被称为模块系统：</p>
 <ul>
-<li>我在 Linux 下也搭建了一下 9.0.1 版本，直接在 LLVM 官网上下载对应版本与系统的预编译包，解压及用、库又全又好用 😀。</li>
-<li>但是由于我使用的 Ubuntu WSL 子系统，通过 Vscode 的 WSL 插件连接上后发现对 c++ 插件支持貌似有问题，代码颜色渲染信息不全，不清楚是 GCC 编译器问题还是啥原因，导致强迫症患者不想在 WSL 系统直接开发，知道原因的大佬求告知，反正当前的项目是通过 CMake 管理，所以决定在 windows 下开发完成后在移植到 Linux 下。<blockquote>
-<p>这个问题已经解决了，是 vscode cpp 插件的问题，github 项目上有 issue 描述了此问题，最新版本已经修复。所以说非得在 Windows 上编译纯粹就是个伪需求，想必没谁有类似的需求了。</p>
-</blockquote>
-</li>
+<li>Package（包）：Cargo 的特性，使用者构建、测试、共享 crate 的基础。</li>
+<li>Crate（单元包）：一个模块树，它可产生一个 library 或可执行文件。</li>
+<li>Module（模块）、use：让使用者控制代码的组织、作用域、私有路径。</li>
+<li>Path（路径）：为 struct、function 或 module 等项命名的方式。</li>
 </ul>
-</li>
-<li><p>废话就说这么多现在开始。</p>
 </li>
 </ol>
-<hr>
-<h2 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h2><ol>
-<li><p>Win10 操作系统，已经安装了 VS2017 全家桶。包括最最重要的 msvc2017_64 工具包、Vscode、以及 camke(version 3.12.18081601-MSVC_2) 工具。当然如果你不想装那么巨大的 IDE，也可以单独安装 mingw + cmake 网上的教程也很多。</p>
-</li>
-<li><p>环境变量正确配置，例如在 powershell 或 cmd 中敲 cmake.exe -version 可以打印出安装的工具版本，确保你的编译器相关工具也可以正常工作。</p>
+<h2 id="Package-和-Crate"><a href="#Package-和-Crate" class="headerlink" title="Package 和 Crate"></a>Package 和 Crate</h2><ol>
+<li>Crate 包括 binary 和 library 两种类型。</li>
+<li>Crate Root 则表示为源代码文件，Rust 编译器是从这里开始，组成你的 Crate 的 Module。</li>
+<li>一个 Package ：<ul>
+<li>包括一个 Cargo.toml，它描述了如何构建这些 Crates。</li>
+<li>只能包含 0-1 个 library crate。</li>
+<li>可以包含任意数量的 binary crate。</li>
+<li>但必须至少包含一个 crate（library 或 binary）。</li>
+</ul>
 </li>
 </ol>
-<h2 id="Let’s-Begin"><a href="#Let’s-Begin" class="headerlink" title="Let’s Begin"></a>Let’s Begin</h2><h3 id="获取-LLVM-Project-源码"><a href="#获取-LLVM-Project-源码" class="headerlink" title="获取 LLVM Project 源码"></a>获取 LLVM Project 源码</h3><p>查找了一些网上的资料发现下载源码超级麻烦，要么是需要安装 svn 、要么去官网下载，并且需要下载这个源码然后在下那个源码，一眼看过去就迷失在了未知的海洋里嘞。因此在这里推荐直接下载 llvm-project 源码合集大礼包，可以避免很多问题。</p>
-<ol>
-<li><p>如果你是在担忧源码编译出来过大以及多余你不需要的模块，那么不用担心，llvm 的贴心的准备了裁剪编译命令，帮助你只构建需要的模块。</p>
+<h3 id="Cargo-的惯例"><a href="#Cargo-的惯例" class="headerlink" title="Cargo 的惯例"></a>Cargo 的惯例</h3><ol>
+<li><p>src/main.rs：</p>
 <ul>
-<li>考虑到当时我下载时艰辛的网速，<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1xxCf43Gg-S3idpyCZ1WbQA">你也可以通过这里下载 10.0.0 版本的源码</a>，提取码：u0sf。<blockquote>
-<p>看看当时青涩的我，代理网站和镜像网站下载不香么 😓。这里推荐个<a target="_blank" rel="noopener" href="https://hub.fastgit.xyz/">代理站</a>，下载速度还是很快的，上边这个网盘我也懒得去修改了，真有需求邮件我好了，我再更新。</p>
-</blockquote>
-</li>
+<li>是 binary crate 的 crate root。</li>
+<li>crate 名与 package 名相同。</li>
 </ul>
 </li>
-<li><p>此时你已经拿到了源码包，开开心心的右键 -&gt; 解压到当前文件夹 -&gt; 等待 -&gt; ….. -&gt; 错误：无法创建文件。 What???</p>
+<li><p>src/lib.rs:</p>
 <ul>
-<li><p>我遇到的问题主要是由于压缩包中包含软连接，当前 Windows 下文件系统不支持创建，导致错误。最终我是直接通过 WSL 子系统，使用命令 tar 解压的。所以如果在 Windows 下解压失败的话可以尝试在 Linux 中解压然后在拷贝出来。</p>
-<blockquote>
-<p>So，不要在 Windows 上编译源码，就是个坑。直接预编译包不香么。</p>
-</blockquote>
-</li>
+<li>package 包含一个 library crate。</li>
+<li>library crate 的 crate root。</li>
+<li>crate 名与 package 名相同。</li>
 </ul>
-<p><img src="https://fastly.jsdelivr.net/gh/HATTER-LONG/Resource@main/images/LLVM/1_1.png" alt="命令"></p>
+</li>
+<li><p>Cargo 把 crate root 文件交给 rustc 来构建 library 或 binary。</p>
+</li>
+<li><p>一个 Package 可以同时包含 src/main.rs 和 src/lib.rs。</p>
+<ul>
+<li>一个 binary crate，一个 library crate。</li>
+<li>这两个名称都与 package 名相同。</li>
+</ul>
+</li>
+<li><p>一个 Package 可以有多个 binary crate。</p>
+<ul>
+<li>文件放在 src/bin。</li>
+<li>每个文件都是单独的 binary crate。</li>
+</ul>
 </li>
 </ol>
-<h3 id="使用-Vscode-打开-amp-编译-LLVM-Project"><a href="#使用-Vscode-打开-amp-编译-LLVM-Project" class="headerlink" title="使用 Vscode 打开&amp;编译 LLVM Project"></a>使用 Vscode 打开&amp;编译 LLVM Project</h3><p>在打开之前，需要介绍一个很重要的工具，它就是 CmakeTools，作为 Vscode 的插件，在管理使用 cmake 构建的工程非常好用，可以方便的配置使用的编译器、编译模式、使用 GDB、<strong>控制生成模块</strong>。因此如果你不想耗费精力去管理工程或者输入编译命令，那么我强烈建议你安装一个。</p>
-<ol>
-<li><p>安装好 CmakeTools 工具后，通过 vscode 打开 llvm-project 的源码文件夹。如果你的环境变量正确，编译器、cmake 工具能正确搜索到，那么 CmakeTools 会自动使用 cmake 工具配置当前项目，但是由于 llvm-project 的源码根目录中并没有 CMakeLists.txt，因此 CmakeTools 工具会提示一个错误。</p>
-<ul>
-<li><p>解决的办法就在根目录中的 <code>README.md</code> 中，可以看到几个步骤，其中 mkdir build 的步骤其实 CmakeTools 默认就会在当前文件夹根目录创建 build 用于保存编译中间文件因此略过。主要看到其中 cmake 命令对应的 ../llvm 目录，可知作为入口的 CMakeLists.txt 就在 llvm 目录中。</p>
-<p><img src="https://fastly.jsdelivr.net/gh/HATTER-LONG/Resource@main/images/LLVM/1_2.png" alt="编译"></p>
+<h2 id="定义-module-来控制作用域与私有性"><a href="#定义-module-来控制作用域与私有性" class="headerlink" title="定义 module 来控制作用域与私有性"></a>定义 module 来控制作用域与私有性</h2><ol>
+<li><p>Module 在一个 crate 内，将代码进行分组。增加代码可读性，易于服用。控制项目（item）的私有性，public、private。</p>
 </li>
-<li><p>因此配置 cmaketools 的根目录为 llvm 目录。</p>
-<p><img src="https://fastly.jsdelivr.net/gh/HATTER-LONG/Resource@main/images/LLVM/1_3.png" alt="设置 cmaketools"></p>
-</li>
-</ul>
-</li>
-<li><p>这时你的 CmakeTools 应该就可以正确的工作了。以下就是我当前环境中的 CmakeTools 在配置 CMakeLists.txt 时的输出信息，可以看到最终是配置成功的。</p>
-<pre class="line-numbers language-sh"><code class="language-sh">[variant] 已加载一组新变量
-[kit] 已成功从 C:\Users\Administrator\AppData\Local\CMakeTools\cmake-tools-kits.json 加载 14 工具包
-[main] 正在配置文件夹: llvm-project-10.0.0
-[cmake] clang project is enabled
-[cmake] clang-tools-extra project is enabled
-[cmake] compiler-rt project is disabled
-[cmake] debuginfo-tests project is disabled
-[cmake] libc project is disabled
-[cmake] libclc project is disabled
-[cmake] libcxx project is disabled
-[cmake] libcxxabi project is disabled
-[cmake] libunwind project is disabled
-[cmake] lld project is disabled
-[cmake] lldb project is disabled
-[cmake] llgo project is disabled
-[cmake] mlir project is disabled
-[cmake] openmp project is disabled
-[cmake] parallel-libs project is disabled
-[cmake] polly project is disabled
-[cmake] pstl project is disabled
-[cmake] Could NOT find Z3: Found unsuitable version "0.0.0", but required is at least "4.7.1" (found Z3_LIBRARIES-NOTFOUND)
-[cmake] Could NOT find Backtrace (missing: Backtrace_LIBRARY Backtrace_INCLUDE_DIR)
-[cmake] Native target architecture is X86
-[cmake] Threads enabled.
-[cmake] Doxygen disabled.
-[cmake] Go bindings disabled.
-[cmake] Ninja version: 1.8.2
-[cmake] Could NOT find OCaml (missing: OCAMLFIND OCAML_VERSION OCAML_STDLIB_PATH)
-[cmake] OCaml bindings disabled.
-[cmake] LLVM host triple: x86_64-pc-windows-msvc
-[cmake] LLVM default target triple: x86_64-pc-windows-msvc
-[cmake] Using Release VC++ CRT: MD
-[cmake] Constructing LLVMBuild project information
-[cmake] LLVMHello ignored -- Loadable modules not supported on this platform.
-[cmake] Targeting AArch64
-[cmake] Targeting AMDGPU
-[cmake] Targeting ARM
-[cmake] Targeting BPF
-[cmake] Targeting Hexagon
-[cmake] Targeting Lanai
-[cmake] Targeting Mips
-[cmake] Targeting MSP430
-[cmake] Targeting NVPTX
-[cmake] Targeting PowerPC
-[cmake] Targeting RISCV
-[cmake] Targeting Sparc
-[cmake] Targeting SystemZ
-[cmake] Targeting WebAssembly
-[cmake] Targeting X86
-[cmake] Targeting XCore
-[cmake] Clang version: 10.0.0
-[cmake] PrintFunctionNames ignored -- Loadable modules not supported on this platform.
-[cmake] AnnotateFunctions ignored -- Loadable modules not supported on this platform.
-[cmake] BugpointPasses ignored -- Loadable modules not supported on this platform.
-[cmake] Bye ignored -- Loadable modules not supported on this platform.
-[cmake] TestPlugin ignored -- Loadable modules not supported on this platform.
-[cmake] -- Version: 0.0.0
-[cmake] -- Performing Test HAVE_GNU_POSIX_REGEX -- failed to compile
-[cmake] -- Performing Test HAVE_POSIX_REGEX -- failed to compile
-[cmake] CMake Warning at utils/benchmark/CMakeLists.txt:244 (message):
-[cmake]   Using std::regex with exceptions disabled is not fully supported
-[cmake]
-[cmake]
-[cmake] -- Performing Test HAVE_STEADY_CLOCK -- success
-[cmake] Configuring done
-[cmake] Generating done
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-<li><p>这里如果想要编译其他模块例如 <code>[cmake] clang project is enabled</code>，还需要在 CmakeTools 配置的时候传入一些参数，如图。参数的含义可以看根目录中 README.md 中有详细的解释。这里有个问题就是像我配置的第一项 <code>compiler-rt</code> 其实依旧是 <code>disabled</code> 的，怀疑是 LLVM 的 CMakeLists.txt 解析有 BUG 或者我哪里配置的还是不对，请了解的大佬告知。</p>
-<ul>
-<li><p>这里有一点需要注意，CMakeTools 默认也是编译 Debug 模式，但是这对电脑内存要求较高，耗时同样很长，因此我这里配置参数编译的是 Release 版本。</p>
-<p><img src="https://fastly.jsdelivr.net/gh/HATTER-LONG/Resource@main/images/LLVM/1_4.png" alt="设置 cmaketools"></p>
-</li>
-</ul>
-</li>
-<li><p>最终当这一切配置完成，点击 CmakeTools 中的 <code>生成</code> 按钮，就可以开始编译了。</p>
-<p><img src="https://fastly.jsdelivr.net/gh/HATTER-LONG/Resource@main/images/LLVM/1_5.png" alt="cmaketools 编译"></p>
+<li><p>建立 module 需要使用 mod 关键字，其可以嵌套。</p>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token comment" spellcheck="true">//file: module_demo</span>
+
+<span class="token keyword">mod</span> front_of_house <span class="token punctuation">{</span>
+     <span class="token keyword">mod</span> hosting <span class="token punctuation">{</span>
+         <span class="token keyword">fn</span> <span class="token function">add_to_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+         <span class="token keyword">fn</span> <span class="token function">seat_at_table</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+     <span class="token punctuation">}</span>
+     <span class="token keyword">mod</span> serving <span class="token punctuation">{</span>
+         <span class="token keyword">fn</span> <span class="token function">take_order</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+         <span class="token keyword">fn</span> <span class="token function">serve_order</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+         <span class="token keyword">fn</span> <span class="token function">take_payment</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+     <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 </ol>
-<h3 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h3><p>最终编译完成后，会在根目录的 build 文件夹中生成许多文件，其中 <code>lib</code> 就包括所有生成的库文件。<br>注意 LLVM 中有一些头文件时在编译过程中针对平台生成，也在 build 目录中，当使用库时发现头文件找不到的情况，可以去 build 中搜索下查找。</p>
-<p>至此，LLVM 就成功编译完成，接下来就可以开心的搞事情了。</p>
+<h2 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h2><ol>
+<li>为了在 Rust 的模块中找到某个条目，需要使用路径。</li>
+<li>路径又两种形式：<ul>
+<li>绝对路径：从 crate root 开始，使用 crate 名或字面值 crate。</li>
+<li>相对路径：从当前模块开始，使用 slef，super 或当前模块的标识符。</li>
+</ul>
+</li>
+<li>路径至少由一个标识符组成，标识符之间使用 ::。</li>
+</ol>
+<h2 id="私有边界-privacy-boundary"><a href="#私有边界-privacy-boundary" class="headerlink" title="私有边界 privacy boundary"></a>私有边界 privacy boundary</h2><ol>
+<li>模块不仅可以组织代码，还可以定义私有边界。</li>
+<li>如果想要把函数或 struct 等设置为私有，可以将它放到某个模块中。</li>
+<li>Rust 中所有的条目（函数，方法，struct，enum，模块，常量）默认是私有的。</li>
+<li>父级模块无法访问子模块中的私有条目。</li>
+<li>子模块里可以使用所有祖先模块中的条目。</li>
+</ol>
+<h3 id="pub-关键字"><a href="#pub-关键字" class="headerlink" title="pub 关键字"></a>pub 关键字</h3><ol>
+<li>使用 pub 关键字来将某些条目标记为公共的。<ul>
+<li><code>front_of_house</code> 是同级别的，不标记 pub 也可以直接调用。</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">mod</span> front_of_house <span class="token punctuation">{</span>
+    <span class="token keyword">pub</span> <span class="token keyword">mod</span> hosting <span class="token punctuation">{</span>
+        <span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">add_to_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token keyword">fn</span> <span class="token function">seat_at_table</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">mod</span> serving <span class="token punctuation">{</span>
+        <span class="token keyword">fn</span> <span class="token function">take_order</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token keyword">fn</span> <span class="token function">serve_order</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token keyword">fn</span> <span class="token function">take_payment</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">eat_at_restaurant</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">crate</span><span class="token punctuation">:</span><span class="token punctuation">:</span>front_of_house<span class="token punctuation">:</span><span class="token punctuation">:</span>hosting<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">add_to_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    front_of_house<span class="token punctuation">:</span><span class="token punctuation">:</span>hosting<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">add_to_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h3><ol>
+<li>super：用来访问父级模块路径中的内容，类似文件系统中的 <code>..</code> 。</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">mod</span> front_of_house <span class="token punctuation">{</span>
+    <span class="token keyword">pub</span> <span class="token keyword">mod</span> hosting <span class="token punctuation">{</span>
+        <span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">add_to_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token keyword">fn</span> <span class="token function">seat_at_table</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">mod</span> serving <span class="token punctuation">{</span>
+        <span class="token keyword">fn</span> <span class="token function">take_order</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">super</span><span class="token punctuation">:</span><span class="token punctuation">:</span>hosting<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">add_to_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="pub-struct"><a href="#pub-struct" class="headerlink" title="pub struct"></a>pub struct</h3><ol>
+<li>pub 放在 struct 前：<ul>
+<li>struct 是公共的。</li>
+<li>struct 中默认的字段都是私有的。</li>
+<li>在 struct 中的字段需要单独设置 pub 来变成公共的。</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">eat_at_restaurant</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">crate</span><span class="token punctuation">:</span><span class="token punctuation">:</span>front_of_house<span class="token punctuation">:</span><span class="token punctuation">:</span>hosting<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">add_to_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    front_of_house<span class="token punctuation">:</span><span class="token punctuation">:</span>hosting<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">add_to_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">let</span> <span class="token keyword">mut</span> meal <span class="token operator">=</span> back_of_house<span class="token punctuation">:</span><span class="token punctuation">:</span>Breakfast<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">summer</span><span class="token punctuation">(</span><span class="token string">"Rye"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    meal<span class="token punctuation">.</span>toast <span class="token operator">=</span> String<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"Wheat"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// error : meal.seasonal_fruit = String::from("banana");</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">mod</span> back_of_house <span class="token punctuation">{</span>
+    <span class="token keyword">pub</span> <span class="token keyword">struct</span> Breakfast <span class="token punctuation">{</span>
+        <span class="token keyword">pub</span> toast<span class="token punctuation">:</span> String<span class="token punctuation">,</span>
+        seasonal_fruit<span class="token punctuation">:</span> String<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">impl</span> Breakfast <span class="token punctuation">{</span>
+        <span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">summer</span><span class="token punctuation">(</span>toast<span class="token punctuation">:</span> <span class="token operator">&amp;</span>str<span class="token punctuation">)</span> <span class="token punctuation">-></span> Breakfast <span class="token punctuation">{</span>
+            Breakfast <span class="token punctuation">{</span>
+                toast<span class="token punctuation">:</span> String<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">from</span><span class="token punctuation">(</span>toast<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                seasonal_fruit<span class="token punctuation">:</span> String<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"peaches"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="pub-enum"><a href="#pub-enum" class="headerlink" title="pub enum"></a>pub enum</h3><ol>
+<li>与 struct 类似将 pub 放在 enum 前即可声明为公共：<ul>
+<li>enum 是公共的。</li>
+<li>enum 的变体也都是公共的。</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">mod</span> demo <span class="token punctuation">{</span>
+    <span class="token keyword">pub</span> <span class="token keyword">enum</span> Appetizer <span class="token punctuation">{</span>
+        Soup<span class="token punctuation">,</span>
+        Salad<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="use-关键字"><a href="#use-关键字" class="headerlink" title="use 关键字"></a>use 关键字</h2><ol>
+<li><p>可以使用 use 关键字将路径导入到作用域内：</p>
+<ul>
+<li>仍遵循私有性规则。</li>
+</ul>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">mod</span> use_demo <span class="token punctuation">{</span>
+    <span class="token keyword">pub</span> <span class="token keyword">mod</span> hosting <span class="token punctuation">{</span>
+        <span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">add_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">use</span> <span class="token keyword">crate</span><span class="token punctuation">:</span><span class="token punctuation">:</span>use_demo<span class="token punctuation">:</span><span class="token punctuation">:</span>hosting<span class="token punctuation">;</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">eat_somgthing</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    hosting<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">add_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>也可以用 use 来引用相对路径。</p>
+</li>
+</ol>
+<h3 id="use-的习惯用法"><a href="#use-的习惯用法" class="headerlink" title="use 的习惯用法"></a>use 的习惯用法</h3><ol>
+<li>函数：将函数的父级模块引入作用域（指定到父级），避免模糊函数是本地定义还是外部引用进入。</li>
+<li>struct、enum 等其他：指定完整路径（指定到本身）。</li>
+</ol>
+<h3 id="as-关键字"><a href="#as-关键字" class="headerlink" title="as 关键字"></a>as 关键字</h3><ol>
+<li>as 关键字可以为引入的路径指定本地的别名。</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">use</span> <span class="token keyword">crate</span><span class="token punctuation">:</span><span class="token punctuation">:</span>use_demo<span class="token punctuation">:</span><span class="token punctuation">:</span>hosting <span class="token keyword">as</span> demoHosting<span class="token punctuation">;</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">eat_somgthing</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    demoHosting<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">add_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="使用-pub-use-重新导出名称"><a href="#使用-pub-use-重新导出名称" class="headerlink" title="使用 pub use 重新导出名称"></a>使用 pub use 重新导出名称</h3><ol>
+<li>使用 use 将路径（名称）导入到作用域后，该名称在此作用域内是私有的。<ul>
+<li>使用 pub 可以将 use 的暴露出来。</li>
+<li>将条目引入到当前作用域，也可以将该条目导出被外部代码引入它们的作用域。</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">use</span> <span class="token keyword">crate</span><span class="token punctuation">:</span><span class="token punctuation">:</span>use_demo<span class="token punctuation">:</span><span class="token punctuation">:</span>hosting <span class="token keyword">as</span> demoHosting<span class="token punctuation">;</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">eat_somgthing</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    demoHosting<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">add_waitlist</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="package"><a href="#package" class="headerlink" title="package"></a>package</h2><ol>
+<li>Cargo.toml 添加依赖的包（package）。</li>
+<li>use 将特定条目引入到作用域。</li>
+<li>标准库（std）也被当作外部包：<ul>
+<li>不需要修改 Cargo.toml 来包含 std。</li>
+<li>需要使用 use 将 std 中的特定条目引入当前作用域。</li>
+</ul>
+</li>
+</ol>
+<h3 id="使用嵌套路径清理大量的-use-语句"><a href="#使用嵌套路径清理大量的-use-语句" class="headerlink" title="使用嵌套路径清理大量的 use 语句"></a>使用嵌套路径清理大量的 use 语句</h3><ol>
+<li>如果使用同一包或模块下的多个条目，可以使用嵌套路径在同一行内将上述条目进行引入：<ul>
+<li>路径相同的部分 ::{路径差异部分}。</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">use</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span>cmp<span class="token punctuation">:</span><span class="token punctuation">:</span>Ordering<span class="token punctuation">;</span>
+<span class="token keyword">use</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span>io<span class="token punctuation">;</span>
+
+<span class="token keyword">use</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token punctuation">{</span>cmp<span class="token punctuation">:</span><span class="token punctuation">:</span>Ordering<span class="token punctuation">,</span> io<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">use</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span>io<span class="token punctuation">;</span>
+<span class="token keyword">use</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span>io<span class="token punctuation">:</span><span class="token punctuation">:</span>Write<span class="token punctuation">;</span>
+
+<span class="token keyword">use</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span>io<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token punctuation">{</span><span class="token keyword">self</span><span class="token punctuation">,</span> Write<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符 *"></a>通配符 *</h3><ol>
+<li>可以使用 <code>*</code> 将路径中所有的公共条目都引用到作用域中。<ul>
+<li>注意：谨慎使用。</li>
+<li>应用场景：<ul>
+<li>测试：将所有被测试代码引入到 tests 模块中。</li>
+<li>优势被用于预导入模块。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">use</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span>collections<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">*</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="如何将模块拆分为不同的文件"><a href="#如何将模块拆分为不同的文件" class="headerlink" title="如何将模块拆分为不同的文件"></a>如何将模块拆分为不同的文件</h2><ol>
+<li>Rust 可以将模块内容移动到其他文件，在模块定义时，如果模块名后边是 <code>;</code>，而不是代码块：<ul>
+<li>Rust 会从与模块同名的文件中加载内容。</li>
+<li>模块树的结构不会发生变化。</li>
+</ul>
+</li>
+<li>随着模块逐渐变大，该技术可以把模块的内容移动到其他文件中。</li>
+</ol>
 
                 
             </div>
@@ -634,7 +785,7 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://hatter-long-blog.vercel.app/2022/06/02/yi-llvm-bian-yi-qi-huan-jing-pei-zhi/">https://hatter-long-blog.vercel.app/2022/06/02/yi-llvm-bian-yi-qi-huan-jing-pei-zhi/</a>
+                    <a href="https://hatter-long-blog.vercel.app/2022/07/22/wu-rust-package/">https://hatter-long-blog.vercel.app/2022/07/22/wu-rust-package/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -672,8 +823,8 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/">
-                                    <span class="chip bg-color">LLVM 编译器</span>
+                                <a href="/tags/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+                                    <span class="chip bg-color">Rust 编程基础</span>
                                 </a>
                             
                         </div>
@@ -721,17 +872,18 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/06/03/er-llvm-bian-yi-qi-gou-jian-clang-libtooling-gong-ju/">
+                <a href="/2022/07/22/wu-rust-package/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="（二）LLVM编译器--构建_Clang_libTooling_工具">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="（五）Rust_Package">
                         
-                        <span class="card-title">（二）LLVM编译器--构建_Clang_libTooling_工具</span>
+                        <span class="card-title">（五）Rust_Package</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -741,26 +893,27 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-03
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-22
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-category">
-                                    LLVM 编译器
+                            <a href="/categories/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="post-category">
+                                    Rust 编程基础
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/LLVM-%E7%BC%96%E8%AF%91%E5%99%A8/">
-                        <span class="chip bg-color">LLVM 编译器</span>
+                    <a href="/tags/Rust-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+                        <span class="chip bg-color">Rust 编程基础</span>
                     </a>
                     
                 </div>
@@ -774,13 +927,13 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/06/02/liu-ce-shi-qu-dong-kai-fa-ji-qiao-zeng-liang-she-ji/">
+                <a href="/2022/07/16/san-liu-mei-ti-zhi-ffmpeg-ming-ling-xing-jie-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="（六）测试驱动开发技巧--增量设计">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="（三）流媒体之FFmpeg命令行解析">
                         
-                        <span class="card-title">（六）测试驱动开发技巧--增量设计</span>
+                        <span class="card-title">（三）流媒体之FFmpeg命令行解析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -791,14 +944,14 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-02
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-16
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="post-category">
-                                    测试驱动开发技巧
+                            <a href="/categories/%E6%B5%81%E5%AA%92%E4%BD%93%E6%8A%80%E6%9C%AF/" class="post-category">
+                                    流媒体技术
                                 </a>
                             
                             
@@ -808,8 +961,8 @@ hello，又开了一个新系列的坑，不写 BLOG 真是不知道，以前我
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">
-                        <span class="chip bg-color">测试驱动开发技巧</span>
+                    <a href="/tags/%E6%B5%81%E5%AA%92%E4%BD%93-%E9%9F%B3%E8%A7%86%E9%A2%91/">
+                        <span class="chip bg-color">流媒体 音视频</span>
                     </a>
                     
                 </div>
