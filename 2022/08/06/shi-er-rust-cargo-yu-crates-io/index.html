@@ -4,19 +4,14 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="（九）Rust_生命周期, null">
-    <meta name="description" content="生命周期什么是生命周期
-Rust 每个引用都有自己的生命周期。
+    <meta name="keywords" content="（十二）Rust_Cargo与Crates.io, null">
+    <meta name="description" content="Cargo 与 crates.io前言本章主要内容：
 
-生命周期：引用保持有效的作用域。
-
-大多数情况：生命周期是隐式的、可被推断的。
-
-当引用的生命周期可能以不同的方式互相关联时：手动标注生命周期。
-
-生命周期的作用：
-
-主要作">
+通用 release profile 来自定义构建。
+尝试在 crates.io 上发布库。
+通过 workspaces 组织大工程。
+从 crates.io 安装库。
+使用自定义命令">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -30,7 +25,7 @@ Rust 每个引用都有自己的生命周期。
 
     
 
-    <title>（九）Rust_生命周期 | null</title>
+    <title>（十二）Rust_Cargo与Crates.io | null</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -279,12 +274,12 @@ Rust 每个引用都有自己的生命周期。
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">（九）Rust_生命周期</h1>
+                    <h1 class="description center-align post-title">（十二）Rust_Cargo与Crates.io</h1>
                 </div>
             </div>
         </div>
@@ -425,7 +420,7 @@ Rust 每个引用都有自己的生命周期。
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-07-31
+                    2022-08-06
                 </div>
                 
 
@@ -434,14 +429,14 @@ Rust 每个引用都有自己的生命周期。
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.8k
+                    1.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    7 分
+                    5 分
                 </div>
                 
 
@@ -461,288 +456,253 @@ Rust 每个引用都有自己的生命周期。
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><h2 id="什么是生命周期"><a href="#什么是生命周期" class="headerlink" title="什么是生命周期"></a>什么是生命周期</h2><ol>
-<li><p>Rust 每个引用都有自己的生命周期。</p>
-</li>
-<li><p>生命周期：引用保持有效的作用域。</p>
-</li>
-<li><p>大多数情况：生命周期是隐式的、可被推断的。</p>
-</li>
-<li><p>当引用的生命周期可能以不同的方式互相关联时：手动标注生命周期。</p>
-</li>
-<li><p>生命周期的作用：</p>
-<ul>
-<li>主要作用就是为了避免悬垂引用（dangling reference）。</li>
-</ul>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token comment" spellcheck="true">/*
- error[E0597]: `x` does not live long enough
- --> src/main.rs:6:17
- |
- 6 |             r = &amp;x;
- |                 ^^ borrowed value does not live long enough
- 7 |         }
- |         - `x` dropped here while still borrowed
- 8 |
- 9 |         println!("r : {}", r);
- |                            - borrow later used here
-*/</span>
-
- <span class="token keyword">let</span> r<span class="token punctuation">;</span>
- <span class="token punctuation">{</span>
-     <span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
-     r <span class="token operator">=</span> <span class="token operator">&amp;</span>x<span class="token punctuation">;</span>
- <span class="token punctuation">}</span>
-
- <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"r : {}"</span><span class="token punctuation">,</span> r<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-<li><p>借用检查器：</p>
-<ul>
-<li>Rust 实现生命周期检查的主要方式是借用检查器具：比较作用域来判断所有的借用是否合法。</li>
-</ul>
-</li>
+                <h1 id="Cargo-与-crates-io"><a href="#Cargo-与-crates-io" class="headerlink" title="Cargo 与 crates.io"></a>Cargo 与 crates.io</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本章主要内容：</p>
+<ol>
+<li>通用 release profile 来自定义构建。</li>
+<li>尝试在 crates.io 上发布库。</li>
+<li>通过 workspaces 组织大工程。</li>
+<li>从 crates.io 安装库。</li>
+<li>使用自定义命令扩展 cargo。</li>
 </ol>
-<h2 id="泛型生命周期"><a href="#泛型生命周期" class="headerlink" title="泛型生命周期"></a>泛型生命周期</h2><h3 id="函数中的范型生命周期"><a href="#函数中的范型生命周期" class="headerlink" title="函数中的范型生命周期"></a>函数中的范型生命周期</h3><ol>
-<li><p>函数标注生命周期。</p>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> string1 <span class="token operator">=</span> String<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"abcd"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> string2 <span class="token operator">=</span> <span class="token string">"xyz"</span><span class="token punctuation">;</span>
+<h2 id="通过-release-profile-来自定义构建"><a href="#通过-release-profile-来自定义构建" class="headerlink" title="通过 release profile 来自定义构建"></a>通过 release profile 来自定义构建</h2><ul>
+<li>release profile 即发布配置文件：<ul>
+<li>其是预定义大。</li>
+<li>可自定义：可使用不同的配置，对代码编译拥有更多控制。</li>
+</ul>
+</li>
+<li>每个 profile 的配置都是相互独立的。</li>
+<li>Cargo 主要的两个 profile：<ul>
+<li>dev profile：适用于开发，即执行 cargo build 时使用。</li>
+<li>release profile：适用于发布，执行 cargo build –release 时使用。</li>
+</ul>
+</li>
+</ul>
+<h3 id="自定义-profile"><a href="#自定义-profile" class="headerlink" title="自定义 profile"></a>自定义 profile</h3><ul>
+<li>针对每个 profile，Cargo 都提供来默认的配置。</li>
+<li>如果想要自定义 xxx profile 的配置：<ul>
+<li>可以在 Cargo.toml 里添加 [profile.xxx] 区域，在里面覆盖默认配置子集。</li>
+<li>对于每个配置的默认值和完整选项，详见 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/cargo/reference/profiles.html">官方文档</a>。</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-toml"><code class="language-toml">[profile.dev]
+opt-level = 1 # 决定编译优化等级，0 - 3
 
-    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token function">longest</span><span class="token punctuation">(</span>string1<span class="token punctuation">.</span><span class="token function">as_str</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> string2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+[profile.release]
+opt-level = 3
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="发布库到-crates-io"><a href="#发布库到-crates-io" class="headerlink" title="发布库到 crates.io"></a>发布库到 crates.io</h2><ul>
+<li>可以通过发布包来共享你的代码。</li>
+<li>crate 的 <a target="_blank" rel="noopener" href="https://crates.io/">注册表</a>：<ul>
+<li>他会分发已注册的包的源代码。</li>
+<li>主要托管开源的代码。</li>
+</ul>
+</li>
+</ul>
+<h3 id="文档注释"><a href="#文档注释" class="headerlink" title="文档注释"></a>文档注释</h3><ul>
+<li>文档注释：用于生成文档。<ul>
+<li>生成 HTML 文档。</li>
+<li>显示公共 API 的文档注释，例如如何使用 API。</li>
+<li>使用 <code>///</code> 来表示。</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token comment" spellcheck="true">/// Adds one to the number given.</span>
+<span class="token comment" spellcheck="true">///</span>
+<span class="token comment" spellcheck="true">/// # example</span>
+<span class="token comment" spellcheck="true">///</span>
+<span class="token comment" spellcheck="true">/// ```</span>
+<span class="token comment" spellcheck="true">/// let arg = 5;</span>
+<span class="token comment" spellcheck="true">/// let answer = my_crate::add_one(arg);</span>
+<span class="token comment" spellcheck="true">///</span>
+<span class="token comment" spellcheck="true">/// assert_eq!(6, answer);</span>
+<span class="token comment" spellcheck="true">/// ```</span>
 
-    <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"The longest string is {}"</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">add_one</span><span class="token punctuation">(</span>x<span class="token punctuation">:</span> i32<span class="token punctuation">)</span> <span class="token punctuation">-></span> i32<span class="token punctuation">{</span>
+    x <span class="token operator">+</span> <span class="token number">1</span>
 <span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>cargo doc：<ul>
+<li>它会运行 rustdoc 工具，默认会安装。</li>
+<li>它会把生成的 HTML 文档放在 target/doc 目录下。</li>
+</ul>
+</li>
+<li>cargo doc -open：<ul>
+<li>构建当前 crate 文档（也包含 crate 依赖项的文档）。</li>
+<li>在浏览器打开文档。</li>
+</ul>
+</li>
+</ul>
+<h3 id="常用章节"><a href="#常用章节" class="headerlink" title="常用章节"></a>常用章节</h3><ul>
+<li><code># Example</code>：例子，上边的源码已经展示了。</li>
+<li>其他常用章节：<ul>
+<li><code># Panics</code>：函数可能发生 panic 的场景。</li>
+<li><code># Errors</code>：如果函数返回 Result，描述可能的错误种类，以及可导致错误的条件。</li>
+<li><code># Safety</code>：如果函数处于 unsafe 调用，经应该解释函数 unsafe 的原因，以及调用者确保的使用前提。</li>
+</ul>
+</li>
+</ul>
+<h3 id="文档注释作为测试"><a href="#文档注释作为测试" class="headerlink" title="文档注释作为测试"></a>文档注释作为测试</h3><ul>
+<li>示例代码块的附加值：<ul>
+<li>运行 cargo test：将把文档注释中的示例代码作为测试来运行。</li>
+</ul>
+</li>
+</ul>
+<h3 id="为包含注释的项添加文档注释"><a href="#为包含注释的项添加文档注释" class="headerlink" title="为包含注释的项添加文档注释"></a>为包含注释的项添加文档注释</h3><ul>
+<li>符号：<code>//!</code> 为包裹当前注释的外层条目添加文档注释。<ul>
+<li>这类注释通常描述 crate 和模块：<ul>
+<li>crate root（按惯例 src/lib.rs）。</li>
+<li>一个模块内，将 crate 或模块作为一个整理进行记录。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token comment" spellcheck="true">//! # My Crate</span>
+<span class="token comment" spellcheck="true">//!</span>
+<span class="token comment" spellcheck="true">//! `my_crate` is collection of utilities to make proforming certain</span>
+<span class="token comment" spellcheck="true">//! calculations more convenient.</span>
 
-<span class="token comment" spellcheck="true">// longest 的返回值会是 x、y 其中之一，x、y 的具体生命周期也无法确定</span>
-<span class="token comment" spellcheck="true">// 而且与函数的实现体无关，rust 只检查函数签名</span>
-<span class="token comment" spellcheck="true">// 需要手动增加生命周期。</span>
-<span class="token keyword">fn</span> longest<span class="token operator">&lt;</span><span class="token string">'a>(x: &amp;'</span>a str<span class="token punctuation">,</span> y<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token string">'a str) -> &amp;'</span>a str <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> x<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> y<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        x
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        y
-    <span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">/// Adds one to the number given.</span>
+<span class="token comment" spellcheck="true">///</span>
+<span class="token comment" spellcheck="true">/// # example</span>
+<span class="token comment" spellcheck="true">///</span>
+<span class="token comment" spellcheck="true">/// ```</span>
+<span class="token comment" spellcheck="true">/// let arg = 5;</span>
+<span class="token comment" spellcheck="true">/// let answer = my_crate::add_one(arg);</span>
+<span class="token comment" spellcheck="true">///</span>
+<span class="token comment" spellcheck="true">/// assert_eq!(6, answer);</span>
+<span class="token comment" spellcheck="true">/// ```</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">add_one</span><span class="token punctuation">(</span>x<span class="token punctuation">:</span> i32<span class="token punctuation">)</span> <span class="token punctuation">-></span> i32<span class="token punctuation">{</span>
+    x <span class="token operator">+</span> <span class="token number">1</span>
 <span class="token punctuation">}</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-<li><p>生命周期的标注：</p>
-<ul>
-<li>生命周期的标注不会改变引用的生命周期长度。</li>
-<li>当指定了泛型生命周期参数，函数可以接收带有<code>任何</code>生命周期的引用。</li>
-<li>生命周期的标注：描述了多个引用的生命周期间的关系，但不影响生命周期。</li>
+<h2 id="pub-use"><a href="#pub-use" class="headerlink" title="pub use"></a>pub use</h2><ul>
+<li>使用 pub use 导出方便使用的公共 API。</li>
+<li>问题：crate 的程序结构在开发时对于开发者很合理，但对于它的使用者不够方便。<ul>
+<li>开发者会把程序结构分为很多层，使用者想要找到这种深层结构中的某个类型很费劲。</li>
+<li>例如：<code>my_crate::some_module::another_module::UsefulType</code>，用户想要使用就比较麻烦。</li>
+<li>方便的形式 <code>my_crate::UsefulType</code>。</li>
 </ul>
 </li>
-<li><p>生命周期的标注语法：</p>
-<ul>
-<li>生命周期参数名：<ul>
-<li>以 <code>'</code> 开头。</li>
-<li>通常全小写且非常短。</li>
-<li>通常使用 <code>'a</code>。</li>
-</ul>
-</li>
-<li>生命周期标注的位置：<ul>
-<li>在引用的 ‘&amp;’ 符号后。</li>
-<li>使用空格将标注和引用类型分开。</li>
+<li>解决方法：<ul>
+<li>不需要重新组织内部代码结构。</li>
+<li>使用 pub use：可以重新导出，创建一个与内部私有结构不同的对外公共结构。</li>
 </ul>
 </li>
 </ul>
-</li>
-<li><p>函数签名中的生命周期标注：</p>
-<ul>
-<li>泛型生命周期参数声明在：函数名和参数列表之间的 <code>&lt;&gt;</code> 里。</li>
-</ul>
-</li>
-<li><p>生命周期的约束如何生效：</p>
-<ul>
-<li>当 string1、string2 的生命周期不在一致，且返回值 result 生命周期长度大于 string2 时，编译报错。</li>
-<li>生命周期 <code>'a</code> 的实际生命周期是：x 和 y 两个生命周期中较小的哪个。</li>
-</ul>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token comment" spellcheck="true">/*
-error[E0597]: `string2` does not live long enough
---> src/main.rs:7:44
-|
-7 |         result = longest(string1.as_str(), string2.as_str());
-|                                            ^^^^^^^^^^^^^^^^ borrowed value does not live long e
-nough
-8 |     }
-|     - `string2` dropped here while still borrowed
-9 |     println!("The longest string is {}", result);
-|                                          ------ borrow later used here
+<pre class="line-numbers language-rust"><code class="language-rust"><span class="token comment" spellcheck="true">//lib.rs</span>
 
-*/</span>
+<span class="token comment" spellcheck="true">//! # Art</span>
+<span class="token comment" spellcheck="true">//!</span>
+<span class="token comment" spellcheck="true">//! A library for modeling artistic concepts.</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">use</span> <span class="token keyword">self</span><span class="token punctuation">:</span><span class="token punctuation">:</span>kinds<span class="token punctuation">:</span><span class="token punctuation">:</span>PrimaryColor<span class="token punctuation">;</span>
+<span class="token keyword">pub</span> <span class="token keyword">use</span> <span class="token keyword">self</span><span class="token punctuation">:</span><span class="token punctuation">:</span>kinds<span class="token punctuation">:</span><span class="token punctuation">:</span>SecondaryColor<span class="token punctuation">;</span>
+<span class="token keyword">pub</span> <span class="token keyword">use</span> <span class="token keyword">self</span><span class="token punctuation">:</span><span class="token punctuation">:</span>utils<span class="token punctuation">:</span><span class="token punctuation">:</span>mix<span class="token punctuation">;</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">mod</span> kinds <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">/// The primary colors according to the RYB color model.</span>
+    <span class="token keyword">pub</span> <span class="token keyword">enum</span> PrimaryColor <span class="token punctuation">{</span>
+        Red<span class="token punctuation">,</span>
+        Yellow<span class="token punctuation">,</span>
+        Blue<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/// The secondary colors according to the RYB color model.</span>
+    <span class="token keyword">pub</span> <span class="token keyword">enum</span> SecondaryColor <span class="token punctuation">{</span>
+        Orange<span class="token punctuation">,</span>
+        Green<span class="token punctuation">,</span>
+        Purple<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">mod</span> utils <span class="token punctuation">{</span>
+    <span class="token keyword">use</span> <span class="token keyword">crate</span><span class="token punctuation">:</span><span class="token punctuation">:</span>kinds<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">*</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/// Combines two primary colors in equal amounts to create</span>
+    <span class="token comment" spellcheck="true">/// a secondary color</span>
+    <span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function">mix</span><span class="token punctuation">(</span>c1<span class="token punctuation">:</span> PrimaryColor<span class="token punctuation">,</span> c2<span class="token punctuation">:</span> PrimaryColor<span class="token punctuation">)</span> <span class="token punctuation">-></span> SecondaryColor <span class="token punctuation">{</span>
+        SecondaryColor<span class="token punctuation">:</span><span class="token punctuation">:</span>Green
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">//main.rs</span>
+<span class="token comment" spellcheck="true">// use art::kinds::PrimaryColor;</span>
+<span class="token comment" spellcheck="true">// use art::utils::mix;</span>
+<span class="token keyword">use</span> art<span class="token punctuation">:</span><span class="token punctuation">:</span>mix<span class="token punctuation">;</span>
+<span class="token keyword">use</span> art<span class="token punctuation">:</span><span class="token punctuation">:</span>PrimaryColor<span class="token punctuation">;</span>
+
 <span class="token keyword">fn</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> result<span class="token punctuation">;</span>
-    <span class="token keyword">let</span> string1 <span class="token operator">=</span> String<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"abcd"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">{</span>
-        <span class="token keyword">let</span> string2 <span class="token operator">=</span> String<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"xyz"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//这里改成 String 是由于 静态字符串非堆内存 j</span>
-
-        result <span class="token operator">=</span> <span class="token function">longest</span><span class="token punctuation">(</span>string1<span class="token punctuation">.</span><span class="token function">as_str</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> string2<span class="token punctuation">.</span><span class="token function">as_str</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"The longest string is {}"</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> red <span class="token operator">=</span> PrimaryColor<span class="token punctuation">:</span><span class="token punctuation">:</span>Red<span class="token punctuation">;</span>
+    <span class="token keyword">let</span> yellow <span class="token operator">=</span> PrimaryColor<span class="token punctuation">:</span><span class="token punctuation">:</span>Yellow<span class="token punctuation">;</span>
+    <span class="token function">mix</span><span class="token punctuation">(</span>red<span class="token punctuation">,</span> yellow<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-
-<span class="token keyword">fn</span> longest<span class="token operator">&lt;</span><span class="token string">'a>(x: &amp;'</span>a str<span class="token punctuation">,</span> y<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token string">'a str) -> &amp;'</span>a str <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> x<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> y<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        x
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        y
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-</ol>
-<h3 id="深入理解生命周期"><a href="#深入理解生命周期" class="headerlink" title="深入理解生命周期"></a>深入理解生命周期</h3><ol>
-<li><p>指定生命周期参数的方式依赖于函数所做的事情。</p>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ul>
-<li>如下例中，返回的只有 x，那么参数 y 就不再需要生命周期的标注，只需要保证 x 与返回值 str<br>切片的生命周期一致即可。</li>
+<li>重新导出后的效果如下：</li>
 </ul>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> longest<span class="token operator">&lt;</span><span class="token string">'a>(x: &amp;'</span>a str<span class="token punctuation">,</span> y<span class="token punctuation">:</span> <span class="token operator">&amp;</span>str<span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token operator">&amp;</span>'a str <span class="token punctuation">{</span>
-    x
-<span class="token punctuation">}</span>
+<p><img src="https://fastly.jsdelivr.net/gh/HATTER-LONG/Resource@main/images/RustLearning/20220604112537.png"></p>
+<h2 id="发布-crate"><a href="#发布-crate" class="headerlink" title="发布 crate"></a>发布 crate</h2><ul>
+<li>暂略。</li>
+</ul>
+<p>// TODO 待完善。</p>
+<h2 id="Cargo-工作空间"><a href="#Cargo-工作空间" class="headerlink" title="Cargo 工作空间"></a>Cargo 工作空间</h2><ul>
+<li>cargo 工作空间：帮忙管理多个相互关联且需要协同开发的 crate。</li>
+<li>cargo 工作空间是一套共享同一个 Cargo.lock 和输出文件夹的包。</li>
+</ul>
+<h3 id="创建工作空间"><a href="#创建工作空间" class="headerlink" title="创建工作空间"></a>创建工作空间</h3><ul>
+<li><p>有多种方式来组件工作空间：例如，1 个二进制 crate，2 个库 crate：</p>
+<ul>
+<li>二进制 crate：main 函数，依赖于其他两个 crate。</li>
+<li>其中一个 crate 提供 <code>add_one</code> 函数。</li>
+<li>另外一个 crate 提供 <code>add_two</code> 函数。</li>
+</ul>
+</li>
+<li><p>添加 workspace.members：</p>
+</li>
+</ul>
+<pre class="line-numbers language-toml"><code class="language-toml">[workspace]
+
+members = ["adder", "add_one"]
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-</li>
-<li><p>当函数返回引用时，返回类型的生命周期参数需要与其中一个参数的生命周期匹配。</p>
-</li>
-<li><p>如果返回的引用没有指向任何参数，那么它就只能引用函数内创建的值：</p>
 <ul>
-<li>这就是悬垂引用：该值在函数结束时就走出里作用域。</li>
+<li>创建 adder 子模块，文件目录结构如下，产物是在 workspace 根：</li>
 </ul>
-</li>
-</ol>
-<h3 id="Struct-定义中的生命周期标注"><a href="#Struct-定义中的生命周期标注" class="headerlink" title="Struct 定义中的生命周期标注"></a>Struct 定义中的生命周期标注</h3><ol>
-<li><p>Struct 里可包括：</p>
-<ul>
-<li>自持有的类型。</li>
-<li>引用：需要在每个引用上添加生命周期标注。</li>
-</ul>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token comment" spellcheck="true">// part 所引用的对象 str 的生命周期需要包括整个 struct 实例的生命周期。</span>
-<span class="token keyword">struct</span> ImportantExcerpt<span class="token operator">&lt;</span>'a<span class="token operator">></span> <span class="token punctuation">{</span>
-    part<span class="token punctuation">:</span> <span class="token operator">&amp;</span>'a str<span class="token punctuation">,</span>
-<span class="token punctuation">}</span>
+<pre class="line-numbers language-text"><code class="language-text">❯ tree -I target
+.
+├── Cargo.lock
+├── Cargo.toml
+├── add-one
+│&nbsp;&nbsp; ├── Cargo.toml
+│&nbsp;&nbsp; └── src
+│&nbsp;&nbsp;     └── lib.rs
+└── adder
+    ├── Cargo.toml
+    └── src
+        └── main.rs
 
-<span class="token keyword">fn</span> <span class="token function">test_struct_lifttime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> novel <span class="token operator">=</span> String<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"Call me Ishmael. Some years ago ..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> first_sentence <span class="token operator">=</span> novel<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'.'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">expect</span><span class="token punctuation">(</span><span class="token string">"Could not found a ."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> i <span class="token operator">=</span> ImportantExcerpt <span class="token punctuation">{</span>
-        part<span class="token punctuation">:</span> first_sentence<span class="token punctuation">,</span>
-    <span class="token punctuation">}</span><span class="token punctuation">;</span>
-
-    <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"print part {}"</span><span class="token punctuation">,</span> i<span class="token punctuation">.</span>part<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
+4 directories, 6 files
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-</ol>
-<h2 id="生命周期的省略"><a href="#生命周期的省略" class="headerlink" title="生命周期的省略"></a>生命周期的省略</h2><ol>
-<li><p>经过前文我们了解到，每个引用都有生命周期，需要为使用生命周期的函数或 struct 指定生命周期参数。</p>
 <ul>
-<li>但是我们之前在 02 节所有权中又一个例子返回了引用却没有标注生命周期，这就是生命周期的省略。</li>
-</ul>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function">first_world_v2</span><span class="token punctuation">(</span>s<span class="token punctuation">:</span> <span class="token operator">&amp;</span>String<span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token operator">&amp;</span>str <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> bytes <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">as_bytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token punctuation">,</span> <span class="token operator">&amp;</span>item<span class="token punctuation">)</span> <span class="token keyword">in</span> bytes<span class="token punctuation">.</span><span class="token function">iter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">enumerate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">if</span> item <span class="token operator">==</span> <span class="token string">b' '</span> <span class="token punctuation">{</span>
-            <span class="token keyword">return</span> <span class="token operator">&amp;</span>s<span class="token punctuation">[</span><span class="token punctuation">..</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    <span class="token operator">&amp;</span>s<span class="token punctuation">[</span><span class="token punctuation">..</span><span class="token punctuation">]</span>
-<span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-<li><p>生命周期的省略规则：在 Rust 引用分析中所编入的模式称为<code>生命周期省略规则</code>。</p>
-<ul>
-<li>这些规则无需开发者来遵守。</li>
-<li>它们是一些特殊情况，由编译器来考虑。</li>
-<li>如果你的代码符合这些情况，那么就无需显式的标注生命周期。</li>
+<li>adder 需要依赖 add-one：<ul>
+<li>在 adder 的 Cargo.toml 依赖中添加。</li>
 </ul>
 </li>
-<li><p>生命周期省略规则不会提供完整的推断：</p>
-<ul>
-<li>如果应用规则后，引用的生命周期仍然模糊不清，这是则会编译错误。</li>
-<li>解决方法：添加生命周期标注，表明引用间的相互关系。</li>
 </ul>
-</li>
-</ol>
-<h3 id="输入生命周期与输入生命周期"><a href="#输入生命周期与输入生命周期" class="headerlink" title="输入生命周期与输入生命周期"></a>输入生命周期与输入生命周期</h3><ol>
-<li>生命周期在：<ul>
-<li>函数/方法的参数：输入生命周期。</li>
-<li>函数/方法的返回值：输出生命周期。</li>
-</ul>
-</li>
-</ol>
-<h3 id="生命周期省略的三个规则"><a href="#生命周期省略的三个规则" class="headerlink" title="生命周期省略的三个规则"></a>生命周期省略的三个规则</h3><ol>
-<li>规则 1 应用于输出生命周期。</li>
-<li>规则 2、3 应用于输入生命周期。</li>
-<li>这些规则适用于 fn 定义和 impl 块。</li>
-</ol>
-<ul>
-<li>规则 1：每个引用类型的参数都有自己的生命周期。</li>
-<li>规则 2：如果只有 1 个输入生命周期参数，那么该生命周期被赋给所有的输出生命周期参数。</li>
-<li>规则 3：如果有多个生命周期参数，但其中一个是 <code>&amp;self</code> 或 <code>&amp;mut self</code>（是方法），那么 self<br>的生命周期会被赋给所有的输出生命周期参数。</li>
-</ul>
-<h2 id="方法定义中的生命周期标注"><a href="#方法定义中的生命周期标注" class="headerlink" title="方法定义中的生命周期标注"></a>方法定义中的生命周期标注</h2><ol>
-<li><p>在 struct 上使用生命周期实现方法，语法和泛型参数的语法一样。</p>
-</li>
-<li><p>在哪生命和使用生命周期参数，依赖于：</p>
-<ul>
-<li>生命周期参数是否和字段、方法的参数或返回值有关。</li>
-</ul>
-</li>
-<li><p>struct 字段的生命周期名：</p>
-<ul>
-<li>在 <code>impl</code> 后声明。</li>
-<li>在 <code>struct</code> 名子后使用。</li>
-<li>这些生命周期是 struct 类型的一部分。</li>
-</ul>
-</li>
-<li><p>impl 块内的方法签名中：</p>
-<ul>
-<li><code>引用</code>必须绑定于 struct 字段引用的生命周期，或者引用是独立的也可以。</li>
-<li>生命周期省略规则经常使得方法中的生命周期标注不是必须的。</li>
-</ul>
-<pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">struct</span> ImportantExcerpt<span class="token operator">&lt;</span>'a<span class="token operator">></span> <span class="token punctuation">{</span>
-    part<span class="token punctuation">:</span> <span class="token operator">&amp;</span>'a str<span class="token punctuation">,</span>
-<span class="token punctuation">}</span>
+<pre class="line-numbers language-toml"><code class="language-toml">[dependencies]
 
-<span class="token keyword">impl</span><span class="token operator">&lt;</span><span class="token string">'a> ImportantExcerpt&lt;'</span>a<span class="token operator">></span> <span class="token punctuation">{</span>
-    <span class="token keyword">fn</span> <span class="token function">level</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> i32 <span class="token punctuation">{</span>
-        <span class="token number">3</span>
-    <span class="token punctuation">}</span>
-    <span class="token comment" spellcheck="true">// 返回的引用被赋予来 self 的生命周期</span>
-    <span class="token keyword">fn</span> <span class="token function">announce_and_return_part</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">,</span> announcement<span class="token punctuation">:</span> <span class="token operator">&amp;</span>str<span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token operator">&amp;</span>str <span class="token punctuation">{</span>
-        <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"Attention please: {}"</span><span class="token punctuation">,</span> announcement<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">self</span><span class="token punctuation">.</span>part
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-</ol>
-<h3 id="静态生命周期"><a href="#静态生命周期" class="headerlink" title="静态生命周期"></a>静态生命周期</h3><ol>
-<li><p><code>'static</code> 是一个特殊的生命周期：整个程序的持续时间。</p>
-<ul>
-<li>例如：所有的字符串字面值都拥有 <code>'static</code> 生命周期。<ul>
-<li><code>let s: &amp;'static str = "I have a static lifetime";</code></li>
+add-one = { path = "../add-one" }
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="在工作空间中依赖外部-crate"><a href="#在工作空间中依赖外部-crate" class="headerlink" title="在工作空间中依赖外部 crate"></a>在工作空间中依赖外部 crate</h3><ul>
+<li>工作空间只有一个 Cargo.lock 文件，在工作空间的顶层目录。<ul>
+<li>保证工作空间内所有 crate 使用的依赖的版本都相同。</li>
+<li>工作空间内所有的版本都是相兼容的。</li>
 </ul>
 </li>
 </ul>
-</li>
-<li><p>为引用指定 <code>'static</code> 生命周期前要三思：</p>
-<ul>
-<li>是否需要引用在程序整个生命周期内都存活。</li>
-</ul>
-</li>
-</ol>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><pre class="line-numbers language-rust"><code class="language-rust"><span class="token keyword">fn</span> longest_with_an_announcement<span class="token operator">&lt;</span><span class="token string">'a, T>(x: &amp;'</span>a str<span class="token punctuation">,</span> y<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token string">'a str, ann: T) -> &amp;'</span>a str
-<span class="token keyword">where</span>
-    T<span class="token punctuation">:</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span>fmt<span class="token punctuation">:</span><span class="token punctuation">:</span>Display<span class="token punctuation">,</span>
-<span class="token punctuation">{</span>
-    <span class="token function">println!</span><span class="token punctuation">(</span><span class="token string">"Announcement! {}"</span><span class="token punctuation">,</span> ann<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> x<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> y<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        x
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        y
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
                 
             </div>
@@ -769,7 +729,7 @@ nough
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://hatter-long.github.io/2022/07/31/jiu-rust-sheng-ming-zhou-qi/">https://hatter-long.github.io/2022/07/31/jiu-rust-sheng-ming-zhou-qi/</a>
+                    <a href="https://hatter-long.github.io/2022/08/06/shi-er-rust-cargo-yu-crates-io/">https://hatter-long.github.io/2022/08/06/shi-er-rust-cargo-yu-crates-io/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -860,13 +820,13 @@ nough
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/08/06/shi-rust-bian-xie-yu-yun-xing-ce-shi/">
+                <a href="/2022/08/06/shi-san-rust-zhi-neng-zhi-zhen/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="（十）Rust_编写与运行测试">
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="（十三）Rust_智能指针">
                         
-                        <span class="card-title">（十）Rust_编写与运行测试</span>
+                        <span class="card-title">（十三）Rust_智能指针</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -909,13 +869,13 @@ nough
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/07/24/ba-rust-fan-xing-yu-trait/">
+                <a href="/2022/08/06/shi-yi-rust-die-dai-qi-he-bi-bao/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="（八）Rust_泛型与Trait">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="（十一）Rust_迭代器和闭包">
                         
-                        <span class="card-title">（八）Rust_泛型与Trait</span>
+                        <span class="card-title">（十一）Rust_迭代器和闭包</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -926,7 +886,7 @@ nough
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-08-06
                             </span>
                         <span class="publish-author">
                             
